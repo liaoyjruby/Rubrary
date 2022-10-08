@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rubrary
+# Rubrary
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -11,12 +11,12 @@ also to test out R package building! :^)
 
 ## Installation
 
-You can install the development version of rubrary from
+You can install the development version of Rubrary from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("liaoyjruby/rubrary")
+devtools::install_github("liaoyjruby/Rubrary")
 ```
 
 ## Example
@@ -24,7 +24,7 @@ devtools::install_github("liaoyjruby/rubrary")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(rubrary)
+library(Rubrary)
 ## basic example code
 ```
 

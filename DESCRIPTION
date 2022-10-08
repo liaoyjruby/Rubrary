@@ -1,4 +1,4 @@
-Package: rubrary
+Package: Rubrary
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -13,4 +13,11 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
-    stringr
+    DESeq2,
+    ggplot2,
+    ggpubr,
+    gridExtra,
+    stats,
+    stringr,
+    tibble,
+    utils
