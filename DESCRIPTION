@@ -1,10 +1,11 @@
 Package: Rubrary
-Title: What the Package Does (One Line, Title Case)
+Title: Fun Functions from Ruby
 Version: 0.0.0.9000
 Authors@R: 
     person("Yi Jou (Ruby)", "Liao", , "liaoyjruby@ucla.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2853-5475"))
-Description: Personal functions, mostly for Graeber Lab stuff.
+Description: Miscellaneous collection of functions, mostly for Graeber Lab 
+  projects. FDB project, OV project, Metabolomics, etc.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -21,3 +22,5 @@ Imports:
     stringr,
     tibble,
     utils
+URL: https://github.com/liaoyjruby/Rubrary
+BugReports: https://github.com/liaoyjruby/Rubrary/issues
