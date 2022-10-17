@@ -14,9 +14,12 @@ Imports:
     DESeq2,
     ggplot2,
     ggpubr,
+    ggsurvfit,
     gridExtra,
+    magrittr,
     stats,
     stringr,
+    survival,
     tibble,
     utils
 Suggests: 
