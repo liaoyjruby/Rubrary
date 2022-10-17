@@ -27,7 +27,7 @@ plot_SCN_KaplanMeier(
 \item{filename}{filename to save as}
 }
 \value{
-Kaplan-Meier survival plot
+Kaplan-Meier overall survival analysis plot comparing SCN-like status
 }
 \description{
 Plot SCN Kaplan Meier Survival Analysis
