@@ -12,8 +12,11 @@ BugReports: https://github.com/liaoyjruby/Rubrary/issues
 biocViews:
 Imports: 
     DESeq2,
+    dplyr,
+    ggExtra,
     ggplot2,
     ggpubr,
+    ggrepel,
     ggsurvfit,
     gridExtra,
     magrittr,
@@ -21,7 +24,6 @@ Imports:
     survival,
     tibble,
     utils
-Suggests: 
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
