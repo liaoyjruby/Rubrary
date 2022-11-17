@@ -13,3 +13,19 @@ left_join_rownames <- function(df1, df2){
   dfmerged$rn <- NULL
   return(dfmerged)
 }
+
+#' Full join by rownames
+#'
+#' Wrapper for dplyr::full_join to merge by rownames.
+#'
+#' @param df1 Numerical dataframe with rownames
+#' @param df2 Numerical dataframe with rownames
+#'
+#' @return Full-joined dataframe by rownames with rownames
+#' @export
+full_join_rownames <- function(df1, df2){
+  dfmerged <- dplyr::full_join(tibble::rownames_to_column(df1, var = "rn"), tibble::rownames_to_column(df2, var = "rn"), by = "rn")
+  rownames(dfmerged) <- dfmerged$rn
+  dfmerged$rn <- NULL
+  return(dfmerged)
+}
