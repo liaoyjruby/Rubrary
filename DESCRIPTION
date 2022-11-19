@@ -20,6 +20,7 @@ Imports:
     ggsurvfit,
     gridExtra,
     magrittr,
+    plyr,
     stats,
     survival,
     tibble,

@@ -29,3 +29,18 @@ full_join_rownames <- function(df1, df2){
   dfmerged$rn <- NULL
   return(dfmerged)
 }
+
+#' Combine data.frames by column, filling in missing rows.
+#'
+#' `cbinds` a list of dataframes filling missing rows with NA.
+#'
+#' @param ... input data frames to column bind together
+#'
+#' @return a single data frame
+#' @export
+#'
+cbind.fill <- function(...) { # https://stackoverflow.com/a/7962980
+  transpoted <- lapply(list(...),t)
+  transpoted_dataframe <- lapply(transpoted, as.data.frame)
+  return (data.frame(t(plyr::rbind.fill(transpoted_dataframe))))
+}
