@@ -11,7 +11,8 @@ utils::globalVariables(c(
 #' @param PCtype c("Loading", "Score")
 #' @param label logical; T to label points
 #' @param annoname string; Colname in dfanno matching point name
-#' @param annotype string; Colname in dfanno with annotation
+#' @param annotype string; Colname in dfanno with info to color by
+#' @param annotype2 string; Colname in dfanno with info to change shape by
 #' @param title string; Plot title
 #' @param marginal logical; Show density plot along both axes
 #' @param save logical; T to save to png
@@ -26,7 +27,7 @@ utils::globalVariables(c(
 #' @export
 #'
 plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score",
-                     label = T, annoname = "Sample", annotype = "Batch", highlight = NA,
+                     label = T, annoname = "Sample", annotype = "Batch", annotype2 = NA, highlight = NA,
                      title = paste0("PCA ",PCtype ," Plot - ", annotype),
                      subtitle = NA, marginal = F, save = F, savename = "PCA_plot.png"){
 
@@ -60,8 +61,13 @@ plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score"
     }
     df[,2:ncol(df)] <- sapply(df[,2:ncol(df)], as.numeric)
 
-    df_merged <- dplyr::left_join(df, dfanno[,c(annoname, annotype)], by = structure(names = PCtype, .Data = annoname))
-    df_merged <- df_merged[,c(PCtype, PCx, PCy, annotype)]
+    if (is.na(annotype2)){
+      df_merged <- dplyr::left_join(df, dfanno[,c(annoname, annotype)], by = structure(names = PCtype, .Data = annoname))
+      df_merged <- df_merged[,c(PCtype, PCx, PCy, annotype)]
+    } else {
+      df_merged <- dplyr::left_join(df, dfanno[,c(annoname, annotype, annotype2)], by = structure(names = PCtype, .Data = annoname))
+      df_merged <- df_merged[,c(PCtype, PCx, PCy, annotype, annotype2)]
+    }
     # colnames(df_merged) <- c(PCx, PCy, "Type")
 
     # Two groups, calc KS p-value for both PCx and PCy
@@ -118,20 +124,20 @@ plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score"
       label = F
       df_merged$Highlight <- ifelse(df_merged$Score %in% highlight, "HL", "")
       ggplt <- ggplot(df_merged, aes_string(x = PCx, y = PCy, color = annotype, shape = "Highlight"))
-
+    } else if (!is.na(annotype2)) {
+      ggplt <- ggplot(df_merged, aes_string(x = PCx, y = PCy, color = annotype, shape = annotype2))
     } else {
       ggplt <- ggplot(df_merged, aes_string(x = PCx, y = PCy, color = annotype))
     }
 
     plt <- ggplt +
-      geom_point(size = 2, alpha = alpha) +
+      geom_point(size = 3, alpha = alpha) +
       {if(is.numeric(df_merged[,annotype])) scale_color_gradient(low = "blue", high = "red", guide = "colourbar")} +
       labs(title = title,
            x = paste0(PCx," (", sdev$pve[match(PCx, rownames(sdev))], "%)"),
            y = paste0(PCy," (", sdev$pve[match(PCy, rownames(sdev))], "%)")) +
       {if(!is.na(subtitle)) labs(subtitle = subtitle)} +
-      guides(color=guidetitle,
-             shape = "none") + # Set title of legend
+      guides(color=guidetitle) + # Set title of legend
       theme_classic() +
       {if(label) ggrepel::geom_text_repel(label = df[,PCtype], max.overlaps = 30, color = "black")} +
       {if(!all(is.na(highlight))) ggrepel::geom_text_repel(aes(label=ifelse(Highlight == "HL",df[,PCtype],"")), color = "black", max.overlaps = 30, size = 3)}

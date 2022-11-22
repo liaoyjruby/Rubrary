@@ -11,6 +11,7 @@ URL: https://github.com/liaoyjruby/Rubrary
 BugReports: https://github.com/liaoyjruby/Rubrary/issues
 biocViews:
 Imports: 
+    cowplot,
     DESeq2,
     dplyr,
     ggExtra,

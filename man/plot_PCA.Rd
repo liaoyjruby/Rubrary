@@ -13,6 +13,7 @@ plot_PCA(
   label = T,
   annoname = "Sample",
   annotype = "Batch",
+  annotype2 = NA,
   highlight = NA,
   title = paste0("PCA ", PCtype, " Plot - ", annotype),
   subtitle = NA,
@@ -36,7 +37,9 @@ plot_PCA(
 
 \item{annoname}{string; Colname in dfanno matching point name}
 
-\item{annotype}{string; Colname in dfanno with annotation}
+\item{annotype}{string; Colname in dfanno with info to color by}
+
+\item{annotype2}{string; Colname in dfanno with info to change shape by}
 
 \item{highlight}{char vector; Specific points to shape differently/labels}
 
