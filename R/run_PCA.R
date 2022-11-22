@@ -14,8 +14,8 @@
 #'
 #' @export
 #'
-run_PCA <- function(df, savename = "PCA", summary = F,
-                    center = TRUE, scale = FALSE, tol = 0.05){
+run_PCA <- function(df, savename = "PCA", summary = FALSE,
+                    center = TRUE, scale = TRUE, tol = 0.05){
 
   if (is.character(df)){
     dfpath <- df

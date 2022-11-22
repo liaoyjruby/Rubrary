@@ -7,9 +7,9 @@
 run_PCA(
   df,
   savename = "PCA",
-  summary = F,
+  summary = FALSE,
   center = TRUE,
-  scale = FALSE,
+  scale = TRUE,
   tol = 0.05
 )
 }
