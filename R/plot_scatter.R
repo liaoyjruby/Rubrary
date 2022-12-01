@@ -3,10 +3,10 @@
 #' @param df Dataframe
 #' @param xval Colname for x axis
 #' @param yval Colname for y axis
-#' @param eqlims Equal limits?
+#' @param eqlims Equal limits? TO BE IMPLEMENTED
 #'
 #' @return Simple scatter plot
-#' @importFrom ggplot2 ggplot aes_string geom_point geom_smooth
+#' @importFrom ggplot2 ggplot aes_string geom_point geom_smooth theme_classic
 #' @export
 #'
 plot_scatter <- function(df, xval, yval, eqlims = F) {
@@ -21,5 +21,6 @@ plot_scatter <- function(df, xval, yval, eqlims = F) {
   ggplot(df, aes_string(x = xval, y = yval)) +
     geom_point() +
     geom_smooth(method = "lm", se=FALSE, color = 'red') +
-    ggpubr::stat_cor(method = "pearson", label.x.npc = 0.4)
+    ggpubr::stat_cor(method = "pearson", label.x.npc = 0.4) +
+    theme_classic()
 }
