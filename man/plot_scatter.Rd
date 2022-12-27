@@ -13,7 +13,7 @@ plot_scatter(df, xval, yval, eqlims = F)
 
 \item{yval}{Colname for y axis}
 
-\item{eqlims}{Equal limits?}
+\item{eqlims}{Equal limits? TO BE IMPLEMENTED}
 }
 \value{
 Simple scatter plot
