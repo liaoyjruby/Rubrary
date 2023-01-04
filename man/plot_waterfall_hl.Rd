@@ -17,6 +17,7 @@ plot_waterfall_hl(
   wf_neg = "Pre-Therapy",
   title = "DE Genes",
   subtitle = NA,
+  pval = T,
   save = F,
   savename = "DESeq_slogp_WF_hl.png"
 )
@@ -34,9 +35,9 @@ plot_waterfall_hl(
 
 \item{toplabel}{string; name of highlight group}
 
-\item{label}{logical}
+\item{label}{logical or char vector; if vector, should match length of nrow(sig_hl)}
 
-\item{ylab}{string}
+\item{ylab}{string; rankcol axis label}
 
 \item{wf_pos}{string; label for positive side of waterfall}
 
@@ -45,6 +46,8 @@ plot_waterfall_hl(
 \item{title}{string; plot title}
 
 \item{subtitle}{string; plot subtitle}
+
+\item{pval}{logical; include KS p value?}
 
 \item{save}{logical; "T" to save}
 

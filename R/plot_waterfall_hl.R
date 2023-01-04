@@ -32,10 +32,11 @@ get_n <- function(signature, pos = T, sig = F){
 #' @param subtitle string; plot subtitle
 #' @param save logical; "T" to save
 #' @param savename string; name to save plot under
-#' @param label logical
-#' @param ylab string
+#' @param label logical or char vector; if vector, should match length of nrow(sig_hl)
+#' @param ylab string; rankcol axis label
 #' @param wf_pos string; label for positive side of waterfall
 #' @param wf_neg string; label for negative side of waterfall
+#' @param pval logical; include KS p value?
 #'
 #' @importFrom ggplot2 geom_text layer_scales
 #' @importFrom ggpubr ggbarplot ggdensity rremove rotate
@@ -45,7 +46,7 @@ get_n <- function(signature, pos = T, sig = F){
 plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, rev = F, toplabel = "Top SCN",
                               label = F, ylab = "DESeq Signed log p-values",
                               wf_pos = "Post-Therapy", wf_neg = "Pre-Therapy",
-                              title = "DE Genes", subtitle = NA,
+                              title = "DE Genes", subtitle = NA, pval = T,
                               save = F, savename = "DESeq_slogp_WF_hl.png") {
 
   # Rank DF by rankcol values
@@ -62,10 +63,12 @@ plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, r
   sig$type <- ifelse(sig$gene %in% sig_hl[hlrange, 1], toplabel, "Other")
   sig$type <- factor(sig$type, levels = c(toplabel, "Other"))
 
-  ks_pval = stats::ks.test(
-    sig[sig$type == toplabel, "rank"],
-    sig[!sig$type == toplabel, "rank"]
-  )$p.value
+  if(pval){
+    ks_pval = stats::ks.test(
+      sig[sig$type == toplabel, "rank"],
+      sig[!sig$type == toplabel, "rank"]
+    )$p.value
+  }
 
   a = ggbarplot(
     data = sig,
@@ -98,7 +101,7 @@ plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, r
     rremove("y.text") +
     theme(legend.position=c(0,1), legend.justification=c(0,1)) +
     geom_text(x = xpos_top, y = ypos, label = wf_pos) +
-    geom_text(x = xpos_mid, y = ypos, label = paste0("KS enrich. p-value = ", signif(ks_pval, digits = 4))) +
+    {if(pval) geom_text(x = xpos_mid, y = ypos, label = paste0("KS enrich. p-value = ", signif(ks_pval, digits = 4)))} +
     geom_text(x = xpos_bot, y = ypos, label = wf_neg) +
     {if(!is.na(subtitle)) labs(subtitle = subtitle)}
 
