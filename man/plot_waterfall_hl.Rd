@@ -34,6 +34,14 @@ plot_waterfall_hl(
 
 \item{toplabel}{string; name of highlight group}
 
+\item{label}{logical}
+
+\item{ylab}{string}
+
+\item{wf_pos}{string; label for positive side of waterfall}
+
+\item{wf_neg}{string; label for negative side of waterfall}
+
 \item{title}{string; plot title}
 
 \item{subtitle}{string; plot subtitle}

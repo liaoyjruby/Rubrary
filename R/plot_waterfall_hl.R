@@ -32,6 +32,10 @@ get_n <- function(signature, pos = T, sig = F){
 #' @param subtitle string; plot subtitle
 #' @param save logical; "T" to save
 #' @param savename string; name to save plot under
+#' @param label logical
+#' @param ylab string
+#' @param wf_pos string; label for positive side of waterfall
+#' @param wf_neg string; label for negative side of waterfall
 #'
 #' @importFrom ggplot2 geom_text layer_scales
 #' @importFrom ggpubr ggbarplot ggdensity rremove rotate
