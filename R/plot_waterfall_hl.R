@@ -37,6 +37,7 @@ get_n <- function(signature, pos = T, sig = F){
 #' @param wf_pos string; label for positive side of waterfall
 #' @param wf_neg string; label for negative side of waterfall
 #' @param pval logical; include KS p value?
+#' @param density logcal; include density plot on right?
 #'
 #' @importFrom ggplot2 geom_text layer_scales
 #' @importFrom ggpubr ggbarplot ggdensity rremove rotate
@@ -46,7 +47,7 @@ get_n <- function(signature, pos = T, sig = F){
 plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, rev = F, toplabel = "Top SCN",
                               label = F, ylab = "DESeq Signed log p-values",
                               wf_pos = "Post-Therapy", wf_neg = "Pre-Therapy",
-                              title = "DE Genes", subtitle = NA, pval = T,
+                              title = "DE Genes", subtitle = NA, pval = T, density = T,
                               save = F, savename = "DESeq_slogp_WF_hl.png") {
 
   # Rank DF by rankcol values
@@ -105,36 +106,47 @@ plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, r
     geom_text(x = xpos_bot, y = ypos, label = wf_neg) +
     {if(!is.na(subtitle)) labs(subtitle = subtitle)}
 
-  x = ggdensity(
-    data = sig,
-    x = "rank",
-    xlab = "",
-    ylab = "Density",
-    fill = "type",
-    alpha = 0.85,
-    palette = colors
-  ) +
-    rotate() +
-    rremove("y.ticks") +
-    rremove("y.text") +
-    rremove("x.text") +
-    rremove("legend")
+  if(density){
+    x = ggdensity(
+      data = sig,
+      x = "rank",
+      xlab = "",
+      ylab = "Density",
+      fill = "type",
+      alpha = 0.85,
+      palette = colors
+    ) +
+      rotate() +
+      rremove("y.ticks") +
+      rremove("y.text") +
+      rremove("x.text") +
+      rremove("legend")
 
-  pg = cowplot::plot_grid(
-    a,
-    x,
-    align = "h", axis = "bt",
-    ncol = 2,
-    rel_widths = c(2, 0.7), #increase 0.3 to 0.5 (or more) if density plot is too squished
-    rel_heights = c(0.7, 2) #increase 0.3 to 0.5 (or more) if density plot is too squished
-  )
-
-  if(save){
-    cowplot::ggsave2(
-      filename = savename,
-      plot = pg,
-      width = 10, height = 8
+    pg = cowplot::plot_grid(
+      a,
+      x,
+      align = "h", axis = "bt",
+      ncol = 2,
+      rel_widths = c(2, 0.7), #increase 0.3 to 0.5 (or more) if density plot is too squished
+      rel_heights = c(0.7, 2) #increase 0.3 to 0.5 (or more) if density plot is too squished
     )
+
+    if(save){
+      cowplot::ggsave2(
+        filename = savename,
+        plot = pg,
+        width = 10, height = 8
+      )
+    }
+  } else {
+    pg <- a
+    if(save){
+      ggplot2::ggsave(
+        filename = savename,
+        plot = pg,
+        width = 8, height = 8
+      )
+    }
   }
 
   return(pg)

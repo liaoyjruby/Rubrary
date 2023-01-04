@@ -18,6 +18,7 @@ plot_waterfall_hl(
   title = "DE Genes",
   subtitle = NA,
   pval = T,
+  density = T,
   save = F,
   savename = "DESeq_slogp_WF_hl.png"
 )
@@ -48,6 +49,8 @@ plot_waterfall_hl(
 \item{subtitle}{string; plot subtitle}
 
 \item{pval}{logical; include KS p value?}
+
+\item{density}{logcal; include density plot on right?}
 
 \item{save}{logical; "T" to save}
 
