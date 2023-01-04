@@ -41,6 +41,7 @@ get_n <- function(signature, pos = T, sig = F){
 #' @importFrom ggpubr ggbarplot ggdensity rremove rotate
 #'
 #' @return Waterfall plot with n genes from sig_hl highlighted, ks p value
+#' @export
 plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, rev = F, toplabel = "Top SCN",
                               label = F, ylab = "DESeq Signed log p-values",
                               wf_pos = "Post-Therapy", wf_neg = "Pre-Therapy",
