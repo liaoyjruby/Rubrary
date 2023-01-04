@@ -1,3 +1,6 @@
+# Rubrary 0.1.4
+* Optional KS pval for plot_waterfall_hl
+
 # Rubrary 0.1.3
 * plot_waterfall_hl label outside
 
