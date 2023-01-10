@@ -4,16 +4,27 @@
 \alias{plot_scatter}
 \title{Plot simple scatter}
 \usage{
-plot_scatter(df, xval, yval, eqlims = F)
+plot_scatter(
+  df = NA,
+  xval,
+  yval,
+  eqlims = F,
+  save = F,
+  outname = "Scatter.png"
+)
 }
 \arguments{
-\item{df}{Dataframe}
+\item{df}{Dataframe; includes both signatures}
 
-\item{xval}{Colname for x axis}
+\item{xval}{String; colname for x axis}
 
-\item{yval}{Colname for y axis}
+\item{yval}{String; colname for y axis}
 
 \item{eqlims}{Equal limits? TO BE IMPLEMENTED}
+
+\item{save}{Logical; save as .png}
+
+\item{outname}{Output file name}
 }
 \value{
 Simple scatter plot

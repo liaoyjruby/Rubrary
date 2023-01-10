@@ -85,7 +85,7 @@ plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, r
     sort.val = "asc", # Ascending
     sort.by.groups = FALSE,
     legend.title = "Type",
-    label = label, lab.pos = "out"
+    label = label, lab.hjust = -0.1
   )
 
   # Figure out dimensions and scale for label position
