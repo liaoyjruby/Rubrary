@@ -1,3 +1,6 @@
+# Rubrary 0.1.5
+* Save option for "plot_scatter"
+
 # Rubrary 0.1.4
 * Optional KS pval for plot_waterfall_hl
 
