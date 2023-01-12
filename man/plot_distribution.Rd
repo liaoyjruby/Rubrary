@@ -8,6 +8,7 @@ plot_distribution(
   df = NA,
   value,
   swtest = FALSE,
+  hist = TRUE,
   title = "Distribution",
   xlab = "Value",
   save = FALSE,
@@ -20,6 +21,8 @@ plot_distribution(
 \item{value}{string; colname of values}
 
 \item{swtest}{logical; perform SW test for normality?}
+
+\item{hist}{logical; include histogram?}
 
 \item{title}{string; plot title}
 

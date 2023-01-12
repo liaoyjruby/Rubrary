@@ -1,3 +1,6 @@
+# Rubrary 0.2.0
+* plot_distribution: Density plot with histo
+
 # Rubrary 0.1.5
 * Save option for "plot_scatter"
 

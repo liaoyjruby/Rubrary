@@ -7,6 +7,7 @@ utils::globalVariables(c(
 #' @param df dataframe
 #' @param value string; colname of values
 #' @param swtest logical; perform SW test for normality?
+#' @param hist logical; include histogram?
 #' @param title string; plot title
 #' @param xlab string; x-axis label
 #' @param save logical; save as PNG?
@@ -25,7 +26,7 @@ utils::globalVariables(c(
 #' df_uni <- data.frame(Value = 1:100)
 #' plot_distribution(df_uni, value = "Value", title = "Uniform", swtest = TRUE)
 #'
-plot_distribution <- function(df = NA, value, swtest = FALSE,
+plot_distribution <- function(df = NA, value, swtest = FALSE, hist = TRUE,
                               title = "Distribution", xlab = "Value",
                               save = FALSE, savename = "Distribution.png") {
   if (!is.character(value)) {
@@ -48,7 +49,7 @@ plot_distribution <- function(df = NA, value, swtest = FALSE,
   }
 
   plt <- ggplot(df, aes_string(x = value)) +
-    geom_histogram(aes(y = ..density..), color = "black", fill = "white") +
+    {if(hist) geom_histogram(aes(y = ..density..), color = "black", fill = "white")} +
     geom_density(alpha = 0.2, fill = "red") +
     geom_vline(aes(xintercept = mean(df[, value])), color = "blue", linetype = "dashed") +
     geom_vline(aes(xintercept = median(df[, value])), color = "red", linetype = "dashed") +
