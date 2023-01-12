@@ -8,7 +8,9 @@ plot_scatter(
   df = NA,
   xval,
   yval,
+  label = NA,
   eqlims = F,
+  title = paste0(xval, " vs. ", yval),
   save = F,
   outname = "Scatter.png"
 )
@@ -20,7 +22,11 @@ plot_scatter(
 
 \item{yval}{String; colname for y axis}
 
+\item{label}{String; colname for point labels}
+
 \item{eqlims}{Equal limits? TO BE IMPLEMENTED}
+
+\item{title}{String; title of plot}
 
 \item{save}{Logical; save as .png}
 
@@ -31,4 +37,9 @@ Simple scatter plot
 }
 \description{
 Plot simple scatter
+}
+\examples{
+df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10])
+plot_scatter(df, xval = "A", yval = "B", label = "C", title = "Example Scatter")
+
 }
