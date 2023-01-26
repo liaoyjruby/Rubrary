@@ -10,7 +10,8 @@ run_PCA(
   summary = FALSE,
   center = TRUE,
   scale = TRUE,
-  tol = 0.05
+  tol = 0.05,
+  screeplot = TRUE
 )
 }
 \arguments{
@@ -25,9 +26,11 @@ run_PCA(
 \item{scale}{logical; indicate whether the variables should be scaled to have unit variance before the analysis takes place}
 
 \item{tol}{numerical; indicate the magnitude below which components should be omitted}
+
+\item{screeplot}{logical; output + save screeplot?}
 }
 \value{
-output text files of PCA scores, loadings, sdev
+prcomp obj; output text files of PCA scores, loadings, sdev
 }
 \description{
 Adapted from glab.library "PCA_from_file"

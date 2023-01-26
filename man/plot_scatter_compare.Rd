@@ -10,10 +10,10 @@ plot_scatter_compare(
   set1lab = "Set 1",
   set2lab = "Set 2",
   rank = F,
-  save = F,
+  guides = F,
   title = paste0(set1lab, " vs. ", set2lab),
   subtitle = "",
-  outname = paste0(dirname(set1path), "/", set1lab, "vs", set2lab, ".png")
+  outname = NA
 )
 }
 \arguments{
@@ -27,16 +27,16 @@ plot_scatter_compare(
 
 \item{rank}{Convert sign log p values to rank}
 
-\item{save}{Save as .png}
+\item{guides}{logical; Show m=1 and linear fit?}
 
 \item{title}{Plot title}
 
 \item{subtitle}{Plot subtitle}
 
-\item{outname}{File output}
+\item{outname}{string; File output full name}
 }
 \value{
-Plot
+Plot comparing DESeq signatures
 }
 \description{
 plot_scatter_compare
