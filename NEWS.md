@@ -1,3 +1,12 @@
+# Rubrary 0.3.0
+New DESeq functions + extras
+* output_DESeq
+* filter_DESeq_PC
+* plot_DESeq_volcano
+* plot_scatter_compare
+* plot_screeplot
+* plot_scatter_mtx (WIP)
+    
 # Rubrary 0.2.0
 * plot_distribution: Density plot with histo
 
