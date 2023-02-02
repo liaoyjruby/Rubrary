@@ -27,9 +27,9 @@ utils::globalVariables(c(
 #' @export
 #'
 plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score",
-                     label = T, annoname = "Sample", annotype = "Batch", annotype2 = NA, highlight = NA,
+                     label = TRUE, annoname = "Sample", annotype = "Batch", annotype2 = NA, highlight = NA,
                      title = paste0("PCA ", PCtype, " Plot - ", annotype),
-                     subtitle = NA, marginal = F, save = F, savename = "PCA_plot.png") {
+                     subtitle = NA, marginal = FALSE, savename = "PCA_plot.png") {
   if (is.character(df)) {
     dfpath <- df
     df <- read.delim(dfpath)
@@ -165,7 +165,7 @@ plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score"
       }
   }
 
-  if (save) {
+  if (!is.na(savename)) {
     ggsave(
       plot = plt,
       filename = savename,
@@ -183,7 +183,7 @@ plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score"
       size = 6, groupColour = T, groupFill = T
     )
     savename <- paste0(tools::file_path_sans_ext(savename), "_marginal.png")
-    if (save) {
+    if (!is.na(savename)) {
       ggsave(
         plot = mplt,
         filename = savename,

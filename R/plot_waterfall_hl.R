@@ -48,7 +48,7 @@ plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, r
                               label = F, ylab = "DESeq Signed log p-values",
                               wf_pos = "Post-Therapy", wf_neg = "Pre-Therapy",
                               title = "DE Genes", subtitle = NA, pval = T, density = T,
-                              save = F, savename = "DESeq_slogp_WF_hl.png") {
+                              savename = NA) {
 
   # Rank DF by rankcol values
   sig <- sig[order(sig[,rankcol], decreasing = T),]
@@ -131,7 +131,7 @@ plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, r
       rel_heights = c(0.7, 2) #increase 0.3 to 0.5 (or more) if density plot is too squished
     )
 
-    if(save){
+    if(!is.na(savename)){
       cowplot::ggsave2(
         filename = savename,
         plot = pg,
@@ -140,7 +140,7 @@ plot_waterfall_hl <- function(sig, rankcol = "sign_log_p", sig_hl, topn = 200, r
     }
   } else {
     pg <- a
-    if(save){
+    if(!is.na(savename)){
       ggplot2::ggsave(
         filename = savename,
         plot = pg,
