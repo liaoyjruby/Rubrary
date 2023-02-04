@@ -11,8 +11,7 @@ plot_scatter(
   label = NA,
   eqlims = F,
   title = paste0(xval, " vs. ", yval),
-  save = F,
-  outname = "Scatter.png"
+  outname = NA
 )
 }
 \arguments{
@@ -27,8 +26,6 @@ plot_scatter(
 \item{eqlims}{Equal limits? TO BE IMPLEMENTED}
 
 \item{title}{String; title of plot}
-
-\item{save}{Logical; save as .png}
 
 \item{outname}{Output file name}
 }

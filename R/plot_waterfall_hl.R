@@ -30,7 +30,6 @@ get_n <- function(signature, pos = T, sig = F){
 #' @param toplabel string; name of highlight group
 #' @param title string; plot title
 #' @param subtitle string; plot subtitle
-#' @param save logical; "T" to save
 #' @param savename string; name to save plot under
 #' @param label logical or char vector; if vector, should match length of nrow(sig_hl)
 #' @param ylab string; rankcol axis label

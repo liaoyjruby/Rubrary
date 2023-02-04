@@ -15,7 +15,6 @@ utils::globalVariables(c(
 #' @param annotype2 string; Colname in dfanno with info to change shape by
 #' @param title string; Plot title
 #' @param marginal logical; Show density plot along both axes
-#' @param save logical; T to save to png
 #' @param savename string; Output plot name
 #' @param highlight char vector; Specific points to shape differently/labels
 #' @param subtitle string; Subtitle for plot

@@ -19,8 +19,7 @@ plot_waterfall_hl(
   subtitle = NA,
   pval = T,
   density = T,
-  save = F,
-  savename = "DESeq_slogp_WF_hl.png"
+  savename = NA
 )
 }
 \arguments{
@@ -51,8 +50,6 @@ plot_waterfall_hl(
 \item{pval}{logical; include KS p value?}
 
 \item{density}{logcal; include density plot on right?}
-
-\item{save}{logical; "T" to save}
 
 \item{savename}{string; name to save plot under}
 }

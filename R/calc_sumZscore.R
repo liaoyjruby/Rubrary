@@ -3,9 +3,9 @@
 #' Slightly modified from Favour's function for OV project
 #'
 #' @param df numeric dataframe (e.g gene expression df); rownames should contain name of genes/features in signature
+#' @param topn numeric; genes from top of signature to consider
+#' @param botn numeric; genes from bottom of signature to consider
 #' @param sig vector/list of genes (if applicable, list should be ordered so enriched genes are at the top & de-enriched genes are at the bottom)
-#' @param top.and.bottom default = F; if gene list contain both enriched & de-enriched/depleted genes, set to T
-#' @param n number of genes used. if top.and.bottom == T, the top n & bottom n genes would be used
 #'
 #' @return scores samples using signature genes
 #' @export

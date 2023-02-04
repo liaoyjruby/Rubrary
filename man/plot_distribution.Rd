@@ -2,12 +2,12 @@
 % Please edit documentation in R/plot_distribution.R
 \name{plot_distribution}
 \alias{plot_distribution}
-\title{Plot distribution / normality check}
+\title{Plot distribution}
 \usage{
 plot_distribution(
   df = NA,
   value,
-  swtest = FALSE,
+  check_normal = FALSE,
   hist = TRUE,
   title = "Distribution",
   xlab = "Value",
@@ -20,7 +20,7 @@ plot_distribution(
 
 \item{value}{string; colname of values}
 
-\item{swtest}{logical; perform SW test for normality?}
+\item{check_normal}{logical; perform SW test for normality?}
 
 \item{hist}{logical; include histogram?}
 
@@ -36,14 +36,14 @@ plot_distribution(
 Plot of distribution with median + mean indicated
 }
 \description{
-Plot distribution / normality check
+Plot distribution
 }
 \examples{
 set.seed(13)
 df_norm <- data.frame(Value = rnorm(50))
-plot_distribution(df_norm, value = "Value", title = "Normal", swtest = TRUE)
+plot_distribution(df_norm, value = "Value", title = "Normal", check_normal = TRUE)
 
 df_uni <- data.frame(Value = 1:100)
-plot_distribution(df_uni, value = "Value", title = "Uniform", swtest = TRUE)
+plot_distribution(df_uni, value = "Value", title = "Uniform", check_normal = TRUE)
 
 }
