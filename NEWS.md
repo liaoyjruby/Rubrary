@@ -1,3 +1,11 @@
+# Rubrary 0.4.0
+230203: new functions
+- plot_waterfall
+- plot_density
+- check_normal
+- calc_sumZscore
++ various fixes
+
 # Rubrary 0.3.0
 New DESeq functions + extras
 * output_DESeq
