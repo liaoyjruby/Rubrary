@@ -13,7 +13,7 @@
 #' @examples
 #' set.seed(13)
 #'
-plot_density <- function(df, value, group, pval = T,
+plot_density <- function(df, value, group, title = NA, pval = T,
                          colors = c("gray", "firebrick3"),
                          savename = NA) {
   # KS pval
@@ -35,9 +35,9 @@ plot_density <- function(df, value, group, pval = T,
     alpha = 0.85,
     palette = colors
   ) +
-    theme_classic() + {
-      if (pval) labs(subtitle = paste0("KS enrich. p-value = ", signif(ks_pval, digits = 4)))
-    }
+    theme_classic() +
+    {if (!is.na(title)) labs(title = title)} +
+    {if (pval) labs(subtitle = paste0("KS enrich. p-value = ", signif(ks_pval, digits = 4)))}
 
   if (!is.na(savename)) {
     ggsave(
