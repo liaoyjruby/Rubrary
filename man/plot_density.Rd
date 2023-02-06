@@ -8,8 +8,14 @@ plot_density(
   df,
   value,
   group,
+  group2 = NA,
+  title = NA,
   pval = T,
+  xlab = value,
   colors = c("gray", "firebrick3"),
+  rug = F,
+  rug_label = F,
+  rug_lab_nudge = 1e-05,
   savename = NA
 )
 }
@@ -20,9 +26,21 @@ plot_density(
 
 \item{group}{string; colname of group info}
 
+\item{group2}{string; group of interest}
+
+\item{title}{string; plot title}
+
 \item{pval}{logical; get KSpval first group vs others}
 
+\item{xlab}{string; x-axis label}
+
 \item{colors}{vector; # of colors = to # of groups}
+
+\item{rug}{logical; put rug plot on x axis}
+
+\item{rug_label}{logical; label rug ticks with first df column}
+
+\item{rug_lab_nudge}{numeric; fine-tune distance of label from x-axis}
 
 \item{savename}{string; filepath to save PNG under}
 }
