@@ -12,11 +12,13 @@ plot_density(
   title = NA,
   pval = T,
   xlab = value,
-  colors = c("gray", "firebrick3"),
+  colors = c("firebrick3", "gray"),
   rug = F,
   rug_label = F,
   rug_lab_nudge = 1e-05,
-  savename = NA
+  savename = NA,
+  width = 6,
+  height = 4
 )
 }
 \arguments{
@@ -43,6 +45,10 @@ plot_density(
 \item{rug_lab_nudge}{numeric; fine-tune distance of label from x-axis}
 
 \item{savename}{string; filepath to save PNG under}
+
+\item{width}{numeric; ggsave width of plot}
+
+\item{height}{numeric; ggsave height of plot}
 }
 \value{
 Density plot by group

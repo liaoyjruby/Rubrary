@@ -16,8 +16,8 @@ plot_waterfall(
   pval = TRUE,
   highlab = NA,
   lowlab = NA,
-  title = NA,
-  colors = c("gray", "firebrick3"),
+  title = NULL,
+  colors = c("firebrick3", "gray"),
   width = 12,
   height = 6,
   savename = NA

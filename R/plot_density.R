@@ -12,6 +12,8 @@
 #' @param rug logical; put rug plot on x axis
 #' @param rug_label logical; label rug ticks with first df column
 #' @param rug_lab_nudge numeric; fine-tune distance of label from x-axis
+#' @param width numeric; ggsave width of plot
+#' @param height numeric; ggsave height of plot
 #'
 #' @return Density plot by group
 #' @importFrom ggplot2 ggplot aes scale_fill_manual geom_rug
@@ -23,7 +25,7 @@
 plot_density <- function(df, value, group, group2 = NA, title = NA, pval = T,
                          xlab = value, colors = c("firebrick3", "gray"),
                          rug = F, rug_label = F, rug_lab_nudge = 0.00001,
-                         savename = NA,width = 6, height = 4) {
+                         savename = NA, width = 6, height = 4) {
   if(is.na(group2)) {
     group2 <- unique(df[,group])[1]
   }

@@ -22,13 +22,13 @@ utils::globalVariables(c(
 #' @param savename string
 #'
 #' @return Waterfall plot
-#' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip
+#' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales
 #' @export
 #'
 plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALSE,
                            ylab = rankcol, hllab = "Top SCN", otherlab = "Others",
                            pval = TRUE, highlab = NA, lowlab = NA,
-                           title = NA, colors = c("gray", "firebrick3"),
+                           title = NULL, colors = c("firebrick3", "gray"),
                            width = 12, height = 6,
                            savename = NA) {
   # Rank DF by rankcol values
@@ -36,6 +36,7 @@ plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALS
   sig$rank <- 1:nrow(sig)
 
   sig$type <- ifelse(sig[, 1] %in% highlight, hllab, otherlab)
+  sig$type <- factor(sig$type, levels = c(hllab, otherlab))
   sig$label <- ifelse(sig[, 1] %in% highlight, sig[, 1], NA)
   sig_hl <- sig[sig[, 1] %in% highlight, ]
 
@@ -71,9 +72,11 @@ plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALS
   xpos_top <- (max(xrange) / 4) * 3
 
   sig$label_pos <- ifelse(sig[, rankcol] < 0, 0, sig[, rankcol])
+  nudge_lab <- max(sig$label_pos) / 10
+
   if (vert) {
     wf_lab <- wf +
-      geom_segment(data = sig_hl, aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ), color = colors[2]) +
+      geom_segment(data = sig_hl, aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ), color = colors[1]) +
       coord_flip() +
       {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_left, label = highlab)} +
       {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_right, label = lowlab)} +
@@ -81,7 +84,7 @@ plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALS
         data = sig,
         aes(x = rank, y = label_pos, label = label),
         force = 2, hjust = 0, direction = "y",
-        size = 4, nudge_y = 0.3, segment.size = 0.1
+        size = 4, nudge_y = nudge_lab, segment.size = 0.1
       )
   } else {
     wf_lab <- wf +
@@ -89,12 +92,12 @@ plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALS
         data = sig,
         aes(x = rank, y = label_pos, label = label),
         force = 2, angle = 90, hjust = 0, direction = "x",
-        size = 4, nudge_y = 0.3, segment.size = 0.1
+        size = 4, nudge_y = nudge_lab, segment.size = 0.1
       ) +
       geom_segment(
         data = sig_hl,
         aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ),
-        color = colors[2]
+        color = colors[1]
       ) +
       {if (!is.na(highlab)) geom_text(x = xpos_top, y = yrange[2], label = highlab)} +
       {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = yrange[2], label = lowlab)}
@@ -115,7 +118,14 @@ plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALS
   }
 
   if (density) {
-    dplt <- plot_density(sig, value = "rank", group = "type", pval = F) +
+    dplt <- plot_density(
+      df = sig,
+      value = "rank",
+      group = "type",
+      xlab = "",
+      colors = colors,
+      pval = F
+      ) +
       theme(legend.position = "none", axis.text.y = element_blank())
 
     if (vert) {
@@ -125,19 +135,23 @@ plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALS
         align = 'h', nrow = 1,
         rel_widths = c(3,1)
       )
+      width = width + 3
+
     } else {
       grid <- cowplot::plot_grid(
         wf_lab, dplt,
         align = 'v', ncol = 1,
         rel_heights = c(3,1)
       )
+      height = height + 3
+
     }
 
     cowplot::ggsave2(
-      filename = paste0(tools::file_path_sans_ext(savename), "_density_grid.png",),
+      filename = paste0(tools::file_path_sans_ext(savename), "_density_grid.png"),
       plot = grid,
-      width = 10,
-      height = 5
+      width = width,
+      height = height
     )
   }
 
