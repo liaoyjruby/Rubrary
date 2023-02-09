@@ -20,12 +20,13 @@ utils::globalVariables(c(
 #' @param width numeric
 #' @param height numeric
 #' @param savename string
+#' @param label logical
 #'
 #' @return Waterfall plot
 #' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales
 #' @export
 #'
-plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALSE,
+plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, density = FALSE,
                            ylab = rankcol, hllab = "Top SCN", otherlab = "Others",
                            pval = TRUE, highlab = NA, lowlab = NA,
                            title = NULL, colors = c("firebrick3", "gray"),
@@ -80,20 +81,20 @@ plot_waterfall <- function(sig, highlight, rankcol, vert = FALSE, density = FALS
       coord_flip() +
       {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_left, label = highlab)} +
       {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_right, label = lowlab)} +
-      ggrepel::geom_text_repel(
+      {if (label) ggrepel::geom_text_repel(
         data = sig,
         aes(x = rank, y = label_pos, label = label),
         force = 2, hjust = 0, direction = "y",
         size = 4, nudge_y = nudge_lab, segment.size = 0.1
-      )
+      )}
   } else {
     wf_lab <- wf +
-      ggrepel::geom_text_repel(
+      {if (label) ggrepel::geom_text_repel(
         data = sig,
         aes(x = rank, y = label_pos, label = label),
         force = 2, angle = 90, hjust = 0, direction = "x",
         size = 4, nudge_y = nudge_lab, segment.size = 0.1
-      ) +
+      )} +
       geom_segment(
         data = sig_hl,
         aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ),

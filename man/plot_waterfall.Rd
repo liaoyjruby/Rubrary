@@ -8,6 +8,7 @@ plot_waterfall(
   sig,
   highlight,
   rankcol,
+  label = TRUE,
   vert = FALSE,
   density = FALSE,
   ylab = rankcol,
@@ -29,6 +30,8 @@ plot_waterfall(
 \item{highlight}{vector}
 
 \item{rankcol}{string}
+
+\item{label}{logical}
 
 \item{vert}{logical}
 

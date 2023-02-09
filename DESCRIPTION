@@ -15,6 +15,7 @@ Imports:
     DESeq2,
     dplyr,
     EnhancedVolcano,
+    fgsea,
     ggExtra,
     ggplot2,
     ggpubr,
