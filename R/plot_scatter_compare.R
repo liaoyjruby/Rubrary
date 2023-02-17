@@ -1,5 +1,5 @@
 
-#' plot_scatter_compare
+#' Plot scatter, either metric or rank
 #'
 #' @param set1path Path to 1st set (x axis)
 #' @param set2path Path to 2nd set (y axis)
