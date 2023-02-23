@@ -181,8 +181,9 @@ plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score"
       y = "Density", type = "density", margins = "both",
       size = 6, groupColour = T, groupFill = T
     )
-    savename <- paste0(tools::file_path_sans_ext(savename), "_marginal.png")
     if (!is.na(savename)) {
+      savename <- paste0(tools::file_path_sans_ext(savename), "_marginal.png")
+
       ggsave(
         plot = mplt,
         filename = savename,
