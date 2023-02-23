@@ -9,7 +9,7 @@ plot_GSEA_pathway(
   rankcol,
   rankcol_name = rankcol,
   geneset,
-  geneset_name,
+  title = geneset,
   subtitle = NA,
   savename = NA
 )
@@ -23,7 +23,7 @@ plot_GSEA_pathway(
 
 \item{geneset}{vector; list of genes}
 
-\item{geneset_name}{string; name of geneset}
+\item{title}{string}
 
 \item{subtitle}{string; (name of signature?)}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_scatter_compare.R
 \name{plot_scatter_compare}
 \alias{plot_scatter_compare}
-\title{plot_scatter_compare}
+\title{Plot scatter, either metric or rank}
 \usage{
 plot_scatter_compare(
   set1path,
@@ -39,5 +39,5 @@ plot_scatter_compare(
 Plot comparing DESeq signatures
 }
 \description{
-plot_scatter_compare
+Plot scatter, either metric or rank
 }

@@ -4,14 +4,14 @@
 #' @param rankcol string; colname of values
 #' @param rankcol_name string; descriptive name of values
 #' @param geneset vector; list of genes
-#' @param geneset_name string; name of geneset
+#' @param title string
 #' @param subtitle string; (name of signature?)
 #' @param savename string; filepath to save png under
 #'
 #' @return grid of gene set enrichment waterfall above enrichment plot
 #' @export
 #'
-plot_GSEA_pathway <- function(geneset_name, sig, rankcol, rankcol_name = rankcol, geneset, subtitle = NA, savename = NA){
+plot_GSEA_pathway <- function(sig, rankcol, rankcol_name = rankcol, geneset, title = "", subtitle = NA, savename = NA){
   path_genes <- geneset
   label <- length(path_genes) < 20
   # Waterfall plot
@@ -23,7 +23,7 @@ plot_GSEA_pathway <- function(geneset_name, sig, rankcol, rankcol_name = rankcol
     otherlab = "Other",
     rankcol = rankcol,
     ylab = rankcol_name,
-    title = geneset_name
+    title = title
   ) +
     {if(!is.na(subtitle)) ggplot2::labs(subtitle = subtitle)} +
     ggplot2::theme(legend.position = "none",
