@@ -9,7 +9,7 @@ plot_GSEA_pathway(
   rankcol,
   rankcol_name = rankcol,
   geneset,
-  title = geneset,
+  title = "",
   subtitle = NA,
   savename = NA
 )

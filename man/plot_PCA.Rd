@@ -18,7 +18,7 @@ plot_PCA(
   title = paste0("PCA ", PCtype, " Plot - ", annotype),
   subtitle = NA,
   marginal = FALSE,
-  savename = "PCA_plot.png"
+  savename = NA
 )
 }
 \arguments{

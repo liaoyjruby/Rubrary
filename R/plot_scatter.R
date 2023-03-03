@@ -18,7 +18,11 @@
 #'
 plot_scatter <- function(df = NA, xval, yval, label = NA, eqlims = F,
                          title = paste0(xval, " vs. ", yval), outname = NA) {
-  df <- df[, c(xval, yval, label)]
+  if (!is.na(label)){
+    df <- df[, c(xval, yval, label)]
+  } else {
+    df <- df[, c(xval, yval)]
+  }
 
   if (eqlims) {
     xrange <- c(min(df[, xval], na.rm = T), max(df[, xval], na.rm = T))

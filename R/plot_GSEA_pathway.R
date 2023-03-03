@@ -19,14 +19,14 @@ plot_GSEA_pathway <- function(sig, rankcol, rankcol_name = rankcol, geneset, tit
     sig = sig,
     label = label,
     highlight = path_genes,
-    hllab = "Highlight",
-    otherlab = "Other",
+    hllab = "MHC-I genes", # hllab = "Highlight",
+    otherlab = "Other genes", # otherlab = "Other",
     rankcol = rankcol,
     ylab = rankcol_name,
     title = title
   ) +
     {if(!is.na(subtitle)) ggplot2::labs(subtitle = subtitle)} +
-    ggplot2::theme(legend.position = "none",
+    ggplot2::theme(legend.position = "top", # legend.position = "none",
                    axis.title.x= ggplot2::element_blank(),
                    axis.text.x= ggplot2::element_blank(),
                    axis.ticks.x= ggplot2::element_blank())

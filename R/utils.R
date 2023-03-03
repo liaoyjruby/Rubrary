@@ -44,3 +44,20 @@ cbind.fill <- function(...) { # https://stackoverflow.com/a/7962980
   transpoted_dataframe <- lapply(transpoted, as.data.frame)
   return (data.frame(t(plyr::rbind.fill(transpoted_dataframe))))
 }
+
+
+#' Like head but just the corner
+#'
+#' @param df dataframe
+#' @param n integer; number of rows = columns to display
+#'
+#' @return Top left n x n submatrix of df
+#' @export
+#'
+#' @examples
+#' corner(diag(15))
+corner <- function(df, n = 10){
+  nr <- ifelse(n > nrow(df), nrow(df), n)
+  nc <- ifelse(n > ncol(df), ncol(df), n)
+  return(df[1:nr, 1:nc])
+}
