@@ -53,7 +53,7 @@ check_normal <- function(values){
 #' df_uni <- data.frame(Value = 1:100)
 #' plot_distribution(df_uni, value = "Value", title = "Uniform", check_normal = TRUE)
 #'
-plot_distribution <- function(df = NA, value, check_normal = FALSE, hist = TRUE,
+plot_distribution <- function(df = NA, value, check_normal = FALSE, hist = FALSE,
                               title = "Distribution", xlab = "Value",
                               save = FALSE, savename = "Distribution.png") {
   if (!is.character(value)) {
@@ -64,14 +64,17 @@ plot_distribution <- function(df = NA, value, check_normal = FALSE, hist = TRUE,
 
   if (check_normal) {check_normal(df[,value])}
 
+  mea <- mean(as.numeric(df[, value]), na.rm = T)
+  med <- median(as.numeric(df[, value]), na.rm = T)
+
   plt <- ggplot(df, aes_string(x = value)) +
     {if(hist) geom_histogram(aes(y = ..density..), color = "black", fill = "white")} +
     geom_density(alpha = 0.2, fill = "red") +
-    geom_vline(aes(xintercept = mean(df[, value])), color = "blue", linetype = "dashed") +
-    geom_vline(aes(xintercept = median(df[, value])), color = "red", linetype = "dashed") +
+    geom_vline(aes(xintercept = mea), color = "blue", linetype = "dashed") +
+    geom_vline(aes(xintercept = med), color = "red", linetype = "dashed") +
     labs(
       title = title,
-      subtitle = paste0("Median: ", round(median(df[, value]), 2), "; Mean: ", round(mean(df[, value]), 2)),
+      subtitle = paste0("Median: ", round(med, 2), "; Mean: ", round(mea, 2)),
       x = xlab,
       y = "Density"
     ) +
