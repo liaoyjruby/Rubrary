@@ -11,6 +11,9 @@ run_RRHO(sig1, sig2)
 
 \item{sig2}{string/dataframe;}
 }
+\value{
+RRHO results
+}
 \description{
 Inference on the amount of agreement in two sorted lists using the Rank-Rank Hypergeometric Overlap test.
 Outputs RRHO results, hypermatrix heatmap, rank rank scatter, metric scatter

@@ -6,9 +6,8 @@
 #' @param sig1 string/dataframe;
 #' @param sig2 string/dataframe;
 #'
-#' @return
+#' @return RRHO results
 #' @export
-#'
-#' @examples
+
 run_RRHO <- function(sig1, sig2){
 }

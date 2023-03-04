@@ -8,7 +8,7 @@ plot_distribution(
   df = NA,
   value,
   check_normal = FALSE,
-  hist = TRUE,
+  hist = FALSE,
   title = "Distribution",
   xlab = "Value",
   save = FALSE,
