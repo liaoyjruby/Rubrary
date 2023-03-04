@@ -1,3 +1,10 @@
+# Rubrary 0.5.0
+230303: New scRNA hypergeometric p-value and plot function
+* genecoexp_scatter_hyper
+* phyper_df
+* pltAB
+* run_RRHO (WIP)
+
 # Rubrary 0.4.0
 230203: new functions
 - plot_waterfall
