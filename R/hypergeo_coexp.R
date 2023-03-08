@@ -101,7 +101,7 @@ pltAB <- function(geneB, geneA, hyp_df, sobj, group) {
 #' @export
 #'
 genecoexp_scatter_hyper <- function(seuobj, df_dense = NULL, genesA, genesB, group = NULL,
-                                    savepath){
+                                    savepath, ncols = NA){
   if(is.null(df_dense)){
     df_dense <- as.data.frame(as.matrix(seuobj@assays$RNA@data))
     df_dense <- as.data.frame(t(df_dense[unique(c(genesA, genesB)),]))
@@ -134,16 +134,18 @@ genecoexp_scatter_hyper <- function(seuobj, df_dense = NULL, genesA, genesB, gro
 
     plts_A <- plts_A[!is.na(plts_A)]
 
+    ncols <- ifelse(is.na(ncols), ifelse(length(plts_A) < 3, length(plts_A), 3), ncols)
+
     grid_A <- patchwork::wrap_plots(
       plts_A,
-      ncol = ifelse(length(plts_A) < 3, length(plts_A), 3)
+      ncol = ncols
     ) + patchwork::plot_layout(guides = "collect") & ggplot2::theme(legend.position = "right")
 
     ggplot2::ggsave(
       filename = paste0(savepath, "_", geneA, ".png"),
       plot = grid_A,
-      width = ifelse(length(plts_A) < 3, length(plts_A), 3) * 4,
-      height = ceiling(length(plts_A)/3) * 4
+      width = ncols * 4,
+      height = ceiling(length(plts_A)/ncols) * 4
     )
   }
 

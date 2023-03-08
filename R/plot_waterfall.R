@@ -23,14 +23,14 @@ utils::globalVariables(c(
 #' @param label logical
 #'
 #' @return Waterfall plot
-#' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales
+#' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales element_text
 #' @export
 #'
 plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, density = FALSE,
                            ylab = rankcol, hllab = "Top SCN", otherlab = "Others",
                            pval = TRUE, highlab = NA, lowlab = NA,
                            title = NULL, colors = c("firebrick3", "gray"),
-                           width = 12, height = 6,
+                           width = 10, height = 5,
                            savename = NA) {
   # Rank DF by rankcol values
   sig <- sig[order(sig[, rankcol], decreasing = F), ]
@@ -65,16 +65,17 @@ plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, 
   layer <- layer_scales(wf)
   yrange <- layer$y$range$range # rankcol range
   ypos <- (yrange[which.max(abs(yrange))] / 2)
-  ypos_left <- (min(yrange) / 4) * 3
+  ypos_left <- (min(yrange) / 2) # 4) * 3
   ypos_right <- (max(yrange) / 4) * 3
   xrange <- layer$x$range$range # number of ranked items
-  xpos_bot <- max(xrange) / 4
+  xpos_bot <- max(xrange) / 5
   xpos_mid <- max(xrange) / 2
-  xpos_top <- (max(xrange) / 4) * 3
+  xpos_top <- (max(xrange) / 5) * 4
 
   sig$label_pos <- ifelse(sig[, rankcol] < 0, 0, sig[, rankcol])
   nudge_lab <- max(sig$label_pos) / 10
 
+  # Place high/low text annotations
   if (vert) {
     wf_lab <- wf +
       geom_segment(data = sig_hl, aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ), color = colors[1]) +
@@ -100,14 +101,15 @@ plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, 
         aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ),
         color = colors[1]
       ) +
-      {if (!is.na(highlab)) geom_text(x = xpos_top, y = yrange[2], label = highlab)} +
-      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = yrange[2], label = lowlab)}
+      {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_right, label = highlab, size=6)} +
+      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_left, label = lowlab, size=6)}
   }
 
   # Add pvalue, remove legend title
   wf_lab <- wf_lab +
-    {if (pval) labs(subtitle = paste0("KS enrich. p-value = ", signif(ks_pval, digits = 4)))} +
-    theme(legend.title = element_blank())
+    {if (pval) labs(subtitle = paste0("p-val<sub>enrichment</sub> = ", signif(ks_pval, digits = 4)))} + # "KS enrich. p-value = "
+    theme(legend.title = element_blank(),
+          plot.subtitle = ggtext::element_markdown(size = 15))
 
   # Save
   if (!is.na(savename)) {
