@@ -1,3 +1,9 @@
+# Rubrary 0.6.0
+230323: new GSEA and Seurat DimPlot functions & improvements
+* plot_GSEA_pathway
+* plot_dim_set
+* hypergeo_coexp
+
 # Rubrary 0.5.0
 230303: New scRNA hypergeometric p-value and plot function
 * genecoexp_scatter_hyper
