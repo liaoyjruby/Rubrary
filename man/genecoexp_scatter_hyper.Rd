@@ -10,7 +10,8 @@ genecoexp_scatter_hyper(
   genesA,
   genesB,
   group = NULL,
-  savepath
+  savepath,
+  ncols = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ genecoexp_scatter_hyper(
 \item{group}{string; metadata value to group by}
 
 \item{savepath}{string; path to choose from with title sans extension}
+
+\item{ncols}{integer; number of columns in grid}
 }
 \value{
 dataframe of hypergeometric test p-values

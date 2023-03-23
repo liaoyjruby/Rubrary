@@ -93,6 +93,7 @@ pltAB <- function(geneB, geneA, hyp_df, sobj, group) {
 #' @param genesB char vector; list of genes
 #' @param group string; metadata value to group by
 #' @param savepath string; path to choose from with title sans extension
+#' @param ncols integer; number of columns in grid
 #'
 #' @importFrom stats cor phyper
 #' @importFrom utils write.csv
@@ -101,7 +102,7 @@ pltAB <- function(geneB, geneA, hyp_df, sobj, group) {
 #' @export
 #'
 genecoexp_scatter_hyper <- function(seuobj, df_dense = NULL, genesA, genesB, group = NULL,
-                                    savepath, ncols = NA){
+                                    savepath, ncols = NULL){
   if(is.null(df_dense)){
     df_dense <- as.data.frame(as.matrix(seuobj@assays$RNA@data))
     df_dense <- as.data.frame(t(df_dense[unique(c(genesA, genesB)),]))
@@ -134,7 +135,7 @@ genecoexp_scatter_hyper <- function(seuobj, df_dense = NULL, genesA, genesB, gro
 
     plts_A <- plts_A[!is.na(plts_A)]
 
-    ncols <- ifelse(is.na(ncols), ifelse(length(plts_A) < 3, length(plts_A), 3), ncols)
+    ncols <- ifelse(is.null(ncols), ifelse(length(plts_A) < 3, length(plts_A), 3), ncols)
 
     grid_A <- patchwork::wrap_plots(
       plts_A,

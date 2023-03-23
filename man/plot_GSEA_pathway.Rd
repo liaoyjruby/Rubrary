@@ -6,9 +6,12 @@
 \usage{
 plot_GSEA_pathway(
   sig,
+  geneset,
   rankcol,
   rankcol_name = rankcol,
-  geneset,
+  highlab = NA,
+  lowlab = NA,
+  hllab = "Highlight",
   title = "",
   subtitle = NA,
   savename = NA
@@ -17,13 +20,19 @@ plot_GSEA_pathway(
 \arguments{
 \item{sig}{dataframe; "gene" + rankcol columns}
 
+\item{geneset}{vector; list of genes}
+
 \item{rankcol}{string; colname of values}
 
 \item{rankcol_name}{string; descriptive name of values}
 
-\item{geneset}{vector; list of genes}
+\item{highlab}{string; description of high values}
 
-\item{title}{string}
+\item{lowlab}{string; description of low values}
+
+\item{hllab}{string; description of highlighted values}
+
+\item{title}{string; title of plot}
 
 \item{subtitle}{string; (name of signature?)}
 
