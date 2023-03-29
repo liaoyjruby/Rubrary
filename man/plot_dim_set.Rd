@@ -10,6 +10,7 @@ plot_dim_set(
   set,
   ncol = 3,
   guides = NULL,
+  redtitle = FALSE,
   savename = NULL,
   width = NULL,
   height = NULL
@@ -20,11 +21,13 @@ plot_dim_set(
 
 \item{reduction}{c("pca", "tsne", "umap); must be already run in sobj}
 
-\item{set}{dataframe; col1 metadata name, col2 subplot description, col3 (opt) logical T/F for label}
+\item{set}{dataframe or vector; col1 metadata name, col2 (opt) subplot description, col3 (opt) logical T/F for label}
 
 \item{ncol}{number of columns in grid}
 
 \item{guides}{string; specify how guides should be treated in layout (?patchwork::wrap_plots)}
+
+\item{redtitle}{logical; \code{TRUE} to prepend reduction method in subplot title}
 
 \item{savename}{string; filepath to save figure under}
 
