@@ -1,3 +1,6 @@
+# Rubrary 0.7.0
+230329 function improvements
+
 # Rubrary 0.6.0
 230323: new GSEA and Seurat DimPlot functions & improvements
 * plot_GSEA_pathway
