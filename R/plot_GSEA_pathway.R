@@ -1,5 +1,7 @@
 #' Plot GSEA pathway plots (waterfall + enrichment)
 #'
+#' @import ggplot2
+#'
 #' @param sig dataframe; "gene" + rankcol columns
 #' @param rankcol string; colname of values
 #' @param rankcol_name string; descriptive name of values
@@ -16,7 +18,7 @@
 #'
 plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
                               highlab = NA, lowlab = NA, hllab = "Highlight",
-                              title = "", subtitle = NA, savename = NA){
+                              title = "", subtitle = NA, savename = NULL){
   path_genes <- geneset
   label <- length(path_genes) < 20
   # Waterfall plot
@@ -54,7 +56,7 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
     rel_heights = c(2,1)
   )
 
-  if(!is.na(savename)){
+  if(!is.null(savename)){
     cowplot::ggsave2(
       filename = savename,
       plot = grid,

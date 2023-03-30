@@ -20,11 +20,10 @@ run_RRHO(
   savename = NULL,
   webtool = TRUE,
   BY = FALSE,
-  plot_method = c("ggplot", "lattice"),
+  hm_method = c("ggplot", "lattice"),
   palette = "Spectral",
-  waterfall = T,
-  metricsct = T,
-  ranksct = T
+  waterfall = TRUE,
+  scatter = TRUE
 )
 }
 \arguments{
@@ -58,15 +57,13 @@ run_RRHO(
 
 \item{BY}{logical; T for Benjamini-Yekutieli FDR corrected pvalues}
 
-\item{plot_method}{string; make heatmap with ggplot geom_raster or lattice levelplot}
+\item{hm_method}{string; make heatmap with ggplot geom_raster or lattice levelplot}
 
 \item{palette}{string; RColorBrewer continuous palette name}
 
 \item{waterfall}{logical; T to include waterfall subplots (plot_method = "ggplot" only)}
 
-\item{metricsct}{logical; T to output metric scatterplot}
-
-\item{ranksct}{logical; T to output rank scatterplot}
+\item{scatter}{logical; T to output metric & rank scatterplot}
 }
 \value{
 RRHO results

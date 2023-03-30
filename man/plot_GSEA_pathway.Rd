@@ -14,7 +14,7 @@ plot_GSEA_pathway(
   hllab = "Highlight",
   title = "",
   subtitle = NA,
-  savename = NA
+  savename = NULL
 )
 }
 \arguments{

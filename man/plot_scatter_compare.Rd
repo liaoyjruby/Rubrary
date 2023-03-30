@@ -13,7 +13,7 @@ plot_scatter_compare(
   guides = F,
   title = paste0(set1lab, " vs. ", set2lab),
   subtitle = "",
-  outname = NA
+  savename = NULL
 )
 }
 \arguments{
@@ -33,11 +33,11 @@ plot_scatter_compare(
 
 \item{subtitle}{Plot subtitle}
 
-\item{outname}{string; File output full name}
+\item{savename}{string; File output full name}
 }
 \value{
 Plot comparing DESeq signatures
 }
 \description{
-Plot scatter, either metric or rank
+Rubrary::plot_scatter is written to be a bit more general.
 }

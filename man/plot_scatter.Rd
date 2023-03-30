@@ -5,32 +5,47 @@
 \title{Plot simple scatter}
 \usage{
 plot_scatter(
-  df = NA,
+  df = NULL,
   xval,
   yval,
-  label = NA,
-  eqlims = F,
+  label = NULL,
+  rank = FALSE,
+  xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
+  ylabel = ifelse(methods::is(yval, "character"), xval, "Y"),
+  cormethod = c("pearson", "spearman"),
+  guides = TRUE,
+  reverse = FALSE,
   title = paste0(xval, " vs. ", yval),
-  outname = NA
+  savename = NULL
 )
 }
 \arguments{
-\item{df}{Dataframe; includes both signatures}
+\item{df}{dataframe; includes both signatures}
 
-\item{xval}{String; colname for x axis}
+\item{xval}{string/numeric vector; colname for x axis}
 
-\item{yval}{String; colname for y axis}
+\item{yval}{string/numeric vector; colname for y axis}
 
-\item{label}{String; colname for point labels}
+\item{label}{string; colname for point labels}
 
-\item{eqlims}{Equal limits? TO BE IMPLEMENTED}
+\item{rank}{logical; change metric to rank}
 
-\item{title}{String; title of plot}
+\item{xlabel}{string; xval description}
 
-\item{outname}{Output file name}
+\item{ylabel}{string; yval description}
+
+\item{cormethod}{string; correlation method for stats::cor()}
+
+\item{guides}{logical; T to include fitted line}
+
+\item{reverse}{logical; T to reverse both axes}
+
+\item{title}{string; plot title}
+
+\item{savename}{string; filepath to save figure under}
 }
 \value{
-Simple scatter plot
+Simple scatter plot as ggplot2
 }
 \description{
 Plot simple scatter

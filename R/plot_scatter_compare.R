@@ -1,6 +1,10 @@
 
 #' Plot scatter, either metric or rank
 #'
+#' Rubrary::plot_scatter is written to be a bit more general.
+#'
+#' @import ggplot2
+#'
 #' @param set1path Path to 1st set (x axis)
 #' @param set2path Path to 2nd set (y axis)
 #' @param set1lab Axis label for 1st set (x)
@@ -8,16 +12,15 @@
 #' @param title Plot title
 #' @param subtitle Plot subtitle
 #' @param rank Convert sign log p values to rank
-#' @param outname string; File output full name
+#' @param savename string; File output full name
 #' @param guides logical; Show m=1 and linear fit?
 #'
 #' @return Plot comparing DESeq signatures
-#' @importFrom ggplot2 ggplot aes aes_string geom_point geom_abline geom_smooth labs theme_classic ggsave
 #' @export
 #'
 plot_scatter_compare <- function(set1path, set2path, set1lab = "Set 1", set2lab = "Set 2", rank = F, guides = F,
                                  title = paste0(set1lab, " vs. ", set2lab), subtitle = "",
-                                 outname = NA) {
+                                 savename = NULL) {
 
   sig1 <- utils::read.delim(set1path, header = T)
   sig2 <- utils::read.delim(set2path, header = T)
@@ -40,13 +43,7 @@ plot_scatter_compare <- function(set1path, set2path, set1lab = "Set 1", set2lab 
     geom_point(alpha = 0.2, size = 0.5) +
     {if (!rank) geom_abline(linetype="dashed", aes(intercept=0, slope=1), size = 1)} +
     {if (!rank) geom_smooth(method = "lm", se=FALSE, color = 'red')} +
-    ggpubr::stat_cor(
-      method = cormethod,
-      # label.x = limits[1] + (limits[2] * 0.05),
-      # label.y = limits[2]
-    ) +
-    # stat_regline_equation(label.x = -40, label.y = 28) +
-    # coord_fixed(xlim = limits, ylim = limits) +
+    ggpubr::stat_cor(method = cormethod) +
     theme_classic() +
     labs(
       title = title, # include comp % on axis
@@ -55,14 +52,14 @@ plot_scatter_compare <- function(set1path, set2path, set1lab = "Set 1", set2lab 
       y = set2lab
     )
 
-  if (!is.na(outname)) {
+  if (!is.null(savename)) {
     ggsave(
-      filename = outname,
+      filename = savename,
       plot = plt,
       height = 8,
       width = 8
     )
   }
 
-  plt
+  return(plt)
 }

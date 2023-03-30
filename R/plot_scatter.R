@@ -1,50 +1,97 @@
 #' Plot simple scatter
 #'
-#' @param df Dataframe; includes both signatures
-#' @param xval String; colname for x axis
-#' @param yval String; colname for y axis
-#' @param label String; colname for point labels
-#' @param eqlims Equal limits? TO BE IMPLEMENTED
-#' @param outname Output file name
-#' @param title String; title of plot
+#' @import ggplot2
 #'
-#' @return Simple scatter plot
-#' @importFrom ggplot2 ggplot aes_string geom_point geom_smooth theme_classic labs
+#' @param df dataframe; includes both signatures
+#' @param xval string/numeric vector; colname for x axis
+#' @param yval string/numeric vector; colname for y axis
+#' @param label string; colname for point labels
+#' @param savename string; filepath to save figure under
+#' @param title string; plot title
+#' @param rank logical; change metric to rank
+#' @param xlabel string; xval description
+#' @param ylabel string; yval description
+#' @param cormethod string; correlation method for stats::cor()
+#' @param guides logical; T to include fitted line
+#' @param reverse logical; T to reverse both axes
+#'
+#' @return Simple scatter plot as ggplot2
 #' @export
 #'
 #' @examples
 #' df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10])
 #' plot_scatter(df, xval = "A", yval = "B", label = "C", title = "Example Scatter")
 #'
-plot_scatter <- function(df = NA, xval, yval, label = NA, eqlims = F,
-                         title = paste0(xval, " vs. ", yval), outname = NA) {
-  if (!is.na(label)){
-    df <- df[, c(xval, yval, label)]
+plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
+                         xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
+                         ylabel = ifelse(methods::is(yval, "character"), xval, "Y"),
+                         cormethod = c("pearson", "spearman"), guides = TRUE,
+                         reverse = FALSE, title = paste0(xval, " vs. ", yval),
+                         savename = NULL) {
+  cormethod <- match.arg(cormethod)
+
+  if(is.null(df)){
+    if (!is.null(label)){
+      df <- data.frame(xval = xval, yval = yval, label = label)
+    } else {
+      df <- data.frame(xval = xval, yval = yval)
+    }
+    xval <- "xval"
+    yval <- "yval"
+    label <- "label"
   } else {
-    df <- df[, c(xval, yval)]
+    if (!is.null(label)){
+      df <- df[, c(xval, yval, label)]
+    } else {
+      df <- df[, c(xval, yval)]
+    }
   }
 
-  if (eqlims) {
-    xrange <- c(min(df[, xval], na.rm = T), max(df[, xval], na.rm = T))
-    yrange <- c(min(df[, yval], na.rm = T), max(df[, yval], na.rm = T))
-    limits <- c(min(xrange, yrange) * 1.1, max(xrange, yrange) * 1.1)
+  if (rank) {
+    df <- df[order(df[,xval], decreasing = T),]
+    df[,xval] <- 1:nrow(df)
+    df <- df[order(df[,yval], decreasing = T), ]
+    df[,yval] <- 1:nrow(df)
+    cormethod <- "spearman"
+    # corcoef <- "rho"
+    corcoef <- "\U03C1"
+    guides <- FALSE
+    xlabel <- paste0(xlabel, " Rank")
+    ylabel <- paste0(ylabel, " Rank")
+  } else {
+    corcoef <- "R"
   }
 
-  plt <- ggplot(df, aes_string(x = xval, y = yval, label = label)) +
-    geom_smooth(method = "lm", se = FALSE, color = "red") +
-    geom_point() +
-    ggpubr::stat_cor(method = "pearson", label.x.npc = 0.2) +
+  # if (eqlims) {
+  #   xrange <- c(min(df[, xval], na.rm = T), max(df[, xval], na.rm = T))
+  #   yrange <- c(min(df[, yval], na.rm = T), max(df[, yval], na.rm = T))
+  #   limits <- c(min(xrange, yrange) * 1.1, max(xrange, yrange) * 1.1)
+  # }
+
+  cr <- signif(cor(
+    x = df[, xval],
+    y = df[, yval],
+    method = cormethod
+  ), 2)
+
+  plt <- ggplot(df, aes(x = .data[[xval]], y = .data[[yval]])) +
+    {if(guides) geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")} +
+    geom_point(alpha = 0.2, size = 0.5) +
+    # ggpubr::stat_cor(method = cormethod, cor.coef.name = corcoef) +
+    xlab(xlabel) +
+    ylab(ylabel) +
     labs(
       title = title,
+      subtitle = paste0(corcoef, " = ", cr, "; ", tools::toTitleCase(cormethod), " correlation")
     ) +
     theme_classic() +
-    {
-      if (!is.na(label)) ggrepel::geom_text_repel(max.overlaps = Inf)
-    }
+    {if(reverse) scale_x_reverse()} +
+    {if(reverse) scale_y_reverse()} +
+    {if(!is.null(label)) ggrepel::geom_text_repel(aes(label = .data[[label]]), max.overlaps = Inf)}
 
-  if (!is.na(outname)) {
+  if (!is.null(savename)) {
     ggplot2::ggsave(
-      filename = outname,
+      filename = savename,
       plot = plt,
       height = 8,
       width = 8
