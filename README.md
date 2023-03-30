@@ -43,4 +43,6 @@ devtools::install_github("liaoyjruby/Rubrary")
 
 ### Differential Gene / Pathway Analysis
 
+- `run_RRHO`
+
 ### Survival Analysis

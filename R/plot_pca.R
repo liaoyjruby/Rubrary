@@ -29,7 +29,7 @@ plot_PCA <- function(df, dfanno = NA, PCx = "PC1", PCy = "PC2", PCtype = "Score"
                      label = TRUE, annoname = "Sample", annotype = "Batch", annotype2 = NA, highlight = NA,
                      title = paste0("PCA ", PCtype, " Plot - ", annotype),
                      subtitle = NA, marginal = FALSE, savename = NA) {
-  if (is.character(df)) {
+  if (is.character(df)) { # Read df from path
     dfpath <- df
     df <- read.delim(dfpath)
     sdevpath <- gsub("_[^_]+$", "_sdev.txt", dfpath)

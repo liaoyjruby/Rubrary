@@ -9,9 +9,10 @@ plot_comp_barplot(
   breaks,
   group,
   scale_split = TRUE,
-  title = waiver(),
+  title = ggplot2::waiver(),
   xlabel = breaks,
   colors = NULL,
+  ncol_legend = NULL,
   savename = NULL,
   width = 7,
   height = 7
@@ -32,6 +33,8 @@ plot_comp_barplot(
 
 \item{colors}{char vector; list of colors (n = # of unique groups)}
 
+\item{ncol_legend}{integer; # of legend columns}
+
 \item{savename}{string; filepath to save plot under}
 
 \item{width}{numeric; saved plot width}
@@ -39,7 +42,7 @@ plot_comp_barplot(
 \item{height}{numeric; saved plot height}
 }
 \value{
-Stacked barplot filled by group
+Stacked barplot, filled by group composition
 }
 \description{
 Plot stacked barplot filled by group

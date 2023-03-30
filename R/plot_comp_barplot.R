@@ -9,16 +9,17 @@
 #' @param title string; plot title
 #' @param xlabel string; x-axis (breaks) label
 #' @param colors char vector; list of colors (n = # of unique groups)
+#' @param ncol_legend integer; # of legend columns
 #' @param savename string; filepath to save plot under
 #' @param width numeric; saved plot width
 #' @param height numeric; saved plot height
 #'
-#' @return Stacked barplot filled by group
+#' @return Stacked barplot, filled by group composition
 #' @export
 #'
 plot_comp_barplot <- function(sobj, breaks, group, scale_split = TRUE,
-                              title = waiver(), xlabel = breaks, colors = NULL,
-                              savename = NULL, width = 7, height = 7) {
+                              title = ggplot2::waiver(), xlabel = breaks, colors = NULL,
+                              ncol_legend = NULL, savename = NULL, width = 7, height = 7) {
   df <- sobj@meta.data[,c(breaks, group)]
 
   if(is.null(colors)){
@@ -38,7 +39,7 @@ plot_comp_barplot <- function(sobj, breaks, group, scale_split = TRUE,
       xlab(xlabel) +
       scale_fill_manual(values=cols) +
       theme_classic() +
-      # guides(fill = guide_legend(ncol=3)) +
+      guides(fill = guide_legend(ncol=ncol_legend)) +
       theme(
         legend.position = "bottom",
         legend.title = element_blank()
@@ -49,9 +50,8 @@ plot_comp_barplot <- function(sobj, breaks, group, scale_split = TRUE,
       geom_bar(position = "stack", stat="count", fill = "black") +
       labs(title = title) +
       ylab("# of cells") +
-      # xlab(breaks) +
       theme_classic() +
-      # guides(fill = guide_legend(ncol=3)) +
+      guides(fill = guide_legend(ncol=ncol_legend)) +
       theme(
         legend.position = "bottom",
         axis.text.x = element_blank(),
@@ -65,7 +65,7 @@ plot_comp_barplot <- function(sobj, breaks, group, scale_split = TRUE,
       xlab(xlabel) +
       scale_fill_manual(values=cols) +
       theme_classic() +
-      # guides(fill = guide_legend(ncol=3)) +
+      guides(fill = guide_legend(ncol=ncol_legend)) +
       theme(
         legend.position = "bottom",
         legend.title = element_blank()

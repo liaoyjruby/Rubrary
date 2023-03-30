@@ -4,12 +4,69 @@
 \alias{run_RRHO}
 \title{Run RRHO analysis}
 \usage{
-run_RRHO(sig1, sig2)
+run_RRHO(
+  sig1,
+  sig2,
+  sig1_name,
+  sig2_name,
+  sig1_low = NA,
+  sig1_high = NA,
+  sig2_low = NA,
+  sig2_high = NA,
+  key = "gene",
+  metric1 = "sign_log_p",
+  metric2 = metric1,
+  steps = defaultStepSize(sig1, sig2),
+  savename = NULL,
+  webtool = TRUE,
+  BY = FALSE,
+  plot_method = c("ggplot", "lattice"),
+  palette = "Spectral",
+  waterfall = T,
+  metricsct = T,
+  ranksct = T
+)
 }
 \arguments{
-\item{sig1}{string/dataframe;}
+\item{sig1}{string/dataframe; path or df for sig1, with cols "key" and "metric1"}
 
-\item{sig2}{string/dataframe;}
+\item{sig2}{string/dataframe; path or df for sig2, with cols "key" and "metric2"}
+
+\item{sig1_name}{string; description of sig1}
+
+\item{sig2_name}{string; description of sig2}
+
+\item{sig1_low}{string; description of low sig1 values}
+
+\item{sig1_high}{string; description of high sig1 values}
+
+\item{sig2_low}{string; description of low sig2 values}
+
+\item{sig2_high}{string; description of high sig2 values}
+
+\item{key}{string; colname of corresponding values btwn both sigs}
+
+\item{metric1}{string; colname of sig1 metric to rank by}
+
+\item{metric2}{string; colname of sig2 metric to rank by}
+
+\item{steps}{integer; RRHO step size}
+
+\item{savename}{string; filepath to save results under (no ext.)}
+
+\item{webtool}{logical; T to output text formatted for Graeber RRHO webtool}
+
+\item{BY}{logical; T for Benjamini-Yekutieli FDR corrected pvalues}
+
+\item{plot_method}{string; make heatmap with ggplot geom_raster or lattice levelplot}
+
+\item{palette}{string; RColorBrewer continuous palette name}
+
+\item{waterfall}{logical; T to include waterfall subplots (plot_method = "ggplot" only)}
+
+\item{metricsct}{logical; T to output metric scatterplot}
+
+\item{ranksct}{logical; T to output rank scatterplot}
 }
 \value{
 RRHO results
