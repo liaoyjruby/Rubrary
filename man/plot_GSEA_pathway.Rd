@@ -9,6 +9,7 @@ plot_GSEA_pathway(
   geneset,
   rankcol,
   rankcol_name = rankcol,
+  label = length(geneset) < 20,
   highlab = NA,
   lowlab = NA,
   hllab = "Highlight",
@@ -25,6 +26,8 @@ plot_GSEA_pathway(
 \item{rankcol}{string; colname of values}
 
 \item{rankcol_name}{string; descriptive name of values}
+
+\item{label}{logical; T to label highlighted genes}
 
 \item{highlab}{string; description of high values}
 

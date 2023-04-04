@@ -5,7 +5,7 @@
 #' @param sobj Seurat object
 #' @param breaks string; metadata colname in sobj to set breaks / columns
 #' @param group string; metadata colname in sobj to split columns by
-#' @param scale_split logical; split into stacked plots of counts + fraction
+#' @param stack logical; split into stacked plots of counts + fraction
 #' @param title string; plot title
 #' @param xlabel string; x-axis (breaks) label
 #' @param colors char vector; list of colors (n = # of unique groups)
@@ -17,7 +17,7 @@
 #' @return Stacked barplot, filled by group composition
 #' @export
 #'
-plot_comp_barplot <- function(sobj, breaks, group, scale_split = TRUE,
+plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE,
                               title = ggplot2::waiver(), xlabel = breaks, colors = NULL,
                               ncol_legend = NULL, savename = NULL, width = 7, height = 7) {
   df <- sobj@meta.data[,c(breaks, group)]
@@ -30,7 +30,7 @@ plot_comp_barplot <- function(sobj, breaks, group, scale_split = TRUE,
     cols = colors
   }
 
-  if (!scale_split){
+  if (!stack){
     # Unscaled
     plt <- ggplot(df, aes(x = .data[[breaks]], fill = .data[[group]])) +
       geom_bar(stat="count") +

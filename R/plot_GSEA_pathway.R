@@ -3,9 +3,10 @@
 #' @import ggplot2
 #'
 #' @param sig dataframe; "gene" + rankcol columns
+#' @param geneset vector; list of genes
 #' @param rankcol string; colname of values
 #' @param rankcol_name string; descriptive name of values
-#' @param geneset vector; list of genes
+#' @param label logical; T to label highlighted genes
 #' @param title string; title of plot
 #' @param subtitle string; (name of signature?)
 #' @param savename string; filepath to save png under
@@ -17,10 +18,10 @@
 #' @export
 #'
 plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
+                              label = length(geneset) < 20,
                               highlab = NA, lowlab = NA, hllab = "Highlight",
                               title = "", subtitle = NA, savename = NULL){
   path_genes <- geneset
-  label <- length(path_genes) < 20
   # Waterfall plot
   plt_wf <- Rubrary::plot_waterfall(
     sig = sig,
@@ -31,7 +32,7 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
     hllab = hllab, # hllab = "Highlight",
     otherlab = "Other genes", # otherlab = "Other",
     rankcol = rankcol,
-    ylab = rankcol_name,
+    rankcol_name = rankcol_name,
     title = title
   ) +
     {if(!is.na(subtitle)) ggplot2::labs(subtitle = subtitle)} +

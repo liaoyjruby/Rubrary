@@ -160,11 +160,11 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       scale_x_reverse(expand = c(0,0)) +
       scale_y_reverse(expand = c(0,0)) +
       # x-axis / sig1 annotations
-      annotate("text", x = 0, y = nrow(hypmtx) + 6, label = sig1_high, hjust = "right") +
-      annotate("text", x = nrow(hypmtx), y = nrow(hypmtx) + 6, label = sig1_low, hjust = "left") +
+      annotate("text", x = 0, y = nrow(hypmtx) + 6, label = sig1_low, hjust = "right") +
+      annotate("text", x = nrow(hypmtx), y = nrow(hypmtx) + 6, label = sig1_high, hjust = "left") +
       # y-axis / sig2 annotations
-      annotate("text", x = nrow(hypmtx) + 6, y = 0, label = sig2_high, hjust = "right", angle = 90) +
-      annotate("text", x = nrow(hypmtx) + 6, y = nrow(hypmtx), label = sig2_low, hjust = "left", angle = 90) +
+      annotate("text", x = nrow(hypmtx) + 6, y = 0, label = sig2_low, hjust = "right", angle = 90) +
+      annotate("text", x = nrow(hypmtx) + 6, y = nrow(hypmtx), label = sig2_high, hjust = "left", angle = 90) +
       coord_cartesian(clip = "off")
 
     if(waterfall){
@@ -235,20 +235,20 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     ) +
       theme(line = element_blank(),
             axis.text = element_blank(),
-            axis.title.x = element_text(size = rel(1.25), margin = margin(t = -(0.002 * nrow(merged)))),
-            axis.title.y = element_text(size = rel(1.25), margin = margin(r = -(0.002 * nrow(merged))))) +
+            axis.title.x = element_text(size = rel(1.25), margin = margin(t = -(0.004 * nrow(merged)))),
+            axis.title.y = element_text(size = rel(1.25), margin = margin(r = -(0.004 * nrow(merged))))) +
       geom_segment(x = 0, xend = nrow(merged), y = 0, yend = 0) +
       geom_segment(y = 0, yend = nrow(merged), x = 0, xend = 0) +
       # x-axis / sig1 annotations
       annotate("text", x = 0, y = -(0.025 * nrow(merged)), label = sig1_high,
-               hjust = "left", size = rel(.75)) +
+               hjust = "left") +
       annotate("text", x = nrow(merged), y = -(0.025 * nrow(merged)), label = sig1_low,
-               hjust = "right", size = rel(.75)) +
+               hjust = "right") +
       # y-axis / sig2 annotations
       annotate("text", x = -(0.025 * nrow(merged)), y = 0, label = sig2_high,
-               hjust = "left", angle = 90, size = rel(.75)) +
+               hjust = "left", angle = 90) +
       annotate("text", x = -(0.025 * nrow(merged)), y = nrow(merged), label = sig2_low,
-               hjust = "right", angle = 90, size = rel(.75)) +
+               hjust = "right", angle = 90) +
       coord_cartesian(clip = "off")
 
     if(waterfall){
@@ -263,13 +263,13 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       ggsave(
         filename = paste0(savename,"_metricsct.png"),
         plot = metricsct,
-        width = 4, height = 3
+        width = 4, height = 4
       )
 
       ggsave(
         filename = paste0(savename,"_ranksct.png"),
         plot = ranksct,
-        width = wd, height = ht
+        width = wd, height = ht + 1
       )
     }
   }

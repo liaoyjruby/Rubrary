@@ -8,10 +8,10 @@ plot_waterfall(
   sig,
   highlight,
   rankcol,
+  rankcol_name = rankcol,
   label = TRUE,
   vert = FALSE,
   density = FALSE,
-  ylab = rankcol,
   hllab = "Top SCN",
   otherlab = "Others",
   pval = TRUE,
@@ -21,29 +21,29 @@ plot_waterfall(
   colors = c("firebrick3", "gray"),
   width = 10,
   height = 5,
-  savename = NA
+  savename = NULL
 )
 }
 \arguments{
-\item{sig}{dataframe}
+\item{sig}{dataframe; name + rankcol columns}
 
-\item{highlight}{vector}
+\item{highlight}{vector; list of names to highlight in waterfall}
 
-\item{rankcol}{string}
+\item{rankcol}{string; colname of values}
+
+\item{rankcol_name}{string; descriptive name of values}
 
 \item{label}{logical}
 
-\item{vert}{logical}
+\item{vert}{logical; T for columns to be horizontal (not optimized)}
 
-\item{density}{logical}
+\item{density}{logical; T to output aligned density plot w/ wf}
 
-\item{ylab}{string}
+\item{hllab}{string; description of highlighted values}
 
-\item{hllab}{string}
+\item{otherlab}{string; description of non-highlighted values}
 
-\item{otherlab}{string}
-
-\item{pval}{logical}
+\item{pval}{logical; T to include KS enrichment pvalue}
 
 \item{highlab}{string}
 

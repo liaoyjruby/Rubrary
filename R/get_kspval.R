@@ -11,11 +11,11 @@
 #' @return Kolgomorov-Smirnov enrichment p-value
 #' @export
 #'
-get_kspval <- function(df, value, group, group2 = NA){
+get_kspval <- function(df, value, group, group2 = NULL){
   df <- df[order(df[, value]), ]
   df$rank <- 1:nrow(df)
 
-  if(is.na(group2)) {
+  if(is.null(group2)) {
     group2 = unique(df[, group])[1]
   }
 

@@ -4,7 +4,7 @@
 \alias{get_kspval}
 \title{Calculate Kolgomorov-Smirnov enrichment p-value}
 \usage{
-get_kspval(df, value, group, group2 = NA)
+get_kspval(df, value, group, group2 = NULL)
 }
 \arguments{
 \item{df}{dataframe}

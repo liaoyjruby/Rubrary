@@ -4,15 +4,15 @@ utils::globalVariables(c(
 
 #' Plot waterfall plot (with optional density)
 #'
-#' @param sig dataframe
-#' @param highlight vector
-#' @param rankcol string
-#' @param vert logical
-#' @param density logical
-#' @param ylab string
-#' @param hllab string
-#' @param otherlab string
-#' @param pval logical
+#' @param sig dataframe; name + rankcol columns
+#' @param highlight vector; list of names to highlight in waterfall
+#' @param rankcol string; colname of values
+#' @param rankcol_name string; descriptive name of values
+#' @param vert logical; T for columns to be horizontal (not optimized)
+#' @param density logical; T to output aligned density plot w/ wf
+#' @param hllab string; description of highlighted values
+#' @param otherlab string; description of non-highlighted values
+#' @param pval logical; T to include KS enrichment pvalue
 #' @param highlab string
 #' @param lowlab string
 #' @param title string
@@ -26,12 +26,12 @@ utils::globalVariables(c(
 #' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales element_text
 #' @export
 #'
-plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, density = FALSE,
-                           ylab = rankcol, hllab = "Top SCN", otherlab = "Others",
+plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, label = TRUE,
+                           vert = FALSE, density = FALSE, hllab = "Top SCN", otherlab = "Others",
                            pval = TRUE, highlab = NA, lowlab = NA,
                            title = NULL, colors = c("firebrick3", "gray"),
                            width = 10, height = 5,
-                           savename = NA) {
+                           savename = NULL) {
   # Rank DF by rankcol values
   sig <- sig[order(sig[, rankcol], decreasing = F), ]
   sig$rank <- 1:nrow(sig)
@@ -42,10 +42,12 @@ plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, 
   sig_hl <- sig[sig[, 1] %in% highlight, ]
 
   # KS pval
-  ks_pval <- stats::ks.test(
-    sig[sig$type == hllab, "rank"],
-    sig[!sig$type == hllab, "rank"]
-  )$p.value
+  # ks_pval <- Rubrary::get_kspval(sig, rankcol, "type", hllab)
+
+  #   stats::ks.test(
+  #   sig[sig$type == hllab, "rank"],
+  #   sig[!sig$type == hllab, "rank"]
+  # )$p.value
 
   # Base barplot
   wf <- ggpubr::ggbarplot(
@@ -53,7 +55,7 @@ plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, 
     x = "rank",
     y = rankcol,
     xlab = "Rank",
-    ylab = ylab,
+    ylab = rankcol_name,
     title = title,
     palette = colors,
     fill = "type",
@@ -71,6 +73,8 @@ plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, 
   xpos_bot <- max(xrange) / 5
   xpos_mid <- max(xrange) / 2
   xpos_top <- (max(xrange) / 5) * 4
+  lab_size <- 6
+  replab_size <- 3.5
 
   sig$label_pos <- ifelse(sig[, rankcol] < 0, 0, sig[, rankcol])
   nudge_lab <- max(sig$label_pos) / 10
@@ -80,13 +84,13 @@ plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, 
     wf_lab <- wf +
       geom_segment(data = sig_hl, aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ), color = colors[1]) +
       coord_flip() +
-      {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_left, label = highlab)} +
-      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_right, label = lowlab)} +
+      {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_left, label = highlab, size = lab_size)} +
+      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_right, label = lowlab, size = lab_size)} +
       {if (label) ggrepel::geom_text_repel(
         data = sig,
         aes(x = rank, y = label_pos, label = label),
         force = 2, hjust = 0, direction = "y",
-        size = 4, nudge_y = nudge_lab, segment.size = 0.1
+        size = replab_size, nudge_y = nudge_lab, segment.size = 0.1
       )}
   } else {
     wf_lab <- wf +
@@ -94,25 +98,26 @@ plot_waterfall <- function(sig, highlight, rankcol, label = TRUE, vert = FALSE, 
         data = sig,
         aes(x = rank, y = label_pos, label = label),
         force = 2, angle = 90, hjust = 0, direction = "x",
-        size = 4, nudge_y = nudge_lab, segment.size = 0.1
+        size = replab_size, nudge_y = nudge_lab, segment.size = 0.1
       )} +
       geom_segment(
         data = sig_hl,
         aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ),
         color = colors[1]
       ) +
-      {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_right, label = highlab, size=6)} +
-      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_left, label = lowlab, size=6)}
+      {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_left, label = highlab, size=lab_size)} +
+      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_left, label = lowlab, size=lab_size)}
   }
 
   # Add pvalue, remove legend title
   wf_lab <- wf_lab +
-    {if (pval) labs(subtitle = paste0("p-val<sub>enrichment</sub> = ", signif(ks_pval, digits = 4)))} + # "KS enrich. p-value = "
+    {if (pval) labs(subtitle = paste0("p-val<sub>enrichment</sub> = ",
+                                      signif(Rubrary::get_kspval(sig, rankcol, "type", hllab), digits = 4)))} + # "KS enrich. p-value = "
     theme(legend.title = element_blank(),
           plot.subtitle = ggtext::element_markdown(size = 15))
 
   # Save
-  if (!is.na(savename)) {
+  if (!is.null(savename)) {
     ggsave(
       filename = savename,
       plot = wf_lab,
