@@ -12,12 +12,12 @@ plot_waterfall(
   label = TRUE,
   vert = FALSE,
   density = FALSE,
-  hllab = "Top SCN",
+  hllab = "Highlight",
   otherlab = "Others",
   pval = TRUE,
   highlab = NA,
   lowlab = NA,
-  legendpos = c(0.5, 0.9),
+  legendpos = "none",
   title = NULL,
   colors = c("firebrick3", "gray"),
   width = 10,
@@ -26,7 +26,7 @@ plot_waterfall(
 )
 }
 \arguments{
-\item{sig}{dataframe; name + rankcol columns}
+\item{sig}{dataframe; name (1st column) + rankcol columns}
 
 \item{highlight}{vector; list of names to highlight in waterfall}
 
@@ -34,7 +34,7 @@ plot_waterfall(
 
 \item{rankcol_name}{string; descriptive name of values}
 
-\item{label}{logical}
+\item{label}{logical; T to label highlighted values}
 
 \item{vert}{logical; T for columns to be horizontal (not optimized)}
 
@@ -46,21 +46,21 @@ plot_waterfall(
 
 \item{pval}{logical; T to include KS enrichment pvalue}
 
-\item{highlab}{string}
+\item{highlab}{string; descriptor for high rankcol values}
 
-\item{lowlab}{string}
+\item{lowlab}{string; descriptor for low rankcol values}
 
-\item{legendpos}{vector; value btwn 0-1 as legend coordinates}
+\item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)}
 
-\item{title}{string}
+\item{title}{string; plot title}
 
-\item{colors}{vector}
+\item{colors}{vector; two colors, for highlight vs. other}
 
-\item{width}{numeric}
+\item{width}{numeric; width of plot}
 
-\item{height}{numeric}
+\item{height}{numeric; height of plot}
 
-\item{savename}{string}
+\item{savename}{string; filepath to save figure under}
 }
 \value{
 Waterfall plot

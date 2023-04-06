@@ -10,11 +10,13 @@ plot_GSEA_pathway(
   rankcol,
   rankcol_name = rankcol,
   label = length(geneset) < 20,
+  legendpos = "none",
+  hightolow = FALSE,
   highlab = NA,
   lowlab = NA,
   hllab = "Highlight",
   title = "",
-  subtitle = NA,
+  subtitle = NULL,
   savename = NULL
 )
 }
@@ -28,6 +30,10 @@ plot_GSEA_pathway(
 \item{rankcol_name}{string; descriptive name of values}
 
 \item{label}{logical; T to label highlighted genes}
+
+\item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)}
+
+\item{hightolow}{logical; left = high rankcol, right = low rankcol}
 
 \item{highlab}{string; description of high values}
 

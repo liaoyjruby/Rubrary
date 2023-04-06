@@ -1,3 +1,14 @@
+
+#' Reload package by installation path
+#'
+#' @param pkg string; name of package
+#'
+#' @return Reloads pkg
+#' @export
+reload_inst <- function(pkg = "Rubrary"){
+  devtools::reload(pkgload::inst(pkg))
+}
+
 #' Left join by rownames
 #'
 #' Wrapper for dplyr::left_join to merge by rownames. Both dataframes should have matching rownames
