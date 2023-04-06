@@ -17,6 +17,7 @@ plot_waterfall(
   pval = TRUE,
   highlab = NA,
   lowlab = NA,
+  legendpos = c(0.5, 0.9),
   title = NULL,
   colors = c("firebrick3", "gray"),
   width = 10,
@@ -48,6 +49,8 @@ plot_waterfall(
 \item{highlab}{string}
 
 \item{lowlab}{string}
+
+\item{legendpos}{vector; value btwn 0-1 as legend coordinates}
 
 \item{title}{string}
 

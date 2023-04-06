@@ -4,31 +4,32 @@ utils::globalVariables(c(
 
 #' Plot waterfall plot (with optional density)
 #'
-#' @param sig dataframe; name + rankcol columns
+#' @param sig dataframe; name (1st column) + rankcol columns
 #' @param highlight vector; list of names to highlight in waterfall
 #' @param rankcol string; colname of values
 #' @param rankcol_name string; descriptive name of values
+#' @param label logical; T to label highlighted values
 #' @param vert logical; T for columns to be horizontal (not optimized)
 #' @param density logical; T to output aligned density plot w/ wf
 #' @param hllab string; description of highlighted values
 #' @param otherlab string; description of non-highlighted values
 #' @param pval logical; T to include KS enrichment pvalue
-#' @param highlab string
-#' @param lowlab string
-#' @param title string
-#' @param colors vector
-#' @param width numeric
-#' @param height numeric
-#' @param savename string
-#' @param label logical
+#' @param highlab string; descriptor for high rankcol values
+#' @param lowlab string; descriptor for low rankcol values
+#' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)
+#' @param title string; plot title
+#' @param colors vector; two colors, for highlight vs. other
+#' @param width numeric; width of plot
+#' @param height numeric; height of plot
+#' @param savename string; filepath to save figure under
 #'
 #' @return Waterfall plot
 #' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales element_text
 #' @export
 #'
 plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, label = TRUE,
-                           vert = FALSE, density = FALSE, hllab = "Top SCN", otherlab = "Others",
-                           pval = TRUE, highlab = NA, lowlab = NA,
+                           vert = FALSE, density = FALSE, hllab = "Highlight", otherlab = "Others",
+                           pval = TRUE, highlab = NA, lowlab = NA, legendpos = "none",
                            title = NULL, colors = c("firebrick3", "gray"),
                            width = 10, height = 5,
                            savename = NULL) {
@@ -40,14 +41,6 @@ plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, labe
   sig$type <- factor(sig$type, levels = c(hllab, otherlab))
   sig$label <- ifelse(sig[, 1] %in% highlight, sig[, 1], NA)
   sig_hl <- sig[sig[, 1] %in% highlight, ]
-
-  # KS pval
-  # ks_pval <- Rubrary::get_kspval(sig, rankcol, "type", hllab)
-
-  #   stats::ks.test(
-  #   sig[sig$type == hllab, "rank"],
-  #   sig[!sig$type == hllab, "rank"]
-  # )$p.value
 
   # Base barplot
   wf <- ggpubr::ggbarplot(
@@ -114,6 +107,7 @@ plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, labe
     {if (pval) labs(subtitle = paste0("p-val<sub>enrichment</sub> = ",
                                       signif(Rubrary::get_kspval(sig, rankcol, "type", hllab), digits = 4)))} + # "KS enrich. p-value = "
     theme(legend.title = element_blank(),
+          legend.position = legendpos,
           plot.subtitle = ggtext::element_markdown(size = 15))
 
   # Save
