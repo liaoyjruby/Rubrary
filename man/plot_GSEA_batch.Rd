@@ -15,7 +15,8 @@ plot_GSEA_batch(
   lowlab = "Low",
   highlab = "High",
   savedir = "./",
-  label = length(pthwys[[path_name]]) < 50
+  label = length(pthwys[[path_name]]) < 50,
+  hightolow = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ plot_GSEA_batch(
 \item{savedir}{string; directory path for saving plot}
 
 \item{label}{logical; T to label highlighted genes}
+
+\item{hightolow}{logical; T for high values on left, low on right}
 }
 \value{
 nothing; will save GSEA enrichment plots in savedir
