@@ -10,6 +10,7 @@ plot_waterfall(
   rankcol,
   rankcol_name = rankcol,
   label = TRUE,
+  hightolow = FALSE,
   vert = FALSE,
   density = FALSE,
   hllab = "Highlight",
@@ -35,6 +36,8 @@ plot_waterfall(
 \item{rankcol_name}{string; descriptive name of values}
 
 \item{label}{logical; T to label highlighted values}
+
+\item{hightolow}{logical; T for x-axis by decreasing value}
 
 \item{vert}{logical; T for columns to be horizontal (not optimized)}
 

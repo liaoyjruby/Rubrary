@@ -8,6 +8,7 @@ utils::globalVariables(c(
 #' @param highlight vector; list of names to highlight in waterfall
 #' @param rankcol string; colname of values
 #' @param rankcol_name string; descriptive name of values
+#' @param hightolow logical; T for x-axis by decreasing value
 #' @param label logical; T to label highlighted values
 #' @param vert logical; T for columns to be horizontal (not optimized)
 #' @param density logical; T to output aligned density plot w/ wf
@@ -27,14 +28,20 @@ utils::globalVariables(c(
 #' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales element_text
 #' @export
 #'
-plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, label = TRUE,
+plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, label = TRUE, hightolow = FALSE,
                            vert = FALSE, density = FALSE, hllab = "Highlight", otherlab = "Others",
                            pval = TRUE, highlab = NA, lowlab = NA, legendpos = "none",
                            title = NULL, colors = c("firebrick3", "gray"),
                            width = 10, height = 5,
                            savename = NULL) {
+  if(hightolow){
+    tmp = highlab
+    highlab = lowlab
+    lowlab = tmp
+  }
+
   # Rank DF by rankcol values
-  sig <- sig[order(sig[, rankcol], decreasing = F), ]
+  sig <- sig[order(sig[, rankcol], decreasing = hightolow), ]
   sig$rank <- 1:nrow(sig)
 
   sig$type <- ifelse(sig[, 1] %in% highlight, hllab, otherlab)

@@ -8,21 +8,20 @@
 #' @param rankcol_name string; descriptive name of values
 #' @param label logical; T to label highlighted genes
 #' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)
-#' @param title string; title of plot
-#' @param subtitle string; (name of signature?)
+#' @param title string; plot title
+#' @param subtitle string; plot subtitle; !! overwrites p-val_enrichment
 #' @param savename string; filepath to save png under
 #' @param highlab string; description of high values
 #' @param lowlab string; description of low values
 #' @param hllab string; description of highlighted values
-#' @param hightolow logical; left = high rankcol, right = low rankcol
 #'
 #' @return grid of gene set enrichment waterfall above enrichment plot
 #' @export
 #'
 plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
                               label = length(geneset) < 20, legendpos = "none",
-                              hightolow = FALSE, highlab = NA, lowlab = NA,
-                              hllab = "Highlight", title = "", subtitle = NULL, savename = NULL){
+                              highlab = NA, lowlab = NA, hllab = "Highlight",
+                              title = "", subtitle = NULL, savename = NULL){
   path_genes <- geneset
   # Waterfall plot
   plt_wf <- Rubrary::plot_waterfall(
@@ -35,8 +34,8 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
     rankcol = rankcol,
     rankcol_name = rankcol_name,
     title = title,
+    hightolow = TRUE
   ) +
-    {if(hightolow) scale_x_reverse()} +
     {if(!is.null(subtitle)) labs(subtitle = subtitle)} +
     theme(legend.position = legendpos,
                    legend.text = element_text(size = 15),
@@ -47,12 +46,11 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
   # Enrichment plot
   plt_e <- fgsea::plotEnrichment(
     pathway = geneset,
-    stats = tibble::deframe(sig[,c("gene", rankcol)]) # flips mountain plt !!
+    stats = tibble::deframe(sig[,c("gene", rankcol)])
   ) +
     ylab("Enrichment Score") +
     xlab("Rank") +
-    theme_classic() +
-    {if(!hightolow) scale_x_reverse()}
+    theme_classic()
 
   grid <- cowplot::plot_grid(
     plt_wf, plt_e,
@@ -67,7 +65,38 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol,
       width = 9, height = 6
     )
   }
-
   return(grid)
+}
 
+#' `plot_GSEA_pathway` that works nicely with `lapply`
+#'
+#' @param path_name string; name of pathway
+#' @param pthwys named list; key = geneset name, values = char vector of genes in geneset
+#' @param sig_name string; name of signature
+#' @param sig dataframe; signature
+#' @param rankcol string; colname of values to rank by
+#' @param rankcol_name string; descriptor of rankcol
+#' @param label logical; T to label highlighted genes
+#' @param hllab string; descriptor of highlighted genes
+#' @param lowlab string; label for low rankcol values
+#' @param highlab string; label for high rankcol values
+#' @param savedir string; directory path for saving plot
+#'
+#' @return nothing; will save GSEA enrichment plots in savedir
+#' @export
+plot_GSEA_batch <- function(path_name, pthwys, sig_name, sig, rankcol, rankcol_name,
+                            hllab = "Highlight", lowlab = "Low", highlab = "High",
+                            savedir = "./", label = length(pthwys[[path_name]]) < 50){
+  Rubrary::plot_GSEA_pathway(
+    sig = sig, legendpos = c(0.5, 0.8),
+    rankcol = rankcol,
+    rankcol_name = rankcol_name,
+    geneset = pthwys[[path_name]],
+    label = label,
+    title = path_name,
+    lowlab = lowlab,
+    highlab = highlab,
+    hllab = hllab,
+    savename = paste0(savedir,"/",sig_name,"_", path_name, ".png")
+  )
 }

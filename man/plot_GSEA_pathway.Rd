@@ -11,7 +11,6 @@ plot_GSEA_pathway(
   rankcol_name = rankcol,
   label = length(geneset) < 20,
   legendpos = "none",
-  hightolow = FALSE,
   highlab = NA,
   lowlab = NA,
   hllab = "Highlight",
@@ -33,17 +32,15 @@ plot_GSEA_pathway(
 
 \item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)}
 
-\item{hightolow}{logical; left = high rankcol, right = low rankcol}
-
 \item{highlab}{string; description of high values}
 
 \item{lowlab}{string; description of low values}
 
 \item{hllab}{string; description of highlighted values}
 
-\item{title}{string; title of plot}
+\item{title}{string; plot title}
 
-\item{subtitle}{string; (name of signature?)}
+\item{subtitle}{string; plot subtitle; !! overwrites p-val_enrichment}
 
 \item{savename}{string; filepath to save png under}
 }
