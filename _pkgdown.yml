@@ -4,6 +4,6 @@ template:
   bootswatch: darkly
   theme: breezedark
   bslib:
-    primary: "#911c1c"
-    secondary: "#e77575"
+    primary: '#911c1c'
+    secondary: '#e77575'
 
