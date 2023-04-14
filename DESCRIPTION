@@ -11,27 +11,18 @@ URL: https://github.com/liaoyjruby/Rubrary
 BugReports: https://github.com/liaoyjruby/Rubrary/issues
 biocViews:
 Imports: 
-    cowplot,
-    DESeq2,
     dplyr,
-    EnhancedVolcano,
-    fgsea,
-    ggExtra,
     ggplot2,
     ggpubr,
     ggrepel,
-    ggsurvfit,
     gridExtra,
+    cowplot,
     magrittr,
     methods,
     patchwork,
     plyr,
-    RColorBrewer,
     reshape2,
-    RRHO,
-    Seurat,
     stats,
-    survival,
     tibble,
     utils
 Encoding: UTF-8
@@ -43,4 +34,17 @@ Suggests:
     lattice,
     pals,
     pkgload,
-    scales
+    scales,
+    RColorBrewer,
+    RRHO,
+    survival,
+    ggsurvfit,
+    ggExtra,
+    DESeq2,
+    EnhancedVolcano,
+    fgsea,
+    Seurat,
+    knitr,
+    rmarkdown,
+    BiocManager
+VignetteBuilder: knitr

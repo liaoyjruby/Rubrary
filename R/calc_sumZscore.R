@@ -1,4 +1,4 @@
-#' Sum Z Score
+#' Generate Sum Z Score
 #'
 #' Slightly modified from Favour's function for OV project
 #'

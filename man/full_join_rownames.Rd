@@ -17,3 +17,6 @@ Full-joined dataframe by rownames with rownames
 \description{
 Wrapper for dplyr::full_join to merge by rownames.
 }
+\seealso{
+\code{\link[dplyr:mutate-joins]{dplyr::full_join()}}, \code{\link[=left_join_rownames]{left_join_rownames()}}
+}

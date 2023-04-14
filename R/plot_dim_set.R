@@ -16,6 +16,8 @@
 plot_dim_set <- function(sobj, reduction = "umap", set, ncol = 3,
                          guides = NULL, redtitle = FALSE,
                          savename = NULL, width = NULL, height = NULL){
+  Rubrary::use_pkg("Seurat")
+
   plot_dim <- function(group, name, lb){
     red <- ifelse(reduction == "tsne", "tSNE", toupper(reduction))
     if(methods::is(sobj@meta.data[,group], "numeric")){

@@ -8,23 +8,20 @@ plot_SCN_KaplanMeier(
   df,
   xlab = "Time",
   title = "Survival Analysis",
-  SCN = NA,
-  save = T,
-  filename = paste0(gsub(" ", "_", title, fixed = TRUE), ".png")
+  SCN = NULL,
+  savename = NULL
 )
 }
 \arguments{
-\item{df}{dataframe w/ columns "OS" (overall survival censor), "OS.time" (overall survival time)}
+\item{df}{dataframe; cols "OS" (overall survival censor), "OS.time" (overall survival time)}
 
-\item{xlab}{x-axis label}
+\item{xlab}{string; x-axis label}
 
 \item{title}{plot title}
 
 \item{SCN}{SCN threshold to designate SCN-like status if not already in DF}
 
-\item{save}{save plot as png}
-
-\item{filename}{filename to save as}
+\item{savename}{string; filename to save as}
 }
 \value{
 Kaplan-Meier overall survival analysis plot comparing SCN-like status

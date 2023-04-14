@@ -1,0 +1,9 @@
+url: ~
+template:
+  bootstrap: 5
+  bootswatch: darkly
+  theme: breezedark
+  bslib:
+    primary: "#911c1c"
+    secondary: "#e77575"
+
