@@ -31,7 +31,7 @@ plot_comp_barplot(
 
 \item{xlabel}{string; x-axis (breaks) label}
 
-\item{colors}{char vector; list of colors (n = # of unique groups)}
+\item{colors}{char vector; list of colors (n = # of unique groups), or "alpha"}
 
 \item{ncol_legend}{integer; # of legend columns}
 

@@ -4,21 +4,36 @@
 \alias{plot_DESeq_boxplot}
 \title{plot_DESeq_boxplot}
 \usage{
-plot_DESeq_boxplot(sig, data, anno, batch, merged = T)
+plot_DESeq_boxplot(
+  sig,
+  data,
+  anno,
+  merged = T,
+  colors = c("goldenrod2", "navyblue"),
+  savename = NULL,
+  width = 13,
+  height = 9
+)
 }
 \arguments{
-\item{sig}{Signature}
+\item{sig}{dataframe; sorted signature with genes as first column}
 
-\item{data}{Gene expression data}
+\item{data}{dataframe; gene expression data w/ "gene" column}
 
-\item{anno}{Annotation file for samples}
+\item{anno}{dataframe; sample annotation file w/ "Batch" & "Type" cols}
 
-\item{batch}{Descriptive word/phrase appended to output path}
+\item{merged}{logica; T if dataframe is made from combined datasets}
 
-\item{merged}{If dataframe is made from combined datasets}
+\item{colors}{vector; list of colors, n = number of batches}
+
+\item{savename}{string; filepath to save figures under (no ext.)}
+
+\item{width}{numeric; width of plot saved}
+
+\item{height}{numeric; height of plot saved}
 }
 \value{
-Paired boxplots comparing pre-post for top/bot 5 DESeq genes, plotting gene expression data
+Boxplots of gene expression for top/bot 5 genes in sig
 }
 \description{
 plot_DESeq_boxplot
