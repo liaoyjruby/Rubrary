@@ -43,4 +43,8 @@ Suggests:
     DESeq2,
     EnhancedVolcano,
     fgsea,
-    Seurat
+    Seurat,
+    knitr,
+    rmarkdown,
+    BiocManager
+VignetteBuilder: knitr

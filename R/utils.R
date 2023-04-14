@@ -32,6 +32,9 @@ use_pkg <- function(...){
       paste0("Required packages not found: ", paste(need, collapse = ", ")),
       immediate. = TRUE
       )
+    if (!require("BiocManager", quietly = TRUE)){
+      inst_pkg("BiocManager")
+    }
     invisible(lapply(need, inst_pkg))
   }
 }

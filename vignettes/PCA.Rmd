@@ -1,0 +1,53 @@
+---
+title: "Principal Components Analysis (PCA)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Principal Components Analysis (PCA)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Rubrary)
+if (!require("cBioPortalData", quietly = TRUE)){
+  if (!require("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+  BiocManager::install("cBioPortalData")
+}
+library(cBioPortalData)
+library(dplyr)
+```
+
+# Data
+
+Beltran, H., Prandi, D., Mosquera, J. *et al.* Divergent clonal evolution of castration-resistant neuroendocrine prostate cancer. *Nat Med* **22**, 298--305 (2016). <https://doi.org/10.1038/nm.4045>
+
+https://www.cbioportal.org/study/summary?id=nepc_wcm_2016
+
+```{r Get Beltran MultiAssayExperiment from cBioPortalData}
+beltran_file <- cBioPortalData::downloadStudy(cancer_study_id = "nepc_wcm_2016")
+beltran_dir <- cBioPortalData::untarStudy(beltran_file, tempdir())
+beltran <- cBioPortalData::loadStudy(beltran_dir)
+beltran
+```
+
+```{r Retrieve dataframes}
+beltran_anno <- data.frame(colData(beltran)) %>%
+  mutate(Type = ifelse(grepl("Neuroendocrine", CANCER_TYPE_DETAILED),
+                       "NEPC", "CRPC"))
+
+beltran_cts <- assays(beltran)[[5]]
+```
+
+```{r Run PCA, eval=FALSE}
+beltran_PCA <- Rubrary::run_PCA(
+  df = beltran_cts
+)
+```
+

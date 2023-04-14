@@ -13,5 +13,5 @@ inst_pkg(pkg)
 None
 }
 \description{
-Helper function for "use_pkg"
+Helper function for "Rubrary::use_pkg"
 }
