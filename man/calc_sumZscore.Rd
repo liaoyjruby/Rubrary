@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_sumZscore.R
 \name{calc_sumZscore}
 \alias{calc_sumZscore}
-\title{Sum Z Score}
+\title{Generate Sum Z Score}
 \usage{
 calc_sumZscore(df, sig, topn = length(sig), botn = NA)
 }

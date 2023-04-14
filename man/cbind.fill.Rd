@@ -14,4 +14,5 @@ a single data frame
 }
 \description{
 \code{cbinds} a list of dataframes filling missing rows with NA.
+Based on https://stackoverflow.com/a/7962980
 }

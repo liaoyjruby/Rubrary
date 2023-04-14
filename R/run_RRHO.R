@@ -1,4 +1,3 @@
-defaultStepSize <- utils::getFromNamespace("defaultStepSize", "RRHO")
 
 utils::globalVariables(c(
   "p1", "p2", "r1", "r2", "v1", "v2"
@@ -9,7 +8,6 @@ utils::globalVariables(c(
 #' Inference on the amount of agreement in two sorted lists using the Rank-Rank Hypergeometric Overlap test.
 #' Outputs RRHO results, hypermatrix heatmap, rank rank scatter, metric scatter
 #'
-#' @import RRHO
 #' @import ggplot2
 #' @import patchwork
 #'
@@ -40,10 +38,16 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
                      sig1_low = NA, sig1_high = NA,
                      sig2_low = NA, sig2_high = NA,
                      key = "gene", metric1 = "sign_log_p", metric2 = metric1,
-                     steps = defaultStepSize(sig1, sig2),
+                     steps = NULL,
                      savename = NULL, webtool = TRUE, BY = FALSE,
                      hm_method = c("ggplot", "lattice"), palette = "Spectral",
                      waterfall = TRUE, scatter = TRUE){
+  Rubrary::use_pkg("RRHO")
+
+  if(is.null(steps)){
+    defaultStepSize <- utils::getFromNamespace("defaultStepSize", "RRHO")
+  }
+
   hm_method <- match.arg(hm_method)
 
   # Load & clean individual sigs

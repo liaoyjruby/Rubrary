@@ -16,7 +16,7 @@ run_RRHO(
   key = "gene",
   metric1 = "sign_log_p",
   metric2 = metric1,
-  steps = defaultStepSize(sig1, sig2),
+  steps = NULL,
   savename = NULL,
   webtool = TRUE,
   BY = FALSE,
