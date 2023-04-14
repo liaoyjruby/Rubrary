@@ -7,7 +7,7 @@ Authors@R:
 Description: Miscellaneous collection of functions, mostly for Graeber Lab
     projects. FDB project, OV project, Metabolomics, etc.
 License: MIT + file LICENSE
-URL: https://github.com/liaoyjruby/Rubrary
+URL: https://liaoyjruby.github.io/Rubrary/, https://github.com/liaoyjruby/Rubrary
 BugReports: https://github.com/liaoyjruby/Rubrary/issues
 biocViews:
 Imports: 
