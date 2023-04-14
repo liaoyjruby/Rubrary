@@ -4,6 +4,8 @@
 # Rubrary
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/liaoyjruby/Rubrary/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liaoyjruby/Rubrary/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 Personal functions, mostly for Graeber Lab analysis and to test R
