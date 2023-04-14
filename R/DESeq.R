@@ -1,9 +1,3 @@
-if (.Platform$OS.type == "unix") {
-  dir.db <- "/Users/liaoyj/Dropbox"
-} else {
-  dir.db <- "C:/Users/rubsy/Dropbox"
-}
-
 utils::globalVariables(c(
   "Type", "Batch",
   "gene1", "gene2", "gene3", "gene4", "gene5"

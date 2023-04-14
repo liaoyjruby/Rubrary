@@ -24,15 +24,14 @@ inst_pkg <- function(pkg){
 #' @export
 use_pkg <- function(...){
   pkgs <- unlist(list(...))
-  check <- invisible(unlist(lapply(pkgs, require,
-                                   character.only = TRUE, quietly = TRUE)))
+  check <- invisible(unlist(lapply(pkgs, requireNamespace, quietly = TRUE)))
   need <- pkgs[check==FALSE]
   if(length(need) > 0){
     warning(
       paste0("Required packages not found: ", paste(need, collapse = ", ")),
       immediate. = TRUE
       )
-    if (!require("BiocManager", quietly = TRUE)){
+    if (!requireNamespace("BiocManager", quietly = TRUE)){
       inst_pkg("BiocManager")
     }
     invisible(lapply(need, inst_pkg))

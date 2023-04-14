@@ -6,7 +6,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/liaoyjruby/Rubrary/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liaoyjruby/Rubrary/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
+
+[Rubrary Reference](https://liaoyjruby.github.io/Rubrary/)
 
 Personal functions, mostly for Graeber Lab analysis and to test R
 package building. All functions subject to sudden changes.

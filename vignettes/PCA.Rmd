@@ -16,8 +16,8 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(Rubrary)
-if (!require("cBioPortalData", quietly = TRUE)){
-  if (!require("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+if (!requireNamespace("cBioPortalData", quietly = TRUE)){
+  if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
   BiocManager::install("cBioPortalData")
 }
 library(cBioPortalData)
@@ -30,7 +30,7 @@ Beltran, H., Prandi, D., Mosquera, J. *et al.* Divergent clonal evolution of cas
 
 https://www.cbioportal.org/study/summary?id=nepc_wcm_2016
 
-```{r Get Beltran MultiAssayExperiment from cBioPortalData}
+```{r Get Beltran MultiAssayExperiment from cBioPortalData, message=FALSE}
 beltran_file <- cBioPortalData::downloadStudy(cancer_study_id = "nepc_wcm_2016")
 beltran_dir <- cBioPortalData::untarStudy(beltran_file, tempdir())
 beltran <- cBioPortalData::loadStudy(beltran_dir)

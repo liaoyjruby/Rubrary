@@ -9,6 +9,7 @@ plot_DESeq_boxplot(
   data,
   anno,
   merged = T,
+  batch = "UCLA",
   colors = c("goldenrod2", "navyblue"),
   savename = NULL,
   width = 13,
@@ -23,6 +24,8 @@ plot_DESeq_boxplot(
 \item{anno}{dataframe; sample annotation file w/ "Batch" & "Type" cols}
 
 \item{merged}{logica; T if dataframe is made from combined datasets}
+
+\item{batch}{string; if not merged,}
 
 \item{colors}{vector; list of colors, n = number of batches}
 
