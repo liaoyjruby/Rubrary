@@ -161,14 +161,16 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
             axis.title.y = element_text(size = rel(1.5), margin = margin(r = -10)),
             legend.title = element_blank(),
             legend.key.height = unit(0.125, "npc")) +
-      scale_x_reverse(expand = c(0,0)) +
-      scale_y_reverse(expand = c(0,0)) +
+      scale_x_continuous(expand = c(0,0)) +
+      scale_y_continuous(expand = c(0,0)) +
+      # scale_x_reverse(expand = c(0,0)) + # not sure if need to flip the raster...
+      # scale_y_reverse(expand = c(0,0)) +
       # x-axis / sig1 annotations
-      annotate("text", x = 0, y = nrow(hypmtx) + 6, label = sig1_low, hjust = "right") +
-      annotate("text", x = nrow(hypmtx), y = nrow(hypmtx) + 6, label = sig1_high, hjust = "left") +
+      annotate("text", x = nrow(hypmtx) + 6, y = -6, label = sig1_low, hjust = "right") +
+      annotate("text", x = 0, y = -6, label = sig1_high, hjust = "left") +
       # y-axis / sig2 annotations
-      annotate("text", x = nrow(hypmtx) + 6, y = 0, label = sig2_low, hjust = "right", angle = 90) +
-      annotate("text", x = nrow(hypmtx) + 6, y = nrow(hypmtx), label = sig2_high, hjust = "left", angle = 90) +
+      annotate("text", x = -6, y = nrow(hypmtx), label = sig2_low, hjust = "right", angle = 90) +
+      annotate("text", x = -6, y = 0, label = sig2_high, hjust = "left", angle = 90) +
       coord_cartesian(clip = "off")
 
     if(waterfall){
@@ -239,8 +241,8 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     ) +
       theme(line = element_blank(),
             axis.text = element_blank(),
-            axis.title.x = element_text(size = rel(1.25), margin = margin(t = -(0.004 * nrow(merged)))),
-            axis.title.y = element_text(size = rel(1.25), margin = margin(r = -(0.004 * nrow(merged))))) +
+            axis.title.x = element_text(size = rel(1.25), margin = margin(t = -(0.002 * nrow(merged)))),
+            axis.title.y = element_text(size = rel(1.25), margin = margin(r = -(0.002 * nrow(merged))))) +
       geom_segment(x = 0, xend = nrow(merged), y = 0, yend = 0) +
       geom_segment(y = 0, yend = nrow(merged), x = 0, xend = 0) +
       # x-axis / sig1 annotations

@@ -4,14 +4,12 @@
 \alias{df_to_mtx}
 \title{df_to_mtx}
 \usage{
-df_to_mtx(df, merged = T, filter = T)
+df_to_mtx(df, filter = T)
 }
 \arguments{
-\item{df}{A dataframe}
+\item{df}{dataframe}
 
-\item{merged}{If dataframe is made from combined datasets}
-
-\item{filter}{Apply filter for genes with 9+ zeros}
+\item{filter}{logical; T to filter out genes with 9+ zeros}
 }
 \value{
 Dataframe restructured as matrix

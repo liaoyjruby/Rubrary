@@ -7,10 +7,10 @@
 make_pconly(sig_path)
 }
 \arguments{
-\item{sig_path}{Path to DESeq signature}
+\item{sig_path}{string; path to DESeq signature}
 }
 \value{
-Text and rnk files subsetted to PC coding only genes
+DESeq signature subsetted to PC only genes
 }
 \description{
 Filter signature to PC coding only by matching with genes in log2UQcounts

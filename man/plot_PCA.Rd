@@ -6,19 +6,21 @@
 \usage{
 plot_PCA(
   df,
-  dfanno = NA,
+  dfanno = NULL,
   PCx = "PC1",
   PCy = "PC2",
   PCtype = "Score",
   label = TRUE,
   annoname = "Sample",
   annotype = "Batch",
-  annotype2 = NA,
-  highlight = NA,
+  annotype2 = NULL,
+  highlight = NULL,
   title = paste0("PCA ", PCtype, " Plot - ", annotype),
-  subtitle = NA,
-  marginal = FALSE,
-  savename = NA
+  subtitle = NULL,
+  density = FALSE,
+  savename = NULL,
+  width = 8,
+  height = 8
 )
 }
 \arguments{
@@ -46,9 +48,13 @@ plot_PCA(
 
 \item{subtitle}{string; Subtitle for plot}
 
-\item{marginal}{logical; Show density plot along both axes}
+\item{density}{logical; Show density plot along both axes}
 
-\item{savename}{string; Output plot name}
+\item{savename}{string; filepath to save plot under}
+
+\item{width}{numeric; plot width}
+
+\item{height}{numeric; plot width}
 }
 \value{
 PCA output plotted with annotation

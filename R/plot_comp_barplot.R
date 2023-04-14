@@ -8,7 +8,7 @@
 #' @param stack logical; split into stacked plots of counts + fraction
 #' @param title string; plot title
 #' @param xlabel string; x-axis (breaks) label
-#' @param colors char vector; list of colors (n = # of unique groups)
+#' @param colors char vector; list of colors (n = # of unique groups), or "alpha"
 #' @param ncol_legend integer; # of legend columns
 #' @param savename string; filepath to save plot under
 #' @param width numeric; saved plot width

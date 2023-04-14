@@ -2,20 +2,20 @@
 #'
 #' Adapted from glab.library "PCA_from_file"
 #'
-#' @param df numeric dataframe; samples as columns, genes as rows
-#' @param savename string; directory path and file name but no extension pls
+#' @param df (path to) numeric dataframe; samples as columns, genes as rows
+#' @param savename string; filepath (no ext.) to save PCA scores, loadings, sdev under
 #' @param summary logical; output summary info
 #' @param center logical; indicate whether the variables should be shifted to be zero centered
 #' @param scale logical; indicate whether the variables should be scaled to have unit variance before the analysis takes place
 #' @param tol numerical; indicate the magnitude below which components should be omitted
 #' @param screeplot logical; output + save screeplot?
 #'
-#' @return prcomp obj; output text files of PCA scores, loadings, sdev
+#' @return prcomp obj
 #' @importFrom utils write.table
 #'
 #' @export
 #'
-run_PCA <- function(df, savename = "PCA", summary = FALSE,
+run_PCA <- function(df, savename = NULL, summary = FALSE,
                     center = TRUE, scale = TRUE, tol = 0.05, screeplot = TRUE){
 
   if (is.character(df)){
@@ -37,15 +37,17 @@ run_PCA <- function(df, savename = "PCA", summary = FALSE,
   pca_loadings=cbind("Loading"=colnames(t.df),pca_loadings)
   pca_evalues=pca$sdev
 
-  write.table(pca_scores,
-              paste0(savename,"_prcomp_scores.txt"),
-              sep='\t',row.names=FALSE,quote=FALSE)
-  write.table(pca_loadings,
-              paste0(savename,"_prcomp_loadings.txt"),
-              sep='\t',row.names=FALSE,quote=FALSE)
-  write.table(pca_evalues,
-              paste0(savename,"_prcomp_sdev.txt"),
-              sep='\t',row.names=FALSE,quote=FALSE)
+  if(!is.null(savename)){
+    write.table(pca_scores,
+                paste0(savename,"_prcomp_scores.txt"),
+                sep='\t',row.names=FALSE,quote=FALSE)
+    write.table(pca_loadings,
+                paste0(savename,"_prcomp_loadings.txt"),
+                sep='\t',row.names=FALSE,quote=FALSE)
+    write.table(pca_evalues,
+                paste0(savename,"_prcomp_sdev.txt"),
+                sep='\t',row.names=FALSE,quote=FALSE)
+  }
 
   if (screeplot) {
     Rubrary::plot_screeplot(

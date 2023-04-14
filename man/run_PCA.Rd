@@ -6,7 +6,7 @@
 \usage{
 run_PCA(
   df,
-  savename = "PCA",
+  savename = NULL,
   summary = FALSE,
   center = TRUE,
   scale = TRUE,
@@ -15,9 +15,9 @@ run_PCA(
 )
 }
 \arguments{
-\item{df}{numeric dataframe; samples as columns, genes as rows}
+\item{df}{(path to) numeric dataframe; samples as columns, genes as rows}
 
-\item{savename}{string; directory path and file name but no extension pls}
+\item{savename}{string; filepath (no ext.) to save PCA scores, loadings, sdev under}
 
 \item{summary}{logical; output summary info}
 
@@ -30,7 +30,7 @@ run_PCA(
 \item{screeplot}{logical; output + save screeplot?}
 }
 \value{
-prcomp obj; output text files of PCA scores, loadings, sdev
+prcomp obj
 }
 \description{
 Adapted from glab.library "PCA_from_file"
