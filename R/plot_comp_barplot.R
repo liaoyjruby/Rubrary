@@ -6,6 +6,7 @@
 #' @param breaks string; metadata colname in sobj to set breaks / columns
 #' @param group string; metadata colname in sobj to split columns by
 #' @param stack logical; split into stacked plots of counts + fraction
+#' @param counts logical; T to include counts barplot above stacked barplot
 #' @param title string; plot title
 #' @param xlabel string; x-axis (breaks) label
 #' @param colors char vector; list of colors (n = # of unique groups), or "alpha"
@@ -17,7 +18,7 @@
 #' @return Stacked barplot, filled by group composition
 #' @export
 #'
-plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE,
+plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE, counts = TRUE,
                               title = ggplot2::waiver(), xlabel = breaks, colors = NULL,
                               ncol_legend = NULL, savename = NULL, width = 7, height = 7) {
   df <- sobj@meta.data[,c(breaks, group)]
@@ -25,6 +26,7 @@ plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE,
   if(is.null(colors)){
     cols = scales::hue_pal()(length(unique(df[,group])))
   } else if (colors == "alpha"){
+    Rubrary::use_pkg("pals")
     cols = unname(pals::alphabet2(n = length(unique(df[,group]))))
   } else {
     cols = colors
@@ -71,8 +73,13 @@ plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE,
         legend.title = element_blank()
       )
 
-    plt <- plt_ct / plt_scl +
-      patchwork::plot_layout(heights = c(1,2))
+    if(counts){
+      plt <- plt_ct / plt_scl +
+        patchwork::plot_layout(heights = c(1,2))
+    } else {
+      plt <- plt_scl
+    }
+
   }
 
   if(!is.null(savename)){

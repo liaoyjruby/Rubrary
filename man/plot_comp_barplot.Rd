@@ -9,6 +9,7 @@ plot_comp_barplot(
   breaks,
   group,
   stack = TRUE,
+  counts = TRUE,
   title = ggplot2::waiver(),
   xlabel = breaks,
   colors = NULL,
@@ -26,6 +27,8 @@ plot_comp_barplot(
 \item{group}{string; metadata colname in sobj to split columns by}
 
 \item{stack}{logical; split into stacked plots of counts + fraction}
+
+\item{counts}{logical; T to include counts barplot above stacked barplot}
 
 \item{title}{string; plot title}
 
