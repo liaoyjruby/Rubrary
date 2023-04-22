@@ -1,74 +1,79 @@
-utils::globalVariables(c(
-  "..density.."
-))
+utils::globalVariables(c("density", "x"))
 
 #' Shapiro-Wilk test of normality
 #'
+#' Uses `stats::shapiro.test` to perform test of normality and outputs interpretation into console.
+#'
+#' The null hypothesis of the S-W test is that the sample comes from a normally distributed population. If the p-value is less than the chosen alpha level, the null hypothesis is rejected, indicating that the data has non-normal distribution.
+#'
 #' @param values numeric vector
+#' @param alpha numeric; p-value threshold for significance
 #'
 #' @return Logical SW normality test result; message
+#' @seealso [Rubrary::plot_distribution()]
 #' @export
 #'
 #' @examples
 #' set.seed(13)
-#' check_normal(rnorm(50))
+#' check_normal(rnorm(100))
 #'
-check_normal <- function(values){
+check_normal <- function(values, alpha = 0.05){
+  if(length(values) > 5000){
+    message("** Sampling 5000 values w/o replacement...")
+    values <- sample(values, 5000)
+  }
   sw <- stats::shapiro.test(values)
   pval <- signif(sw$p.value, digits = 3)
   message(paste0(sw$method, ": p-value = ", pval))
-  if (sw$p.value > 0.05) {
-    msg_sw <- paste0("* p = ", pval, " > 0.05; normal")
-    result <- TRUE
+  result <- sw$p.value > alpha
+  if (result) {
+    msg_sw <- paste0("** p = ", pval, " > ", alpha, "; normal")
   } else {
-    msg_sw <- paste0("* p = ", pval, " <= 0.05; non-normal")
-    result <- FALSE
+    msg_sw <- paste0("** p = ", pval, " <= ", alpha, "; non-normal")
   }
   message(msg_sw)
   return(result)
 }
 
 
-#' Plot distribution
+#' Plot distribution of numeric vector
 #'
-#' @param df dataframe
-#' @param value string; colname of values
+#' Ignores NA values for mean & median calculation.
+#'
+#' @import ggplot2
+#'
+#' @param values numeric vector; values to check distribution for
 #' @param check_normal logical; perform SW test for normality?
 #' @param hist logical; include histogram?
 #' @param title string; plot title
 #' @param xlab string; x-axis label
-#' @param save logical; save as PNG?
-#' @param savename string; file to save figure as
+#' @param savename string; filepath to save figure under
+#' @param height numeric; plot height
+#' @param width numeric; plot width
 #'
 #' @return Plot of distribution with median + mean indicated
-#' @importFrom ggplot2 ggplot aes geom_histogram geom_density geom_vline labs theme_classic ggsave
-#' @importFrom stats median
+#' @seealso [Rubrary::check_normal()]
 #' @export
 #'
 #' @examples
 #' set.seed(13)
-#' df_norm <- data.frame(Value = rnorm(50))
-#' plot_distribution(df_norm, value = "Value", title = "Normal", check_normal = TRUE)
+#' vals_normal <- rnorm(100)
+#' plot_distribution(values = vals_normal, title = "Normal", hist = TRUE, check_normal = TRUE)
 #'
-#' df_uni <- data.frame(Value = 1:100)
-#' plot_distribution(df_uni, value = "Value", title = "Uniform", check_normal = TRUE)
+#' vals_sequential <- c(1:100)
+#' plot_distribution(values = vals_sequential, title = "Sequential", check_normal = TRUE)
 #'
-plot_distribution <- function(df = NA, value, check_normal = FALSE, hist = FALSE,
+plot_distribution <- function(values, check_normal = FALSE, hist = FALSE,
                               title = "Distribution", xlab = "Value",
-                              save = FALSE, savename = "Distribution.png") {
-  if (!is.character(value)) {
-    df <- as.data.frame(as.numeric(value))
-    colnames(df)[1] <- "Value"
-    value <- "Value"
-  }
+                              savename = NULL, height = 5, width = 7) {
 
-  if (check_normal) {check_normal(df[,value])}
+  if (check_normal && (length(unique(values)) != 1)) {Rubrary::check_normal(values)}
 
-  mea <- mean(as.numeric(df[, value]), na.rm = T)
-  med <- median(as.numeric(df[, value]), na.rm = T)
+  mea <- mean(as.numeric(values), na.rm = T)
+  med <- stats::median(as.numeric(values), na.rm = T)
 
-  plt <- ggplot(df, aes_string(x = value)) +
-    {if(hist) geom_histogram(aes(y = ..density..), color = "black", fill = "white")} +
+  plt <- ggplot(data.frame(x = values), aes(x = x)) +
+    {if(hist) geom_histogram(aes(y = after_stat(density)), color = "black", fill = "white")} +
     geom_density(alpha = 0.2, fill = "red") +
     geom_vline(aes(xintercept = mea), color = "blue", linetype = "dashed") +
     geom_vline(aes(xintercept = med), color = "red", linetype = "dashed") +
@@ -80,13 +85,13 @@ plot_distribution <- function(df = NA, value, check_normal = FALSE, hist = FALSE
     ) +
     theme_classic()
 
-  if (save) {
+  if (!is.null(savename)) {
     ggsave(
       filename = savename,
       plot = plt,
-      height = 5, width = 7
+      height = height, width = width
     )
   }
 
-  plt
+  return(plt)
 }

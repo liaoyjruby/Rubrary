@@ -2,23 +2,21 @@
 % Please edit documentation in R/plot_distribution.R
 \name{plot_distribution}
 \alias{plot_distribution}
-\title{Plot distribution}
+\title{Plot distribution of numeric vector}
 \usage{
 plot_distribution(
-  df = NA,
-  value,
+  values,
   check_normal = FALSE,
   hist = FALSE,
   title = "Distribution",
   xlab = "Value",
-  save = FALSE,
-  savename = "Distribution.png"
+  savename = NULL,
+  height = 5,
+  width = 7
 )
 }
 \arguments{
-\item{df}{dataframe}
-
-\item{value}{string; colname of values}
+\item{values}{numeric vector; values to check distribution for}
 
 \item{check_normal}{logical; perform SW test for normality?}
 
@@ -28,22 +26,27 @@ plot_distribution(
 
 \item{xlab}{string; x-axis label}
 
-\item{save}{logical; save as PNG?}
+\item{savename}{string; filepath to save figure under}
 
-\item{savename}{string; file to save figure as}
+\item{height}{numeric; plot height}
+
+\item{width}{numeric; plot width}
 }
 \value{
 Plot of distribution with median + mean indicated
 }
 \description{
-Plot distribution
+Ignores NA values for mean & median calculation.
 }
 \examples{
 set.seed(13)
-df_norm <- data.frame(Value = rnorm(50))
-plot_distribution(df_norm, value = "Value", title = "Normal", check_normal = TRUE)
+vals_normal <- rnorm(100)
+plot_distribution(values = vals_normal, title = "Normal", hist = TRUE, check_normal = TRUE)
 
-df_uni <- data.frame(Value = 1:100)
-plot_distribution(df_uni, value = "Value", title = "Uniform", check_normal = TRUE)
+vals_sequential <- c(1:100)
+plot_distribution(values = vals_sequential, title = "Sequential", check_normal = TRUE)
 
+}
+\seealso{
+\code{\link[=check_normal]{check_normal()}}
 }

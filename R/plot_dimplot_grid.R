@@ -10,8 +10,8 @@
 #' @param gridtitle string; title for overall dimplot grid
 #' @param gridsubtitle string; subtitle for overall dimplot grid
 #' @param savename string; filepath to save figure under
-#' @param width integer; width of plot
-#' @param height integer; height of plot
+#' @param width integer; plot width, if unspecified will try to calculate
+#' @param height integer; plot height, if unspecified will try to calculates
 #'
 #' @return Patchwork grid of Seurat DimPlots
 #' @export

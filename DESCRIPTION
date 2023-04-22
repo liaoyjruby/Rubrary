@@ -25,7 +25,8 @@ Imports:
     reshape2,
     stats,
     tibble,
-    utils
+    utils,
+    tidyr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
@@ -47,5 +48,6 @@ Suggests:
     Seurat,
     knitr,
     rmarkdown,
-    BiocManager
+    BiocManager,
+    lisi
 VignetteBuilder: knitr

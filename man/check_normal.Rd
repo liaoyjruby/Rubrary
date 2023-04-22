@@ -4,19 +4,27 @@
 \alias{check_normal}
 \title{Shapiro-Wilk test of normality}
 \usage{
-check_normal(values)
+check_normal(values, alpha = 0.05)
 }
 \arguments{
 \item{values}{numeric vector}
+
+\item{alpha}{numeric; p-value threshold for significance}
 }
 \value{
 Logical SW normality test result; message
 }
 \description{
-Shapiro-Wilk test of normality
+Uses \code{stats::shapiro.test} to perform test of normality and outputs interpretation into console.
+}
+\details{
+The null hypothesis of the S-W test is that the sample comes from a normally distributed population. If the p-value is less than the chosen alpha level, the null hypothesis is rejected, indicating that the data has non-normal distribution.
 }
 \examples{
 set.seed(13)
-check_normal(rnorm(50))
+check_normal(rnorm(100))
 
+}
+\seealso{
+\code{\link[=plot_distribution]{plot_distribution()}}
 }

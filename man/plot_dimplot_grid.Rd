@@ -37,9 +37,9 @@ plot_dimplot_grid(
 
 \item{savename}{string; filepath to save figure under}
 
-\item{width}{integer; width of plot}
+\item{width}{integer; plot width, if unspecified will try to calculate}
 
-\item{height}{integer; height of plot}
+\item{height}{integer; plot height, if unspecified will try to calculates}
 }
 \value{
 Patchwork grid of Seurat DimPlots
