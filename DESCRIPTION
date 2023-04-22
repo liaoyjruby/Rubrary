@@ -51,5 +51,5 @@ Suggests:
     BiocManager,
     lisi
 Remotes:
-  github::immunogenomics/LISI
+  immunogenomics/lisi
 VignetteBuilder: knitr

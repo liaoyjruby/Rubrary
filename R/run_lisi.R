@@ -13,7 +13,7 @@
 #' @return Dataframe of LISI values
 #' @export
 #'
-run_lisi <- function(sobj, labels, reduction = c("umap", "pca", "tsne"),
+run_LISI <- function(sobj, labels, reduction = c("umap", "pca", "tsne"),
                      title = NULL, savename = NULL){
   Rubrary::use_pkg("Seurat", "lisi")
 
