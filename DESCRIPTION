@@ -50,4 +50,6 @@ Suggests:
     rmarkdown,
     BiocManager,
     lisi
+Remotes:
+  github::immunogenomics/LISI
 VignetteBuilder: knitr
