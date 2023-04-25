@@ -4,10 +4,12 @@
 \alias{inst_pkg}
 \title{Prompt user to install package}
 \usage{
-inst_pkg(pkg)
+inst_pkg(pkg, strict = FALSE)
 }
 \arguments{
 \item{pkg}{string; package name (CRAN or Bioconductor)}
+
+\item{strict}{logical; strict requirement on package install?}
 }
 \value{
 None

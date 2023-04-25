@@ -4,12 +4,16 @@
 #' Helper function for "Rubrary::use_pkg"
 #'
 #' @param pkg string; package name (CRAN or Bioconductor)
+#' @param strict logical; strict requirement on package install?
 #'
 #' @return None
-inst_pkg <- function(pkg){
+inst_pkg <- function(pkg, strict = FALSE){
   if (utils::menu(c("Yes", "No"), title = paste0("\nInstall package ", pkg, "?")) == "1") {
     BiocManager::install(pkg)
-  } else { message(paste0("** ", pkg, " not installed; function may break!"))}
+  } else {
+    ifelse(strict, stop(paste0(pkg, " not installed")),
+           message(paste0("** ", pkg, " not installed; function may break!")))
+  }
 }
 
 #' Check if package is installed, prompt if not
@@ -17,12 +21,13 @@ inst_pkg <- function(pkg){
 #' Based on https://stackoverflow.com/a/44660688
 #'
 #' @param ... string; package(s) to check if installed
+#' @param strict logical; strict requirements on package install?
 #'
 #' @return None
 #'
 #' @examples use_pkg("ggplot2", "dplyr")
 #' @export
-use_pkg <- function(...){
+use_pkg <- function(..., strict = FALSE){
   pkgs <- unlist(list(...))
   check <- invisible(unlist(lapply(pkgs, requireNamespace, quietly = TRUE)))
   need <- pkgs[check==FALSE]
@@ -34,7 +39,7 @@ use_pkg <- function(...){
     if (!requireNamespace("BiocManager", quietly = TRUE)){
       inst_pkg("BiocManager")
     }
-    invisible(lapply(need, inst_pkg))
+    invisible(lapply(need, inst_pkg, strict))
   }
 }
 

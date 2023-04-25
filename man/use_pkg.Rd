@@ -4,10 +4,12 @@
 \alias{use_pkg}
 \title{Check if package is installed, prompt if not}
 \usage{
-use_pkg(...)
+use_pkg(..., strict = FALSE)
 }
 \arguments{
 \item{...}{string; package(s) to check if installed}
+
+\item{strict}{logical; strict requirements on package install?}
 }
 \value{
 None
