@@ -43,10 +43,19 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_DESeq_PC.html</loc>
   </url>
   <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_PC_genes.html</loc>
+  </url>
+  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/full_join_rownames.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/genecoexp_scatter_hyper.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/get_PC_genes.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/get_gene_desc.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/get_kspval.html</loc>
@@ -113,6 +122,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_distribution.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_featurescatter.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_scatter.html</loc>
