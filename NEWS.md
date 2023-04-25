@@ -1,10 +1,4 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
-# 230424: Gene accessing, LISI
+230424: Gene accessing, LISI
 
 -   `get_PC_genes`: accesses BioMart database for genes annotated as
     protein coding
@@ -22,63 +16,60 @@ editor_options:
     using LISI metric
     -   outputs visualization to help interpret resulting values
 
-------------------------------------------------------------------------
-
 # Rubrary 0.7.0
-
 230329 function improvements
 
-# 230323: new GSEA, Seurat DimPlot functions & improvements
+# Rubrary 0.6.0
+230323: new GSEA and Seurat DimPlot functions & improvements
 
--   plot_GSEA_pathway
--   plot_dim_set
--   hypergeo_coexp
+* plot_GSEA_pathway
+* plot_dim_set
+* hypergeo_coexp
 
-# 230303: New scRNA hypergeometric p-value and plot function
+# Rubrary 0.5.0
+230303: New scRNA hypergeometric p-value and plot function
 
--   genecoexp_scatter_hyper
--   phyper_df
--   pltAB
--   run_RRHO (WIP)
+* genecoexp_scatter_hyper
+* phyper_df
+* pltAB
+* run_RRHO (WIP)
 
-# 230203: new functions
+# Rubrary 0.4.0
+230203: new functions
 
--   plot_waterfall
--   plot_density
--   check_normal
--   calc_sumZscore + various fixes
+- plot_waterfall
+- plot_density
+- check_normal
+- calc_sumZscore
++ various fixes
 
-# New DESeq functions + extras
+# Rubrary 0.3.0
+New DESeq functions + extras
 
--   output_DESeq
--   filter_DESeq_PC
--   plot_DESeq_volcano
--   plot_scatter_compare
--   plot_screeplot
--   plot_scatter_mtx (WIP)
-
+* output_DESeq
+* filter_DESeq_PC
+* plot_DESeq_volcano
+* plot_scatter_compare
+* plot_screeplot
+* plot_scatter_mtx (WIP)
+    
 # Rubrary 0.2.0
-
--   plot_distribution: Density plot with histo
+* plot_distribution: Density plot with histo
 
 # Rubrary 0.1.5
-
--   Save option for "plot_scatter"
+* Save option for "plot_scatter"
 
 # Rubrary 0.1.4
-
--   Optional KS pval for plot_waterfall_hl
+* Optional KS pval for plot_waterfall_hl
 
 # Rubrary 0.1.3
-
--   plot_waterfall_hl label outside
+* plot_waterfall_hl label outside
 
 # Rubrary 0.1.2
-
--   Fixed export of plot_waterfall_hl.R to namespace
+* Fixed export of plot_waterfall_hl.R to namespace
 
 # Rubrary 0.1.1
 
 # Rubrary 0.1.0
 
--   Added a `NEWS.md` file to track changes to the package.
+* Added a `NEWS.md` file to track changes to the package.
