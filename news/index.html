@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/DESeq_GSEA.html">DESeq / GSEA</a>
     <a class="dropdown-item" href="../articles/PCA.html">Principal Components Analysis (PCA)</a>
   </div>
 </li>
@@ -50,6 +51,14 @@
       <small>Source: <a href="https://github.com/liaoyjruby/Rubrary/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.0" id="rubrary-080">Rubrary 0.8.0<a class="anchor" aria-label="anchor" href="#rubrary-080"></a></h2>
+<p>General - Gene accessing, LISI - PCA functions improvements - Functional vignettes</p>
+<p>New - <code>get_PC_genes</code>: accesses BioMart database for genes annotated as protein coding - <code>filter_PC_genes</code>: filter dataframe to specified list of genes, with possible <code><a href="https://satijalab.org/seurat/reference/UpdateSymbolList.html" class="external-link">Seurat::UpdateSymbolList</a></code> powered gene symbol correcting. Technically this isn’t specific to protein-coding filtering only and words with list input. - <code>get_gene_desc</code>: accesses BioMart database for gene description w/ list of genes input - Technically not specific to getting description fields given list of BioMart attrs - Should probably add a error/warning if gene names don’t match, possible Seurat correction? - <code>convert_genes</code>: access BioMart database to convert gene name format - <code>run_LISI</code>: for Seurat obj, assess integration quantitatively by using LISI metric - outputs visualization to help interpret resulting values</p>
+<p>Improved - <code>run_PCA</code>: additional documentation recommending standardization - <code>plot_PCA</code>: accommodation for passing in <code>prcomp</code> object, custom colors</p>
+<p>Vignettes - <code>PCA</code>: changed to <code>palmerpenguins</code> dataset and have it actually run and output - <code>DESeq_GSEA</code>: working DESeq example with <code>airway</code> dataset</p>
+<p>230424: Gene accessing, LISI</p>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="rubrary-070">Rubrary 0.7.0<a class="anchor" aria-label="anchor" href="#rubrary-070"></a></h2>
 <p>230329 function improvements</p>

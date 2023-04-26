@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/DESeq_GSEA.html">DESeq / GSEA</a>
     <a class="dropdown-item" href="../articles/PCA.html">Principal Components Analysis (PCA)</a>
   </div>
 </li>
@@ -90,11 +91,19 @@
 <span><span class="co">#&gt;     filter, lag</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span></code></pre></div>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span></span>
+<span><span class="co"># For `palmerpenguins` install</span></span>
+<span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"repos"</span><span class="op">)</span></span>
+<span><span class="va">r</span><span class="op">[</span><span class="st">"CRAN"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"http://cran.us.r-project.org"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<p><code>palmerpenguins</code> dataset from Allison Horst</p>
+<p>Using <code>palmerpenguins</code> dataset <a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">from Allison
+Horst</a>.</p>
+<p>Get <code>palmerpenguins</code> data and add a unique ID per
+entry.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span><span class="op">)</span></span>
@@ -111,12 +120,13 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Sample_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">penguins_raw</span><span class="op">$</span><span class="va">`Individual ID`</span>, <span class="st">"_"</span>, <span class="va">penguins_raw</span><span class="op">$</span><span class="va">`Sample Number`</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">penguins</span><span class="op">$</span><span class="va">Sample_ID</span></span></code></pre></div>
+<p>Subset data to numeric only, and run PCA.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">num</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, <span class="va">Sample_ID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, <span class="va">Sample_ID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="op">~</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="op">~</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Filter out NAs</span></span>
 <span>  </span>
 <span><span class="va">pca</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/run_PCA.html">run_PCA</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">num</span>,</span>
@@ -125,7 +135,9 @@
 <span>  screeplot <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ** Cumulative var. exp. &gt;= 80% at PC 2 (88.2%)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/Run%20PCA-1.png" width="700"></p>
+<p><img src="PCA_files/figure-html/Run%20PCA-1.png" width="288"></p>
+<p>Use resulting <code>prcomp</code> object to plot PCA scores while
+annotating by <code>species</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
 <span>  df_pca <span class="op">=</span> <span class="va">pca</span>,</span>
@@ -133,9 +145,20 @@
 <span>  annoname <span class="op">=</span> <span class="st">"Sample_ID"</span>,</span>
 <span>  annotype <span class="op">=</span> <span class="st">"species"</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Scores - Species"</span>,</span>
-<span>  label <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  density <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
+<span>  df_pca <span class="op">=</span> <span class="va">pca</span>,</span>
+<span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
+<span>  annoname <span class="op">=</span> <span class="st">"Sample_ID"</span>,</span>
+<span>  annotype <span class="op">=</span> <span class="st">"sex"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Scores - Sex"</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  density <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/Plot%20PCA-1.png" width="700"></p>
+<p><img src="PCA_files/figure-html/Plot%20PCA-1.png" width="288"></p>
 </div>
   </main>
 </div>

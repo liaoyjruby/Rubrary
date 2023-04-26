@@ -10,6 +10,9 @@
     <loc>https://liaoyjruby.github.io/Rubrary/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/articles/DESeq_GSEA.html</loc>
+  </url>
+  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/articles/PCA.html</loc>
   </url>
   <url>
@@ -32,6 +35,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/check_normal.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/convert_genes.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/corner.html</loc>
