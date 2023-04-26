@@ -1,5 +1,16 @@
+
+230426: PCA functions & vignette
+
+Improved
+- `run_PCA`: additional documentation recommending standardization
+- `plot_PCA`: accommodation for passing in `prcomp` object, custom colors
+
+Vignettes
+- `PCA`: changed dataset to `palmerpenguins` and have it actually run and output
+
 230424: Gene accessing, LISI
 
+New
 -   `get_PC_genes`: accesses BioMart database for genes annotated as
     protein coding
 -   `filter_PC_genes`: filter dataframe to specified list of genes, with

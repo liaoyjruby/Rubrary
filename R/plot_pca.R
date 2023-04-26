@@ -1,5 +1,5 @@
 utils::globalVariables(c(
-  "Highlight"
+  "Highlight", ".", "var"
 ))
 
 #' Plot PCA with annotation
@@ -7,19 +7,20 @@ utils::globalVariables(c(
 #' @import ggplot2
 #' @importFrom utils read.delim
 #'
-#' @param df string; Path to PC output
-#' @param dfanno string or df; Annotation info for DF
+#' @param df_pca string or prcomp obj; (path to) PCA output
+#' @param anno string or df; Annotation info for DF
 #' @param PCx string; Component on x-axis
 #' @param PCy string; Component on y-axis
-#' @param PCtype c("Loading", "Score")
+#' @param PCtype c("Score", "Loading")
 #' @param label logical; T to label points
-#' @param annoname string; Colname in dfanno matching point name
-#' @param annotype string; Colname in dfanno with info to color by
-#' @param annotype2 string; Colname in dfanno with info to change shape by
+#' @param annoname string; Colname in `anno` matching point name
+#' @param annotype string; Colname in `anno` with info to color by
+#' @param annotype2 string; Colname in `anno` with info to change shape by
 #' @param title string; Plot title
 #' @param subtitle string; Subtitle for plot
 #' @param density logical; Show density plot along both axes
-#' @param highlight char vector; Specific points to shape differently/labels
+#' @param highlight char vector; Specific points to shape differently & label
+#' @param colors char vector; length should be number of unique `annotype`s
 #' @param savename string; filepath to save plot under
 #' @param width numeric; plot width
 #' @param height numeric; plot width
@@ -28,25 +29,46 @@ utils::globalVariables(c(
 #'
 #' @export
 #'
-plot_PCA <- function(df, dfanno = NULL, PCx = "PC1", PCy = "PC2", PCtype = "Score",
-                     label = TRUE, annoname = "Sample", annotype = "Batch", annotype2 = NULL, highlight = NULL,
-                     title = paste0("PCA ", PCtype, " Plot - ", annotype),
-                     subtitle = NULL, density = FALSE, savename = NULL,
-                     width = 8, height = 8) {
-  if (is.character(df)) { # Read df from path
-    dfpath <- df
-    df <- read.delim(dfpath)
+plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", PCtype = c("Score", "Loading"),
+                     label = FALSE, annoname = "Sample", annotype = "Batch", annotype2 = NULL,
+                     highlight = NULL, colors = NULL, title = NULL, subtitle = NULL, density = FALSE,
+                     savename = NULL, width = 8, height = 8) {
+  PCtype <- match.arg(PCtype)
+
+  if (is.character(df_pca)) { # Read df from path
+    dfpath <- df_pca
+    df_pca <- read.delim(dfpath)
     sdevpath <- gsub("_[^_]+$", "_sdev.txt", dfpath)
-    sdev <- read.delim(sdevpath)
-    sdev$var <- unlist(sdev^2)
-    sdev$pve <- unlist(round(sdev$var / sum(sdev$var) * 100, digits = 2))
-    rownames(sdev) <- paste0("PC", seq(1, nrow(sdev)))
+    sdev <- read.delim(sdevpath) %>%
+      as.data.frame() %>%
+      mutate(var = .^2,
+             pve = round(var / sum(var) * 100, digits = 2)) %>%
+      `rownames<-`(paste0("PC", rownames(.)))
 
     if (grepl("score", dfpath, ignore.case = T)) {
       PCtype <- "Score"
     } else {
       PCtype <- "Loading"
     }
+  } else if (methods::is(df_pca, "prcomp")){
+    if(PCtype == "Score"){
+      df <- df_pca$x %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column(var = "Score")
+    } else {
+      df <- df_pca$rotation %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column(var = "Loading")
+    }
+
+    sdev <- df_pca$sdev %>%
+      as.data.frame() %>%
+      mutate(var = .^2,
+             pve = round(var / sum(var) * 100, digits = 2)) %>%
+      `rownames<-`(paste0("PC", rownames(.)))
+
+  } else {
+    df <- df_pca
   }
 
   if(exists("sdev")){
@@ -57,29 +79,26 @@ plot_PCA <- function(df, dfanno = NULL, PCx = "PC1", PCy = "PC2", PCtype = "Scor
     PCylab <- PCy
   }
 
-  if (all(is.null(dfanno))) { # No coloring / annotation
+  if (all(is.null(anno))) { # No coloring / annotation
     plt <- ggplot(df, aes(x = .data[[PCx]], y = .data[[PCy]])) +
       geom_point(size = 2) +
       labs(
         title = title,
         x = PCxlab,
-        y = PCylab
-      ) +
+        y = PCylab) +
       theme_classic() +
-      {
-        if (label) ggrepel::geom_text_repel(label = df[, PCtype])
-      }
+      {if (label) ggrepel::geom_text_repel(label = df[, PCtype])}
   } else {
-    if (is.character(dfanno)) {
-      dfanno <- read.delim(dfanno)
+    if (is.character(anno)) {
+      anno <- read.delim(anno)
     }
     df[, 2:ncol(df)] <- sapply(df[, 2:ncol(df)], as.numeric)
 
     if (is.null(annotype2)) {
-      df_merged <- dplyr::left_join(df, dfanno[, c(annoname, annotype)], by = structure(names = PCtype, .Data = annoname))
+      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype)], by = structure(names = PCtype, .Data = annoname))
       df_merged <- df_merged[, c(PCtype, PCx, PCy, annotype)]
     } else {
-      df_merged <- dplyr::left_join(df, dfanno[, c(annoname, annotype, annotype2)], by = structure(names = PCtype, .Data = annoname))
+      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype, annotype2)], by = structure(names = PCtype, .Data = annoname))
       df_merged <- df_merged[, c(PCtype, PCx, PCy, annotype, annotype2)]
     }
     # colnames(df_merged) <- c(PCx, PCy, "Type")
@@ -128,22 +147,32 @@ plot_PCA <- function(df, dfanno = NULL, PCx = "PC1", PCy = "PC2", PCtype = "Scor
           gp = grid::gpar(col = "black", fontsize = 15, fontface = "italic")
         )
       )
-
       df_merged <- df_merged[order(as.numeric(row.names(df_merged))), ]
     }
 
-    if (nrow(df_merged) > 10000) {
-      alpha <- 0.7
+    # Manage alpha if many points
+    alpha <- ifelse(nrow(df_merged) > 10000, 0.7, 1)
+
+    # Manage colors
+    if(is.null(colors)){
+      Rubrary::use_pkg("scales")
+      cols = scales::hue_pal()(length(unique(df_merged[, annotype])))
+    } else if (colors == "alpha"){
+      Rubrary::use_pkg("pals")
+      cols = unname(pals::alphabet2(n = length(unique(df_merged[, annotype]))))
     } else {
-      alpha <- 1
+      cols = colors
     }
 
+    # Manage legend title + colors if numeric
     if (is.numeric(df_merged[, annotype])) {
       guidetitle <- guide_colorbar(title = annotype)
+      if(is.null(colors)){cols <- c("blue", "red")}
     } else {
       guidetitle <- guide_legend(title = annotype)
     }
 
+    # Manage highlights / add'l annos
     if (!all(is.null(highlight))) {
       label <- F
       df_merged$Highlight <- ifelse(df_merged$Score %in% highlight, "HL", "")
@@ -156,24 +185,19 @@ plot_PCA <- function(df, dfanno = NULL, PCx = "PC1", PCy = "PC2", PCtype = "Scor
 
     plt <- ggplt +
       geom_point(size = 2, alpha = alpha) +
-      {
-        if (is.numeric(df_merged[, annotype])) scale_color_gradient(low = "blue", high = "red", guide = "colourbar")
-      } +
+      {if (!is.numeric(df_merged[, annotype])) scale_fill_manual(values=cols)} +
+      {if (is.numeric(df_merged[, annotype])) scale_color_gradient(
+        low = cols[1], high = , guide = "colourbar")} +
       labs(
         title = title,
         x = PCxlab,
-        y = PCylab
-      ) +
-      {
-        if (!is.null(subtitle)) labs(subtitle = subtitle)
-      } +
+        y = PCylab) +
+      {if (!is.null(subtitle)) labs(subtitle = subtitle)} +
       guides(color = guidetitle) + # Set title of legend
       theme_classic() +
-      {
-        if (label) ggrepel::geom_text_repel(label = df[, PCtype], max.overlaps = 30, color = "black")
-      } + {
-        if (!all(is.null(highlight))) ggrepel::geom_text_repel(aes(label = ifelse(Highlight == "HL", df[, PCtype], "")), color = "black", max.overlaps = 30, size = 3)
-      }
+      {if (label) ggrepel::geom_text_repel(label = df[, PCtype], max.overlaps = 30, color = "black")} +
+      {if (!all(is.null(highlight))) ggrepel::geom_text_repel(
+        aes(label = ifelse(Highlight == "HL", df[, PCtype], "")), color = "black", max.overlaps = 30, size = 3)}
   }
 
   if (!is.null(savename)) {
@@ -185,7 +209,7 @@ plot_PCA <- function(df, dfanno = NULL, PCx = "PC1", PCy = "PC2", PCtype = "Scor
     )
   }
 
-  if (density && !is.null(dfanno)) {
+  if (density && !is.null(anno)) {
     if (length(unique(df_merged[, annotype])) == 2) {
       plt <- plt + annotation_custom(grobX) + annotation_custom(grobY)
     }
@@ -206,5 +230,5 @@ plot_PCA <- function(df, dfanno = NULL, PCx = "PC1", PCy = "PC2", PCtype = "Scor
     # plt <- mplt
   }
 
-  plt
+  return(plt)
 }

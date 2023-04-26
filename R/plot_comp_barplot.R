@@ -24,6 +24,7 @@ plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE, counts = TRUE,
   df <- sobj@meta.data[,c(breaks, group)]
 
   if(is.null(colors)){
+    Rubrary::use_pkg("scales")
     cols = scales::hue_pal()(length(unique(df[,group])))
   } else if (colors == "alpha"){
     Rubrary::use_pkg("pals")

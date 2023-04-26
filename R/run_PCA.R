@@ -1,17 +1,25 @@
 #' Run PCA (prcomp wrapper)
 #'
-#' Adapted from glab.library "PCA_from_file"
+#' Adapted from `glab.library::PCA_from_file`.
 #'
-#' @param df (path to) numeric dataframe; samples as columns, genes as rows
+#' In general, Z-score standardization (`center = T`; `scale = T`) before PCA is advised.
+#'
+#' `center = T`: PCA maximizes the sum-of-squared deviations *from the origin* in the first PC. Variance is only maximized if the data is pre-centered.
+#'
+#' `scale = T`: If one feature varies more than others, the feature will dominate resulting principal components. Scaling will also result in components in the same order of magnitude.
+#'
+#' @importFrom utils write.table
+#'
+#' @param df (path to) numeric dataframe; samples as columns, genes/features as rows
 #' @param savename string; filepath (no ext.) to save PCA scores, loadings, sdev under
 #' @param summary logical; output summary info
 #' @param center logical; indicate whether the variables should be shifted to be zero centered
-#' @param scale logical; indicate whether the variables should be scaled to have unit variance before the analysis takes place
+#' @param scale logical; indicate whether the variables should be scaled to have unit variance
 #' @param tol numerical; indicate the magnitude below which components should be omitted
 #' @param screeplot logical; output + save screeplot?
 #'
 #' @return prcomp obj
-#' @importFrom utils write.table
+#' @seealso [stats::prcomp()]
 #'
 #' @export
 #'
@@ -23,19 +31,20 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
     df <- read.delim(dfpath, row.names = 1)
   }
 
-  # Filter out rows of all zero
-  df <- df[rowSums((df[,-1]==0))<ncol(df[-1]),]
-
-  # TRANSPOSE
-  t.df=t(df)
+  df <- df[rowSums((df[,-1]==0))<ncol(df[-1]),] # Filter out rows of all zero
+  t.df=t(df) # Transpose
 
   pca <- stats::prcomp(t.df, center=center, scale = scale, tol = tol)
 
-  pca_scores <- pca$x
-  pca_scores <- cbind("Score"=rownames(pca_scores),pca_scores)
-  pca_loadings <- pca$rotation
-  pca_loadings=cbind("Loading"=colnames(t.df),pca_loadings)
-  pca_evalues=pca$sdev
+  pca_scores <- pca$x %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "Score")
+
+  pca_loadings <- pca$rotation %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "Loading")
+
+  pca_evalues <- pca$sdev
 
   if(!is.null(savename)){
     write.table(pca_scores,
@@ -50,10 +59,11 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
   }
 
   if (screeplot) {
-    Rubrary::plot_screeplot(
+    scrplt <- Rubrary::plot_screeplot(
       obj_prcomp = pca,
       savename = savename
     )
+    print(scrplt)
   }
 
   return(pca)

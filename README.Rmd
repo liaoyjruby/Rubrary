@@ -29,7 +29,7 @@ Installing this package will install many packages used throughout Graeber lab a
 
 ## Installation
 
-You can install the development version of Rubrary from [GitHub](https://github.com/) with:
+You can install the development version of Rubrary from [GitHub](https://github.com/liaoyjruby/Rubrary/) with:
 
 ``` r
 if (!require("devtools", quietly = TRUE))

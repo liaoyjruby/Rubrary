@@ -15,7 +15,7 @@ run_PCA(
 )
 }
 \arguments{
-\item{df}{(path to) numeric dataframe; samples as columns, genes as rows}
+\item{df}{(path to) numeric dataframe; samples as columns, genes/features as rows}
 
 \item{savename}{string; filepath (no ext.) to save PCA scores, loadings, sdev under}
 
@@ -23,7 +23,7 @@ run_PCA(
 
 \item{center}{logical; indicate whether the variables should be shifted to be zero centered}
 
-\item{scale}{logical; indicate whether the variables should be scaled to have unit variance before the analysis takes place}
+\item{scale}{logical; indicate whether the variables should be scaled to have unit variance}
 
 \item{tol}{numerical; indicate the magnitude below which components should be omitted}
 
@@ -33,5 +33,15 @@ run_PCA(
 prcomp obj
 }
 \description{
-Adapted from glab.library "PCA_from_file"
+Adapted from \code{glab.library::PCA_from_file}.
+}
+\details{
+In general, Z-score standardization (\code{center = T}; \code{scale = T}) before PCA is advised.
+
+\code{center = T}: PCA maximizes the sum-of-squared deviations \emph{from the origin} in the first PC. Variance is only maximized if the data is pre-centered.
+
+\code{scale = T}: If one feature varies more than others, the feature will dominate resulting principal components. Scaling will also result in components in the same order of magnitude.
+}
+\seealso{
+\code{\link[stats:prcomp]{stats::prcomp()}}
 }

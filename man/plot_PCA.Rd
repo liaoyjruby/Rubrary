@@ -5,17 +5,18 @@
 \title{Plot PCA with annotation}
 \usage{
 plot_PCA(
-  df,
-  dfanno = NULL,
+  df_pca,
+  anno = NULL,
   PCx = "PC1",
   PCy = "PC2",
-  PCtype = "Score",
-  label = TRUE,
+  PCtype = c("Score", "Loading"),
+  label = FALSE,
   annoname = "Sample",
   annotype = "Batch",
   annotype2 = NULL,
   highlight = NULL,
-  title = paste0("PCA ", PCtype, " Plot - ", annotype),
+  colors = NULL,
+  title = NULL,
   subtitle = NULL,
   density = FALSE,
   savename = NULL,
@@ -24,25 +25,27 @@ plot_PCA(
 )
 }
 \arguments{
-\item{df}{string; Path to PC output}
+\item{df_pca}{string or prcomp obj; (path to) PCA output}
 
-\item{dfanno}{string or df; Annotation info for DF}
+\item{anno}{string or df; Annotation info for DF}
 
 \item{PCx}{string; Component on x-axis}
 
 \item{PCy}{string; Component on y-axis}
 
-\item{PCtype}{c("Loading", "Score")}
+\item{PCtype}{c("Score", "Loading")}
 
 \item{label}{logical; T to label points}
 
-\item{annoname}{string; Colname in dfanno matching point name}
+\item{annoname}{string; Colname in \code{anno} matching point name}
 
-\item{annotype}{string; Colname in dfanno with info to color by}
+\item{annotype}{string; Colname in \code{anno} with info to color by}
 
-\item{annotype2}{string; Colname in dfanno with info to change shape by}
+\item{annotype2}{string; Colname in \code{anno} with info to change shape by}
 
-\item{highlight}{char vector; Specific points to shape differently/labels}
+\item{highlight}{char vector; Specific points to shape differently & label}
+
+\item{colors}{char vector; length should be number of unique \code{annotype}s}
 
 \item{title}{string; Plot title}
 

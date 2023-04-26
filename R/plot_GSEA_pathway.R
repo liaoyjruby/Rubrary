@@ -23,6 +23,8 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol, hig
                               label = length(geneset) < 20, legendpos = "none",
                               highlab = NA, lowlab = NA, hllab = "Highlight",
                               title = "", subtitle = NULL, savename = NULL){
+  Rubrary::use_pkg("fgsea")
+
   path_genes <- geneset
   # Waterfall plot
   plt_wf <- Rubrary::plot_waterfall(

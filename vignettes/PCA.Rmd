@@ -16,38 +16,52 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(Rubrary)
-if (!requireNamespace("cBioPortalData", quietly = TRUE)){
-  if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-  BiocManager::install("cBioPortalData")
-}
-library(cBioPortalData)
 library(dplyr)
 ```
 
 # Data
 
-Beltran, H., Prandi, D., Mosquera, J. *et al.* Divergent clonal evolution of castration-resistant neuroendocrine prostate cancer. *Nat Med* **22**, 298--305 (2016). <https://doi.org/10.1038/nm.4045>
+`palmerpenguins` dataset from Allison Horst
 
-https://www.cbioportal.org/study/summary?id=nepc_wcm_2016
+```{r Get palmerpenguins data, message=FALSE}
+if (!requireNamespace("palmerpenguins", quietly = TRUE)){
+  install.packages("palmerpenguins")
+}
+library(palmerpenguins)
 
-```{r Get Beltran MultiAssayExperiment from cBioPortalData, message=FALSE}
-beltran_file <- cBioPortalData::downloadStudy(cancer_study_id = "nepc_wcm_2016")
-beltran_dir <- cBioPortalData::untarStudy(beltran_file, tempdir())
-beltran <- cBioPortalData::loadStudy(beltran_dir)
-beltran
+names(penguins)
+data("penguins")
+penguins <- penguins %>%
+  as.data.frame() %>%
+  mutate(Sample_ID = paste0(penguins_raw$`Individual ID`, "_", penguins_raw$`Sample Number`))
+  
+rownames(penguins) <- penguins$Sample_ID
 ```
 
-```{r Retrieve dataframes}
-beltran_anno <- data.frame(colData(beltran)) %>%
-  mutate(Type = ifelse(grepl("Neuroendocrine", CANCER_TYPE_DETAILED),
-                       "NEPC", "CRPC"))
-
-beltran_cts <- assays(beltran)[[5]]
+```{r Run PCA}
+num <- penguins %>%
+  select(!c(species, island, sex, year, Sample_ID)) %>%
+  t() %>%
+  as.data.frame() %>%
+  select(where(~!all(is.na(.x))))
+  
+pca <- Rubrary::run_PCA(
+  df = num,
+  summary = T, tol = 0,
+  center = T, scale = T,
+  screeplot = T
+)
 ```
 
-```{r Run PCA, eval=FALSE}
-beltran_PCA <- Rubrary::run_PCA(
-  df = beltran_cts
+
+```{r Plot PCA}
+Rubrary::plot_PCA(
+  df_pca = pca,
+  anno = penguins,
+  annoname = "Sample_ID",
+  annotype = "species",
+  title = "Palmer Penguins PCA Scores - Species",
+  label = FALSE
 )
 ```
 
