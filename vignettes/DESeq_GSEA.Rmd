@@ -1,0 +1,90 @@
+---
+title: "DESeq / GSEA"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DESeq / GSEA}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(Rubrary)
+library(dplyr)
+library(tibble)
+
+# For `airway` install
+r = getOption("repos")
+r["CRAN"] = "http://cran.us.r-project.org"
+options(repos = r)
+```
+
+# `airway` Data
+
+Himes, E. B, Jiang, X., Wagner, P., Hu, R., Wang, Q., Klanderman, B., Whitaker, M. R, Duan, Q., Lasky-Su, J., Nikolos, C., Jester, W., Johnson, M., Panettieri, A. R, Tantisira, G. K, Weiss, T. S, Lu, Q. (2014). “RNA-Seq Transcriptome Profiling Identifies CRISPLD2 as a Glucocorticoid Responsive Gene that Modulates Cytokine Function in Airway Smooth Muscle Cells.” PLoS ONE, 9(6), e99625. http://www.ncbi.nlm.nih.gov/pubmed/24926665.
+
+```{r Load airway data, message=FALSE}
+if (!requireNamespace("airway", quietly = TRUE)){
+  BiocManager::install("airway")
+}
+
+library(airway)
+data(airway)
+```
+
+```{r Get counts and annotations from SummarizedExperiment}
+# Counts
+cts <- assay(airway, "counts")
+# Annotation
+anno <- colData(airway) %>%
+  as.data.frame()
+anno$dex <- relevel(anno$dex, "untrt") # Set untreated as first factor
+```
+
+```{r Visualize samples w/ PCA}
+# Rubrary::run_PCA
+# Rubrary::plot_PCA
+```
+
+
+# Differentially Expressed Genes w/ `DESeq2`
+
+```{r Create DESeqDataSet object and run DESeq}
+library(DESeq2)
+
+dds <- DESeqDataSetFromMatrix(
+  countData = cts[,rownames(anno)],
+  colData = anno,
+  design = ~ dex)
+
+dds <- DESeq(dds)
+res <- results(dds, contrast = c("dex", "trt", "untrt"))
+res_df <- Rubrary::output_DESeq(res)
+```
+
+```{r Replace Ensembl ID w/ HGNC symbol}
+library(biomaRt)
+mart <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl",
+                                mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+conv <- Rubrary::convert_genes(
+    genes = res_df$gene,
+    from_to = c("ensembl_gene_id", "hgnc_symbol"),
+    mart = mart, table = T) %>%
+  filter(hgnc_symbol != "") %>%
+  distinct(ensembl_gene_id, .keep_all = T) %>%
+  mutate(hgnc_symbol = make.names(hgnc_symbol, unique = T))
+
+res_hgnc <- dplyr::left_join(conv, res_df, by = join_by(ensembl_gene_id == gene)) %>%
+  column_to_rownames(var = "hgnc_symbol") %>%
+  arrange(desc(sign_log_p))
+
+head(res_hgnc)
+```
+
+# Gene Set Enrichment Analysis w/ `fgsea` (WIP)

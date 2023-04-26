@@ -21,3 +21,10 @@ Kolgomorov-Smirnov enrichment p-value
 \description{
 If no group of interest specified, pulls first condition against others.
 }
+\examples{
+set.seed(13)
+df = data.frame(
+  group = c(rep("A", 50), rep("B",50)),
+  values = c(rnorm(50, mean = 0), rnorm(50, mean = 2)))
+get_kspval(df, value = "values", group = "group", group2 = "A")
+}

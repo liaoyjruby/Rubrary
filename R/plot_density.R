@@ -21,7 +21,11 @@
 #'
 #' @examples
 #' set.seed(13)
-#'
+#' df = data.frame(
+#'   group = c(rep("A", 50), rep("B",50)),
+#'   values = c(rnorm(50, mean = 0), rnorm(50, mean = 2)))
+#' plot_density(df, value = "values", group = "group")
+
 plot_density <- function(df, value, group, group2 = NA, title = NA, pval = T,
                          xlab = value, colors = c("firebrick3", "gray"),
                          rug = F, rug_label = F, rug_lab_nudge = 0.00001,

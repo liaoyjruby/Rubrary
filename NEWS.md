@@ -1,14 +1,8 @@
 
-230426: PCA functions & vignette
-
-Improved
-- `run_PCA`: additional documentation recommending standardization
-- `plot_PCA`: accommodation for passing in `prcomp` object, custom colors
-
-Vignettes
-- `PCA`: changed dataset to `palmerpenguins` and have it actually run and output
-
-230424: Gene accessing, LISI
+General
+- Gene accessing, LISI
+- PCA functions improvements
+- Functional vignettes
 
 New
 -   `get_PC_genes`: accesses BioMart database for genes annotated as
@@ -23,9 +17,20 @@ New
         list of BioMart attrs
     -   Should probably add a error/warning if gene names don't match,
         possible Seurat correction?
+- `convert_genes`: access BioMart database to convert gene name format
 -   `run_LISI`: for Seurat obj, assess integration quantitatively by
     using LISI metric
     -   outputs visualization to help interpret resulting values
+
+Improved
+- `run_PCA`: additional documentation recommending standardization
+- `plot_PCA`: accommodation for passing in `prcomp` object, custom colors
+
+Vignettes
+- `PCA`: changed  to `palmerpenguins` dataset and have it actually run and output
+- `DESeq_GSEA`: working DESeq example with `airway` dataset
+
+230424: Gene accessing, LISI
 
 # Rubrary 0.7.0
 230329 function improvements

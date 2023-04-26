@@ -2,13 +2,45 @@ utils::globalVariables(c(
   "hgnc_symbol", "gene"
 ))
 
+#' Convert list of genes via BioMart
+#'
+#' See `biomaRT::listAttributes(mart)` for list of all options for `from_to`.
+#'
+#' @param genes char vector; genes
+#' @param from_to length 2 char vector; 1st value is current format (ex. `ensemb_gene_id`), 2nd value is desired format (ex. `hgnc_symbol`)
+#' @param mart biomaRt Mart object
+#' @param table logical; T to return conversion table
+#'
+#' @return char vector with converted gene list to desired format
+#' @export
+convert_genes <- function(genes, from_to = c("ensembl_gene_id", "hgnc_symbol"),
+                          mart = NULL, table = FALSE){
+  Rubrary::use_pkg("biomaRt", strict = T)
+  if(is.null(mart)){
+    mart <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl",
+                                mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+  }
+  conv <- biomaRt::getBM(
+    filters = from_to[1],
+    attributes = from_to,
+    values = genes,
+    mart = mart
+  )
+
+  if(!table) {conv <- conv$hgnc_symbol}
+
+  return(conv)
+}
+
 #' Retrieve protein coding genes from Ensembl BioMart
 #'
 #' @return character vector of protein coding genes
 #' @export
 #'
 #' @examples
-#' head(Rubrary::get_PC_genes())
+#' \donttest{
+#'   head(Rubrary::get_PC_genes())
+#' }
 get_PC_genes <- function(){
   Rubrary::use_pkg("biomaRt")
   # Select Homo sapiens mart

@@ -2,18 +2,20 @@
 % Please edit documentation in R/output_DESeq.R
 \name{output_DESeq}
 \alias{output_DESeq}
-\title{Output DESeq results as text and rank file}
+\title{Output DESeq results as dataframe with signed log2 p metric}
 \usage{
-output_DESeq(DE_results, outname = "DESeq_results")
+output_DESeq(DE_results, savename = NULL, rank = FALSE)
 }
 \arguments{
 \item{DE_results}{DESeq results object}
 
-\item{outname}{string; output filename sans extenstion}
+\item{savename}{string; filepath to save table under (no ext.)}
+
+\item{rank}{logical; T to output .rnk file compatible with Java GSEA app}
 }
 \value{
-DESeq results as text and rank file
+Dataframe with DESeq results
 }
 \description{
-Output DESeq results as text and rank file
+Filters out all \code{sign_log_p == NA} rows.
 }

@@ -24,7 +24,7 @@ plot_screeplot(
 \item{savename}{string; filepath to save PNG under}
 }
 \value{
-Screeplot
+Screeplot as ggplot object
 }
 \description{
 Plot screeplot from prcomp

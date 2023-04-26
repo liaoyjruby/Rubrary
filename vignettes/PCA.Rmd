@@ -17,12 +17,18 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(Rubrary)
 library(dplyr)
+
+# For `palmerpenguins` install
+r = getOption("repos")
+r["CRAN"] = "http://cran.us.r-project.org"
+options(repos = r)
 ```
 
 # Data
 
-`palmerpenguins` dataset from Allison Horst
+Using `palmerpenguins` dataset [from Allison Horst](https://allisonhorst.github.io/palmerpenguins/).
 
+Get `palmerpenguins` data and add a unique ID per entry.
 ```{r Get palmerpenguins data, message=FALSE}
 if (!requireNamespace("palmerpenguins", quietly = TRUE)){
   install.packages("palmerpenguins")
@@ -38,12 +44,13 @@ penguins <- penguins %>%
 rownames(penguins) <- penguins$Sample_ID
 ```
 
-```{r Run PCA}
+Subset data to numeric only, and run PCA.
+```{r Run PCA, fig.width=3, fig.height=2}
 num <- penguins %>%
-  select(!c(species, island, sex, year, Sample_ID)) %>%
+  dplyr::select(!c(species, island, sex, year, Sample_ID)) %>%
   t() %>%
   as.data.frame() %>%
-  select(where(~!all(is.na(.x))))
+  dplyr::select(where(~!all(is.na(.x)))) # Filter out NAs
   
 pca <- Rubrary::run_PCA(
   df = num,
@@ -53,15 +60,26 @@ pca <- Rubrary::run_PCA(
 )
 ```
 
-
-```{r Plot PCA}
+Use resulting `prcomp` object to plot PCA scores while annotating by `species`.
+```{r Plot PCA, fig.width=3, fig.height=2}
 Rubrary::plot_PCA(
   df_pca = pca,
   anno = penguins,
   annoname = "Sample_ID",
   annotype = "species",
   title = "Palmer Penguins PCA Scores - Species",
-  label = FALSE
+  label = FALSE,
+  density = T
+)
+
+Rubrary::plot_PCA(
+  df_pca = pca,
+  anno = penguins,
+  annoname = "Sample_ID",
+  annotype = "sex",
+  title = "Palmer Penguins PCA Scores - Sex",
+  label = FALSE,
+  density = T
 )
 ```
 

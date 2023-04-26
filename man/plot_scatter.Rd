@@ -14,6 +14,9 @@ plot_scatter(
   ylabel = ifelse(methods::is(yval, "character"), xval, "Y"),
   cormethod = c("pearson", "spearman"),
   guides = TRUE,
+  alpha = 1,
+  heatmap = FALSE,
+  hm_palette = "Spectral",
   reverse = FALSE,
   title = paste0(xval, " vs. ", yval),
   savename = NULL
@@ -37,6 +40,12 @@ plot_scatter(
 \item{cormethod}{string; correlation method for stats::cor()}
 
 \item{guides}{logical; T to include fitted line}
+
+\item{alpha}{numeric; point alpha value}
+
+\item{heatmap}{logical; T for underlying heatmap (untested)}
+
+\item{hm_palette}{string; RColorBrewer continuous palette name (untested)}
 
 \item{reverse}{logical; T to reverse both axes}
 

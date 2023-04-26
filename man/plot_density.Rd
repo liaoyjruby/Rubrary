@@ -58,5 +58,8 @@ Density plot by group
 }
 \examples{
 set.seed(13)
-
+df = data.frame(
+  group = c(rep("A", 50), rep("B",50)),
+  values = c(rnorm(50, mean = 0), rnorm(50, mean = 2)))
+plot_density(df, value = "values", group = "group")
 }

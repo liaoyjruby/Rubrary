@@ -11,6 +11,13 @@
 #' @return Kolgomorov-Smirnov enrichment p-value
 #' @export
 #'
+#' @examples
+#' set.seed(13)
+#' df = data.frame(
+#'   group = c(rep("A", 50), rep("B",50)),
+#'   values = c(rnorm(50, mean = 0), rnorm(50, mean = 2)))
+#' get_kspval(df, value = "values", group = "group", group2 = "A")
+
 get_kspval <- function(df, value, group, group2 = NULL){
   df <- df[order(df[, value]), ]
   df$rank <- 1:nrow(df)

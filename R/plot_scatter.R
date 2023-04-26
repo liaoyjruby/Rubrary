@@ -12,8 +12,11 @@
 #' @param xlabel string; xval description
 #' @param ylabel string; yval description
 #' @param cormethod string; correlation method for stats::cor()
+#' @param alpha numeric; point alpha value
 #' @param guides logical; T to include fitted line
 #' @param reverse logical; T to reverse both axes
+#' @param heatmap logical; T for underlying heatmap (untested)
+#' @param hm_palette string; RColorBrewer continuous palette name (untested)
 #'
 #' @return Simple scatter plot as ggplot2
 #' @export
@@ -26,6 +29,7 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
                          xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
                          ylabel = ifelse(methods::is(yval, "character"), xval, "Y"),
                          cormethod = c("pearson", "spearman"), guides = TRUE,
+                         alpha = 1, heatmap = FALSE, hm_palette = "Spectral",
                          reverse = FALSE, title = paste0(xval, " vs. ", yval),
                          savename = NULL) {
   cormethod <- match.arg(cormethod)
@@ -68,7 +72,7 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
   #   limits <- c(min(xrange, yrange) * 1.1, max(xrange, yrange) * 1.1)
   # }
 
-  cr <- signif(cor(
+  corr <- signif(cor(
     x = df[, xval],
     y = df[, yval],
     method = cormethod
@@ -76,13 +80,17 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
 
   plt <- ggplot(df, aes(x = .data[[xval]], y = .data[[yval]])) +
     {if(guides) geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")} +
-    geom_point(alpha = 0.2, size = 0.5) +
+    {if(heatmap) geom_raster()} +
+    {if(heatmap) scale_fill_gradientn(
+      colors = rev(RColorBrewer::brewer.pal(11, hm_palette)),
+      breaks = scales::pretty_breaks(5)) } +
+    geom_point(alpha = alpha, size = 0.5) +
     # ggpubr::stat_cor(method = cormethod, cor.coef.name = corcoef) +
     xlab(xlabel) +
     ylab(ylabel) +
     labs(
       title = title,
-      subtitle = paste0(corcoef, " = ", cr, "; ", tools::toTitleCase(cormethod), " correlation")
+      subtitle = paste0(corcoef, " = ", corr, "; ", tools::toTitleCase(cormethod), " correlation")
     ) +
     theme_classic() +
     {if(reverse) scale_x_reverse()} +

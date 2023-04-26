@@ -12,7 +12,7 @@ utils::globalVariables(c(
 #' @param npcs integer; # of PCs to include in plot
 #' @param cum_var_exp integer; c(1:100), cumulative variance explained threshold
 #'
-#' @return Screeplot
+#' @return Screeplot as ggplot object
 #' @export
 #'
 plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
@@ -46,7 +46,8 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
     labs(title = paste0(title_scr, " Screeplot")) +
     theme_bw() +
     theme(legend.title = element_blank(),
-          axis.text.x = element_text(angle = 90)) +
+          # axis.text.x = element_text(angle = 90)
+          ) +
     {if (label) ggrepel::geom_text_repel(size = 3, show.legend = F)}
 
   if(!is.null(savename)){

@@ -82,10 +82,9 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", PCtype = c("
   if (all(is.null(anno))) { # No coloring / annotation
     plt <- ggplot(df, aes(x = .data[[PCx]], y = .data[[PCy]])) +
       geom_point(size = 2) +
-      labs(
-        title = title,
-        x = PCxlab,
-        y = PCylab) +
+      labs(title = title,
+           x = PCxlab,
+           y = PCylab) +
       theme_classic() +
       {if (label) ggrepel::geom_text_repel(label = df[, PCtype])}
   } else {
@@ -95,36 +94,19 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", PCtype = c("
     df[, 2:ncol(df)] <- sapply(df[, 2:ncol(df)], as.numeric)
 
     if (is.null(annotype2)) {
-      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype)], by = structure(names = PCtype, .Data = annoname))
+      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype)],
+                                    by = structure(names = PCtype, .Data = annoname))
       df_merged <- df_merged[, c(PCtype, PCx, PCy, annotype)]
     } else {
-      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype, annotype2)], by = structure(names = PCtype, .Data = annoname))
+      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype, annotype2)],
+                                    by = structure(names = PCtype, .Data = annoname))
       df_merged <- df_merged[, c(PCtype, PCx, PCy, annotype, annotype2)]
     }
-    # colnames(df_merged) <- c(PCx, PCy, "Type")
 
     # Two groups, calc KS p-value for both PCx and PCy
     if (length(unique(df_merged[, annotype])) == 2) {
-      group1 <- unique(df_merged[, annotype])[1]
-      # group2 <- unique(df_merged[,annotype])[2]
-
-      # PCx ranking
-      df_merged <- df_merged[order(df_merged[, PCx], decreasing = T), ]
-      df_merged$rankX <- 1:nrow(df_merged)
-
-      # PCy ranking
-      df_merged <- df_merged[order(df_merged[, PCy], decreasing = T), ]
-      df_merged$rankY <- 1:nrow(df_merged)
-
-      kpX <- stats::ks.test( # for PCx
-        x = df_merged[!df_merged[, annotype] == group1, "rankX"],
-        y = df_merged[df_merged[, annotype] == group1, "rankX"]
-      )$p.value
-
-      kpY <- stats::ks.test( # for PCy
-        x = df_merged[!df_merged[, annotype] == group1, "rankY"],
-        y = df_merged[df_merged[, annotype] == group1, "rankY"]
-      )$p.value
+      kpX <- Rubrary::get_kspval(df_merged, PCx, annotype,unique(df_merged[, annotype])[1])
+      kpY <- Rubrary::get_kspval(df_merged, PCy, annotype, unique(df_merged[, annotype])[1])
 
       grobX <- grid::grobTree(
         grid::textGrob(
@@ -227,7 +209,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", PCtype = c("
         width = width
       )
     }
-    # plt <- mplt
+    plt <- mplt
   }
 
   return(plt)
