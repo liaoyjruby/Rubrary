@@ -25,10 +25,11 @@ r["CRAN"] = "http://cran.us.r-project.org"
 options(repos = r)
 ```
 
-# `airway` Data
+# Load data
 
-Himes, E. B, Jiang, X., Wagner, P., Hu, R., Wang, Q., Klanderman, B., Whitaker, M. R, Duan, Q., Lasky-Su, J., Nikolos, C., Jester, W., Johnson, M., Panettieri, A. R, Tantisira, G. K, Weiss, T. S, Lu, Q. (2014). “RNA-Seq Transcriptome Profiling Identifies CRISPLD2 as a Glucocorticoid Responsive Gene that Modulates Cytokine Function in Airway Smooth Muscle Cells.” PLoS ONE, 9(6), e99625. http://www.ncbi.nlm.nih.gov/pubmed/24926665.
+Himes, E. B, Jiang, X., Wagner, P., Hu, R., Wang, Q., Klanderman, B., Whitaker, M. R, Duan, Q., Lasky-Su, J., Nikolos, C., Jester, W., Johnson, M., Panettieri, A. R, Tantisira, G. K, Weiss, T. S, Lu, Q. (2014). “RNA-Seq Transcriptome Profiling Identifies CRISPLD2 as a Glucocorticoid Responsive Gene that Modulates Cytokine Function in Airway Smooth Muscle Cells.” PLoS ONE, 9(6), e99625. https://doi.org/10.1371/journal.pone.0099625.
 
+## Get `airway` data from package
 ```{r Load airway data, message=FALSE}
 if (!requireNamespace("airway", quietly = TRUE)){
   BiocManager::install("airway")
@@ -38,6 +39,7 @@ library(airway)
 data(airway)
 ```
 
+Get counts and annotations from SummarizedExperiment
 ```{r Get counts and annotations from SummarizedExperiment}
 # Counts
 cts <- assay(airway, "counts")
@@ -47,14 +49,17 @@ anno <- colData(airway) %>%
 anno$dex <- relevel(anno$dex, "untrt") # Set untreated as first factor
 ```
 
+Visualize samples w/ PCA
 ```{r Visualize samples w/ PCA}
+# log2UQ
 # Rubrary::run_PCA
 # Rubrary::plot_PCA
 ```
 
 
-# Differentially Expressed Genes w/ `DESeq2`
+# `DESeq2` differentially expressed genes
 
+## Create DESeqDataSet object and run DESeq
 ```{r Create DESeqDataSet object and run DESeq}
 library(DESeq2)
 
@@ -68,6 +73,7 @@ res <- results(dds, contrast = c("dex", "trt", "untrt"))
 res_df <- Rubrary::output_DESeq(res)
 ```
 
+## Replace Ensembl ID w/ HGNC symbol
 ```{r Replace Ensembl ID w/ HGNC symbol}
 library(biomaRt)
 mart <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl",
@@ -81,10 +87,59 @@ conv <- Rubrary::convert_genes(
   mutate(hgnc_symbol = make.names(hgnc_symbol, unique = T))
 
 res_hgnc <- dplyr::left_join(conv, res_df, by = join_by(ensembl_gene_id == gene)) %>%
-  column_to_rownames(var = "hgnc_symbol") %>%
+  # column_to_rownames(var = "hgnc_symbol") %>%
   arrange(desc(sign_log_p))
 
 head(res_hgnc)
 ```
 
-# Gene Set Enrichment Analysis w/ `fgsea` (WIP)
+# `fgsea` gene set enrichment analysis
+
+## Get pathways from `msigdbr`
+
+[Human MSigDB Collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp)
+- C2CP: curated gene sets, canonical pathways
+- C5GO: ontology gene sets, Gene Ontology gene sets
+  - BP: GO Biological Process ontology
+  - CC: GO Cellular Component ontology
+  - MF: GO Molecular Function ontology
+- H: hallmark gene sets
+
+```{r Get pathways from `msigdbr`}
+if (!requireNamespace("msigdbr", quietly = TRUE)){
+  BiocManager::install("msigdbr")
+}
+library(msigdbr)
+
+msigdbr::msigdbr_collections()
+
+pthwys <- rbind(
+  msigdbr(category = "C2", subcategory = "CP"),
+  msigdbr(category = "C5", subcategory = "GO:BP"),
+  msigdbr(category = "C5", subcategory = "GO:CC"),
+  msigdbr(category = "C5", subcategory = "GO:MF"),
+  msigdbr(category = "H")
+) %>%
+  split(x = .$gene_symbol, f = .$gs_name) # Named list of pathways
+```
+
+## Run `fgsea`
+
+```{r Run fgsea}
+# `fgsea` requires a named numeric vector as input to the `stats` argument
+deseq_stats <- setNames(
+    res_hgnc[,"sign_log_p"], 
+    res_hgnc[,"hgnc_symbol"]
+)
+
+gsea_results <- fgsea::fgsea(
+  pathways = pthwys,
+  stats = deseq_stats,
+  eps = 0.0,
+  minSize = 15,
+  maxSize  = 500) %>%
+  arrange(desc(NES)) %>%
+  mutate(sign_log10_p = sign(NES) * -log10(pval))
+```
+
+

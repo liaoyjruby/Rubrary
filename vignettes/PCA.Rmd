@@ -28,6 +28,8 @@ options(repos = r)
 
 Using `palmerpenguins` dataset [from Allison Horst](https://allisonhorst.github.io/palmerpenguins/).
 
+## Load data
+
 Get `palmerpenguins` data and add a unique ID per entry.
 ```{r Get palmerpenguins data, message=FALSE}
 if (!requireNamespace("palmerpenguins", quietly = TRUE)){
@@ -44,8 +46,10 @@ penguins <- penguins %>%
 rownames(penguins) <- penguins$Sample_ID
 ```
 
-Subset data to numeric only, and run PCA.
-```{r Run PCA, fig.width=3, fig.height=2}
+## Run PCA
+
+Subset data to numeric only, then run PCA.
+```{r Run PCA, fig.width=6, fig.height=4}
 num <- penguins %>%
   dplyr::select(!c(species, island, sex, year, Sample_ID)) %>%
   t() %>%
@@ -60,8 +64,10 @@ pca <- Rubrary::run_PCA(
 )
 ```
 
-Use resulting `prcomp` object to plot PCA scores while annotating by `species`.
-```{r Plot PCA, fig.width=3, fig.height=2}
+## Plot PCA
+
+Use resulting `prcomp` object to plot PCA scores while annotating by `species` metadata.
+```{r Plot PCA w/ species anno, fig.width=6, fig.height=4}
 Rubrary::plot_PCA(
   df_pca = pca,
   anno = penguins,
@@ -71,7 +77,10 @@ Rubrary::plot_PCA(
   label = FALSE,
   density = T
 )
+```
 
+Same PCA scores plot, but annotating by `sex` metadata.
+```{r Plot PCA w/ sex anno, fig.width=6, fig.height=4}
 Rubrary::plot_PCA(
   df_pca = pca,
   anno = penguins,

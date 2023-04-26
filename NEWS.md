@@ -1,12 +1,20 @@
+## General
+
+## New
+
+## Improved
+
+## Vignettes
+- `DESeq_GSEA`: fgsea section
+
 # Rubrary 0.8.0
 
-
-General
+## General
 - Gene accessing, LISI
 - PCA functions improvements
 - Functional vignettes
 
-New
+## New
 -   `get_PC_genes`: accesses BioMart database for genes annotated as
     protein coding
 -   `filter_PC_genes`: filter dataframe to specified list of genes, with
