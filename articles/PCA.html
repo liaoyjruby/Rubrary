@@ -82,15 +82,7 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://liaoyjruby.github.io/Rubrary/">Rubrary</a></span><span class="op">)</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"cBioPortalData"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span>  <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"cBioPortalData"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'utils::findMatches' by</span></span>
-<span><span class="co">#&gt; 'S4Vectors::findMatches' when loading 'AnnotationDbi'</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">cBioPortalData</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: AnVIL</span></span>
-<span><span class="co">#&gt; Loading required package: dplyr</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
@@ -98,131 +90,52 @@
 <span><span class="co">#&gt;     filter, lag</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
-<span><span class="co">#&gt; Loading required package: MultiAssayExperiment</span></span>
-<span><span class="co">#&gt; Loading required package: SummarizedExperiment</span></span>
-<span><span class="co">#&gt; Loading required package: MatrixGenerics</span></span>
-<span><span class="co">#&gt; Loading required package: matrixStats</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'matrixStats'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     count</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'MatrixGenerics'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,</span></span>
-<span><span class="co">#&gt;     colCounts, colCummaxs, colCummins, colCumprods, colCumsums,</span></span>
-<span><span class="co">#&gt;     colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,</span></span>
-<span><span class="co">#&gt;     colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,</span></span>
-<span><span class="co">#&gt;     colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,</span></span>
-<span><span class="co">#&gt;     colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,</span></span>
-<span><span class="co">#&gt;     colWeightedMeans, colWeightedMedians, colWeightedSds,</span></span>
-<span><span class="co">#&gt;     colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,</span></span>
-<span><span class="co">#&gt;     rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,</span></span>
-<span><span class="co">#&gt;     rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,</span></span>
-<span><span class="co">#&gt;     rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,</span></span>
-<span><span class="co">#&gt;     rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,</span></span>
-<span><span class="co">#&gt;     rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,</span></span>
-<span><span class="co">#&gt;     rowWeightedMads, rowWeightedMeans, rowWeightedMedians,</span></span>
-<span><span class="co">#&gt;     rowWeightedSds, rowWeightedVars</span></span>
-<span><span class="co">#&gt; Loading required package: GenomicRanges</span></span>
-<span><span class="co">#&gt; Loading required package: stats4</span></span>
-<span><span class="co">#&gt; Loading required package: BiocGenerics</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'BiocGenerics'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     combine, intersect, setdiff, union</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     IQR, mad, sd, var, xtabs</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     anyDuplicated, aperm, append, as.data.frame, basename, cbind,</span></span>
-<span><span class="co">#&gt;     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,</span></span>
-<span><span class="co">#&gt;     get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,</span></span>
-<span><span class="co">#&gt;     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,</span></span>
-<span><span class="co">#&gt;     Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,</span></span>
-<span><span class="co">#&gt;     table, tapply, union, unique, unsplit, which.max, which.min</span></span>
-<span><span class="co">#&gt; Loading required package: S4Vectors</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'S4Vectors'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     first, rename</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:utils':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     findMatches</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     expand.grid, I, unname</span></span>
-<span><span class="co">#&gt; Loading required package: IRanges</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'IRanges'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     collapse, desc, slice</span></span>
-<span><span class="co">#&gt; Loading required package: GenomeInfoDb</span></span>
-<span><span class="co">#&gt; Loading required package: Biobase</span></span>
-<span><span class="co">#&gt; Welcome to Bioconductor</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Vignettes contain introductory material; view with</span></span>
-<span><span class="co">#&gt;     'browseVignettes()'. To cite Bioconductor, see</span></span>
-<span><span class="co">#&gt;     'citation("Biobase")', and for packages 'citation("pkgname")'.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'Biobase'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:MatrixGenerics':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     rowMedians</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:matrixStats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     anyMissing, rowMedians</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<p>Beltran, H., Prandi, D., Mosquera, J. <em>et al.</em> Divergent
-clonal evolution of castration-resistant neuroendocrine prostate cancer.
-<em>Nat Med</em> <strong>22</strong>, 298–305 (2016). <a href="https://doi.org/10.1038/nm.4045" class="external-link uri">https://doi.org/10.1038/nm.4045</a></p>
-<p><a href="https://www.cbioportal.org/study/summary?id=nepc_wcm_2016" class="external-link uri">https://www.cbioportal.org/study/summary?id=nepc_wcm_2016</a></p>
+<p><code>palmerpenguins</code> dataset from Allison Horst</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">beltran_file</span> <span class="op">&lt;-</span> <span class="fu">cBioPortalData</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/cBioPortalData/man/downloadStudy.html" class="external-link">downloadStudy</a></span><span class="op">(</span>cancer_study_id <span class="op">=</span> <span class="st">"nepc_wcm_2016"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .service_validate_md5sum(api_reference_url, api_reference_md5sum, : service version differs from validated version</span></span>
-<span><span class="co">#&gt;     service url: https://www.cbioportal.org/api/v2/api-docs</span></span>
-<span><span class="co">#&gt;     observed md5sum: 008be96361f24a5c8d1cfb7f10ae9c97</span></span>
-<span><span class="co">#&gt;     expected md5sum: 07ceb76cc5afcf54a9cf2e1a689b18f7</span></span>
-<span><span class="va">beltran_dir</span> <span class="op">&lt;-</span> <span class="fu">cBioPortalData</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/cBioPortalData/man/downloadStudy.html" class="external-link">untarStudy</a></span><span class="op">(</span><span class="va">beltran_file</span>, <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">beltran</span> <span class="op">&lt;-</span> <span class="fu">cBioPortalData</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/cBioPortalData/man/downloadStudy.html" class="external-link">loadStudy</a></span><span class="op">(</span><span class="va">beltran_dir</span><span class="op">)</span></span>
-<span><span class="va">beltran</span></span>
-<span><span class="co">#&gt; A MultiAssayExperiment object of 6 listed</span></span>
-<span><span class="co">#&gt;  experiments with user-defined names and respective classes.</span></span>
-<span><span class="co">#&gt;  Containing an ExperimentList class object of length 6:</span></span>
-<span><span class="co">#&gt;  [1] cna_hg19.seg: RaggedExperiment with 36869 rows and 107 columns</span></span>
-<span><span class="co">#&gt;  [2] log2CNA: SummarizedExperiment with 18612 rows and 107 columns</span></span>
-<span><span class="co">#&gt;  [3] mutations_extended: RaggedExperiment with 7363 rows and 114 columns</span></span>
-<span><span class="co">#&gt;  [4] mutations_mskcc: RaggedExperiment with 7363 rows and 114 columns</span></span>
-<span><span class="co">#&gt;  [5] RNA_Seq_expression_median: SummarizedExperiment with 33200 rows and 49 columns</span></span>
-<span><span class="co">#&gt;  [6] RNA_Seq_mRNA_median_all_sample_Zscores: SummarizedExperiment with 33200 rows and 49 columns</span></span>
-<span><span class="co">#&gt; Functionality:</span></span>
-<span><span class="co">#&gt;  experiments() - obtain the ExperimentList instance</span></span>
-<span><span class="co">#&gt;  colData() - the primary/phenotype DataFrame</span></span>
-<span><span class="co">#&gt;  sampleMap() - the sample coordination DataFrame</span></span>
-<span><span class="co">#&gt;  `$`, `[`, `[[` - extract colData columns, subset, or experiment</span></span>
-<span><span class="co">#&gt;  *Format() - convert into a long or wide DataFrame</span></span>
-<span><span class="co">#&gt;  assays() - convert ExperimentList to a SimpleList of matrices</span></span>
-<span><span class="co">#&gt;  exportClass() - save data to flat files</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">beltran_anno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">colData</span><span class="op">(</span><span class="va">beltran</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Neuroendocrine"</span>, <span class="va">CANCER_TYPE_DETAILED</span><span class="op">)</span>,</span>
-<span>                       <span class="st">"NEPC"</span>, <span class="st">"CRPC"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">beltran_cts</span> <span class="op">&lt;-</span> <span class="fu">assays</span><span class="op">(</span><span class="va">beltran</span><span class="op">)</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "species"           "island"            "bill_length_mm"   </span></span>
+<span><span class="co">#&gt; [4] "bill_depth_mm"     "flipper_length_mm" "body_mass_g"      </span></span>
+<span><span class="co">#&gt; [7] "sex"               "year"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"penguins"</span><span class="op">)</span></span>
+<span><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Sample_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">penguins_raw</span><span class="op">$</span><span class="va">`Individual ID`</span>, <span class="st">"_"</span>, <span class="va">penguins_raw</span><span class="op">$</span><span class="va">`Sample Number`</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">penguins</span><span class="op">$</span><span class="va">Sample_ID</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">num</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, <span class="va">Sample_ID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="op">~</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="va">pca</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/run_PCA.html">run_PCA</a></span><span class="op">(</span></span>
+<span>  df <span class="op">=</span> <span class="va">num</span>,</span>
+<span>  summary <span class="op">=</span> <span class="cn">T</span>, tol <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  center <span class="op">=</span> <span class="cn">T</span>, scale <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>  screeplot <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; ** Cumulative var. exp. &gt;= 80% at PC 2 (88.2%)</span></span></code></pre></div>
+<p><img src="PCA_files/figure-html/Run%20PCA-1.png" width="700"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">beltran_PCA</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/run_PCA.html">run_PCA</a></span><span class="op">(</span></span>
-<span>  df <span class="op">=</span> <span class="va">beltran_cts</span></span>
+<code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
+<span>  df_pca <span class="op">=</span> <span class="va">pca</span>,</span>
+<span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
+<span>  annoname <span class="op">=</span> <span class="st">"Sample_ID"</span>,</span>
+<span>  annotype <span class="op">=</span> <span class="st">"species"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Scores - Species"</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p><img src="PCA_files/figure-html/Plot%20PCA-1.png" width="700"></p>
 </div>
   </main>
 </div>
