@@ -1,10 +1,10 @@
-## General
+General
 
-## New
+New
 
-## Improved
+Improved
 
-## Vignettes
+Vignettes
 - `DESeq_GSEA`: fgsea section
 
 # Rubrary 0.8.0
@@ -39,8 +39,6 @@ Improved
 Vignettes
 - `PCA`: changed  to `palmerpenguins` dataset and have it actually run and output
 - `DESeq_GSEA`: working DESeq example with `airway` dataset
-
-230424: Gene accessing, LISI
 
 # Rubrary 0.7.0
 230329 function improvements

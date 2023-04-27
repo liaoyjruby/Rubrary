@@ -1,6 +1,13 @@
 ---
 title: "DESeq / GSEA"
-output: rmarkdown::html_vignette
+author: "Yi Jou (Ruby) Liao"
+output: 
+  rmarkdown::html_vignette:
+    fig_width: 6
+    fig_height: 4
+    toc: true
+    number_sections: true
+    df_print: paged
 vignette: >
   %\VignetteIndexEntry{DESeq / GSEA}
   %\VignetteEngine{knitr::rmarkdown}
@@ -39,7 +46,7 @@ library(airway)
 data(airway)
 ```
 
-Get counts and annotations from SummarizedExperiment
+## Get counts and annotations from SummarizedExperiment
 ```{r Get counts and annotations from SummarizedExperiment}
 # Counts
 cts <- assay(airway, "counts")
@@ -49,7 +56,7 @@ anno <- colData(airway) %>%
 anno$dex <- relevel(anno$dex, "untrt") # Set untreated as first factor
 ```
 
-Visualize samples w/ PCA
+## Visualize samples w/ PCA
 ```{r Visualize samples w/ PCA}
 # log2UQ
 # Rubrary::run_PCA
@@ -90,7 +97,7 @@ res_hgnc <- dplyr::left_join(conv, res_df, by = join_by(ensembl_gene_id == gene)
   # column_to_rownames(var = "hgnc_symbol") %>%
   arrange(desc(sign_log_p))
 
-head(res_hgnc)
+res_hgnc
 ```
 
 # `fgsea` gene set enrichment analysis

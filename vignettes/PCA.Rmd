@@ -1,6 +1,13 @@
 ---
 title: "Principal Components Analysis (PCA)"
-output: rmarkdown::html_vignette
+author: "Yi Jou (Ruby) Liao"
+output: 
+  rmarkdown::html_vignette:
+    fig_width: 6
+    fig_height: 4
+    toc: true
+    number_sections: true
+    df_print: paged
 vignette: >
   %\VignetteIndexEntry{Principal Components Analysis (PCA)}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,7 +17,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  dev = "png"
 )
 ```
 
@@ -31,7 +39,7 @@ Using `palmerpenguins` dataset [from Allison Horst](https://allisonhorst.github.
 ## Load data
 
 Get `palmerpenguins` data and add a unique ID per entry.
-```{r Get palmerpenguins data, message=FALSE}
+```{r Get_ data, message=FALSE}
 if (!requireNamespace("palmerpenguins", quietly = TRUE)){
   install.packages("palmerpenguins")
 }
@@ -46,10 +54,10 @@ penguins <- penguins %>%
 rownames(penguins) <- penguins$Sample_ID
 ```
 
-## Run PCA
+# Run PCA
 
 Subset data to numeric only, then run PCA.
-```{r Run PCA, fig.width=6, fig.height=4}
+```{r Run_PCA}
 num <- penguins %>%
   dplyr::select(!c(species, island, sex, year, Sample_ID)) %>%
   t() %>%
@@ -64,10 +72,10 @@ pca <- Rubrary::run_PCA(
 )
 ```
 
-## Plot PCA
+# Plot PCA
 
 Use resulting `prcomp` object to plot PCA scores while annotating by `species` metadata.
-```{r Plot PCA w/ species anno, fig.width=6, fig.height=4}
+```{r Plot_PCA_species_anno}
 Rubrary::plot_PCA(
   df_pca = pca,
   anno = penguins,
@@ -80,7 +88,7 @@ Rubrary::plot_PCA(
 ```
 
 Same PCA scores plot, but annotating by `sex` metadata.
-```{r Plot PCA w/ sex anno, fig.width=6, fig.height=4}
+```{r Plot_PCA_sex_anno}
 Rubrary::plot_PCA(
   df_pca = pca,
   anno = penguins,
