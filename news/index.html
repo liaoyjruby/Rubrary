@@ -53,11 +53,32 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="rubrary-080">Rubrary 0.8.0<a class="anchor" aria-label="anchor" href="#rubrary-080"></a></h2>
-<p>General - Gene accessing, LISI - PCA functions improvements - Functional vignettes</p>
-<p>New - <code>get_PC_genes</code>: accesses BioMart database for genes annotated as protein coding - <code>filter_PC_genes</code>: filter dataframe to specified list of genes, with possible <code><a href="https://satijalab.org/seurat/reference/UpdateSymbolList.html" class="external-link">Seurat::UpdateSymbolList</a></code> powered gene symbol correcting. Technically this isn’t specific to protein-coding filtering only and words with list input. - <code>get_gene_desc</code>: accesses BioMart database for gene description w/ list of genes input - Technically not specific to getting description fields given list of BioMart attrs - Should probably add a error/warning if gene names don’t match, possible Seurat correction? - <code>convert_genes</code>: access BioMart database to convert gene name format - <code>run_LISI</code>: for Seurat obj, assess integration quantitatively by using LISI metric - outputs visualization to help interpret resulting values</p>
-<p>Improved - <code>run_PCA</code>: additional documentation recommending standardization - <code>plot_PCA</code>: accommodation for passing in <code>prcomp</code> object, custom colors</p>
+<div class="section level3">
+<h3 id="general-0-8-0">General<a class="anchor" aria-label="anchor" href="#general-0-8-0"></a></h3>
+<ul><li>Gene accessing, LISI</li>
+<li>PCA functions improvements</li>
+<li>Functional vignettes</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-0-8-0">New<a class="anchor" aria-label="anchor" href="#new-0-8-0"></a></h3>
+<ul><li>
+<code>get_PC_genes</code>: accesses BioMart database for genes annotated as protein coding</li>
+<li>
+<code>filter_PC_genes</code>: filter dataframe to specified list of genes, with possible <code><a href="https://satijalab.org/seurat/reference/UpdateSymbolList.html" class="external-link">Seurat::UpdateSymbolList</a></code> powered gene symbol correcting. Technically this isn’t specific to protein-coding filtering only and words with list input.</li>
+<li>
+<code>get_gene_desc</code>: accesses BioMart database for gene description w/ list of genes input
+<ul><li>Technically not specific to getting description fields given list of BioMart attrs</li>
+<li>Should probably add a error/warning if gene names don’t match, possible Seurat correction?</li>
+</ul></li>
+<li>
+<code>convert_genes</code>: access BioMart database to convert gene name format</li>
+<li>
+<code>run_LISI</code>: for Seurat obj, assess integration quantitatively by using LISI metric
+<ul><li>outputs visualization to help interpret resulting values</li>
+</ul></li>
+</ul><p>Improved - <code>run_PCA</code>: additional documentation recommending standardization - <code>plot_PCA</code>: accommodation for passing in <code>prcomp</code> object, custom colors</p>
 <p>Vignettes - <code>PCA</code>: changed to <code>palmerpenguins</code> dataset and have it actually run and output - <code>DESeq_GSEA</code>: working DESeq example with <code>airway</code> dataset</p>
-<p>230424: Gene accessing, LISI</p>
+</div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="rubrary-070">Rubrary 0.7.0<a class="anchor" aria-label="anchor" href="#rubrary-070"></a></h2>

@@ -73,6 +73,8 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Principal Components Analysis (PCA)</h1>
+                        <h4 data-toc-skip class="author">Yi Jou (Ruby)
+Liao</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/liaoyjruby/Rubrary/blob/HEAD/vignettes/PCA.Rmd" class="external-link"><code>vignettes/PCA.Rmd</code></a></small>
@@ -102,6 +104,9 @@
 </h2>
 <p>Using <code>palmerpenguins</code> dataset <a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">from Allison
 Horst</a>.</p>
+<div class="section level3">
+<h3 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
+</h3>
 <p>Get <code>palmerpenguins</code> data and add a unique ID per
 entry.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -120,7 +125,12 @@ entry.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Sample_ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">penguins_raw</span><span class="op">$</span><span class="va">`Individual ID`</span>, <span class="st">"_"</span>, <span class="va">penguins_raw</span><span class="op">$</span><span class="va">`Sample Number`</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">penguins</span><span class="op">$</span><span class="va">Sample_ID</span></span></code></pre></div>
-<p>Subset data to numeric only, and run PCA.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="run-pca">Run PCA<a class="anchor" aria-label="anchor" href="#run-pca"></a>
+</h2>
+<p>Subset data to numeric only, then run PCA.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">num</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, <span class="va">Sample_ID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -135,9 +145,13 @@ entry.</p>
 <span>  screeplot <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ** Cumulative var. exp. &gt;= 80% at PC 2 (88.2%)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/Run%20PCA-1.png" width="288"></p>
+<p><img src="PCA_files/figure-html/Run_PCA-1.png" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="plot-pca">Plot PCA<a class="anchor" aria-label="anchor" href="#plot-pca"></a>
+</h2>
 <p>Use resulting <code>prcomp</code> object to plot PCA scores while
-annotating by <code>species</code>.</p>
+annotating by <code>species</code> metadata.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
 <span>  df_pca <span class="op">=</span> <span class="va">pca</span>,</span>
@@ -147,9 +161,12 @@ annotating by <code>species</code>.</p>
 <span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Scores - Species"</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  density <span class="op">=</span> <span class="cn">T</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="PCA_files/figure-html/Plot_PCA_species_anno-1.png" width="700"></p>
+<p>Same PCA scores plot, but annotating by <code>sex</code>
+metadata.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
 <span>  df_pca <span class="op">=</span> <span class="va">pca</span>,</span>
 <span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
 <span>  annoname <span class="op">=</span> <span class="st">"Sample_ID"</span>,</span>
@@ -158,9 +175,10 @@ annotating by <code>species</code>.</p>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  density <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_files/figure-html/Plot%20PCA-1.png" width="288"></p>
+<p><img src="PCA_files/figure-html/Plot_PCA_sex_anno-1.png" width="700"></p>
 </div>
-  </main>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
