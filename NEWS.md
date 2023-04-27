@@ -32,11 +32,11 @@ Vignettes
     using LISI metric
     -   outputs visualization to help interpret resulting values
 
-Improved
+## Improved
 - `run_PCA`: additional documentation recommending standardization
 - `plot_PCA`: accommodation for passing in `prcomp` object, custom colors
 
-Vignettes
+## Vignettes
 - `PCA`: changed  to `palmerpenguins` dataset and have it actually run and output
 - `DESeq_GSEA`: working DESeq example with `airway` dataset
 

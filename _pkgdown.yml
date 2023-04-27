@@ -1,9 +1,9 @@
 url: https://liaoyjruby.github.io/Rubrary/
 template:
   bootstrap: 5
-  bootswatch: darkly
-  theme: breezedark
+  bootswatch: flatly
+  theme: arrow-light
   bslib:
-    primary: '#911c1c'
+    primary: '#6F1A07'
     secondary: '#e77575'
 
