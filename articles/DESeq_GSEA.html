@@ -512,9 +512,9 @@ results.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gsea_results</span><span class="op">[</span><span class="va">gsea_results</span><span class="op">$</span><span class="va">pathway</span> <span class="op">==</span> <span class="st">"HALLMARK_ADIPOGENESIS"</span>,<span class="op">]</span></span>
 <span><span class="co">#&gt;                  pathway         pval         padj   log2err        ES      NES</span></span>
-<span><span class="co">#&gt; 1: HALLMARK_ADIPOGENESIS 4.505836e-07 0.0007826638 0.6749629 0.6955378 1.919844</span></span>
+<span><span class="co">#&gt; 1: HALLMARK_ADIPOGENESIS 4.336231e-07 0.0007532034 0.6749629 0.6955378 1.905522</span></span>
 <span><span class="co">#&gt;    size                           leadingEdge sign_log10_p</span></span>
-<span><span class="co">#&gt; 1:  196 SPARCL1,STOM,GPX3,TST,SLC5A6,SQOR,...     6.346225</span></span>
+<span><span class="co">#&gt; 1:  196 SPARCL1,STOM,GPX3,TST,SLC5A6,SQOR,...     6.362888</span></span>
 <span></span>
 <span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_GSEA_pathway.html">plot_GSEA_pathway</a></span><span class="op">(</span></span>
 <span>  sig <span class="op">=</span> <span class="va">deseq_res_hgnc_PC</span>,</span>
@@ -533,9 +533,9 @@ labeling each gene may be appropriate.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gsea_results</span><span class="op">[</span><span class="va">gsea_results</span><span class="op">$</span><span class="va">pathway</span> <span class="op">==</span> <span class="st">"GOBP_NEURON_FATE_SPECIFICATION"</span>,<span class="op">]</span></span>
 <span><span class="co">#&gt;                           pathway         pval       padj   log2err         ES</span></span>
-<span><span class="co">#&gt; 1: GOBP_NEURON_FATE_SPECIFICATION 3.084947e-05 0.01786184 0.5573322 -0.8621391</span></span>
+<span><span class="co">#&gt; 1: GOBP_NEURON_FATE_SPECIFICATION 0.0002154196 0.08538821 0.5188481 -0.8621391</span></span>
 <span><span class="co">#&gt;          NES size               leadingEdge sign_log10_p</span></span>
-<span><span class="co">#&gt; 1: -1.888097   20 GLI2,SUFU,GLI3,EYA1,EHMT2    -4.510752</span></span>
+<span><span class="co">#&gt; 1: -1.835486   20 GLI2,SUFU,GLI3,EYA1,EHMT2    -3.666715</span></span>
 <span></span>
 <span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_GSEA_pathway.html">plot_GSEA_pathway</a></span><span class="op">(</span></span>
 <span>  sig <span class="op">=</span> <span class="va">deseq_res_hgnc_PC</span>,</span>
@@ -559,27 +559,27 @@ names to plot gene enrichment plots for the most significant negatively
 enriched pathways.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gsea_results</span><span class="op">[</span><span class="va">gsea_results</span><span class="op">$</span><span class="va">pathway</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">neg_pws</span>,<span class="op">]</span></span>
-<span><span class="co">#&gt;                                              pathway         pval         padj</span></span>
-<span><span class="co">#&gt; 1:        GOMF_SIGNALING_RECEPTOR_REGULATOR_ACTIVITY 7.663365e-06 0.0099834492</span></span>
-<span><span class="co">#&gt; 2:                            GOCC_SYNAPTIC_MEMBRANE 2.676290e-07 0.0006973074</span></span>
-<span><span class="co">#&gt; 3:                        GOCC_POSTSYNAPTIC_MEMBRANE 2.336522e-07 0.0006973074</span></span>
-<span><span class="co">#&gt; 4:     GOCC_INTRINSIC_COMPONENT_OF_SYNAPTIC_MEMBRANE 1.445414e-05 0.0125534240</span></span>
-<span><span class="co">#&gt; 5: GOCC_INTRINSIC_COMPONENT_OF_POSTSYNAPTIC_MEMBRANE 1.331605e-05 0.0125534240</span></span>
+<span><span class="co">#&gt;                                          pathway         pval         padj</span></span>
+<span><span class="co">#&gt; 1:    GOMF_SIGNALING_RECEPTOR_REGULATOR_ACTIVITY 4.261417e-06 0.0055515605</span></span>
+<span><span class="co">#&gt; 2:                        GOCC_SYNAPTIC_MEMBRANE 4.074127e-07 0.0007532034</span></span>
+<span><span class="co">#&gt; 3:                     GOCC_PRESYNAPTIC_MEMBRANE 1.878609e-05 0.0163157167</span></span>
+<span><span class="co">#&gt; 4: GOCC_INTRINSIC_COMPONENT_OF_SYNAPTIC_MEMBRANE 1.749676e-05 0.0163157167</span></span>
+<span><span class="co">#&gt; 5:                    GOCC_POSTSYNAPTIC_MEMBRANE 8.500710e-08 0.0004429720</span></span>
 <span><span class="co">#&gt;      log2err         ES       NES size</span></span>
-<span><span class="co">#&gt; 1: 0.5933255 -0.4721901 -1.602508  387</span></span>
-<span><span class="co">#&gt; 2: 0.6749629 -0.5283197 -1.765797  319</span></span>
-<span><span class="co">#&gt; 3: 0.6901325 -0.5817831 -1.879653  226</span></span>
-<span><span class="co">#&gt; 4: 0.5933255 -0.6182693 -1.889896  128</span></span>
-<span><span class="co">#&gt; 5: 0.5933255 -0.6684340 -1.932328   98</span></span>
+<span><span class="co">#&gt; 1: 0.6105269 -0.4721901 -1.625213  387</span></span>
+<span><span class="co">#&gt; 2: 0.6749629 -0.5283197 -1.774112  319</span></span>
+<span><span class="co">#&gt; 3: 0.5756103 -0.6039770 -1.832044  127</span></span>
+<span><span class="co">#&gt; 4: 0.5756103 -0.6182693 -1.881121  128</span></span>
+<span><span class="co">#&gt; 5: 0.7049757 -0.5817831 -1.884854  226</span></span>
 <span><span class="co">#&gt;                                    leadingEdge sign_log10_p</span></span>
-<span><span class="co">#&gt; 1:        TSLP,CCN3,LIF,CXCL12,FLRT3,GDF15,...    -5.115580</span></span>
-<span><span class="co">#&gt; 2:  KCTD12,SLC6A9,SLC6A6,LRRTM2,DNM1,FLRT3,...    -6.572467</span></span>
-<span><span class="co">#&gt; 3: KCTD12,SLC6A9,SLC6A6,LRRTM2,FLRT3,CNIH3,...    -6.631430</span></span>
-<span><span class="co">#&gt; 4:  SLC6A9,SLC6A6,LRRTM2,FLRT3,ADCY8,EPHB2,...    -4.840008</span></span>
-<span><span class="co">#&gt; 5: SLC6A9,SLC6A6,LRRTM2,FLRT3,EPHB2,ADRA2A,...    -4.875625</span></span>
+<span><span class="co">#&gt; 1:        TSLP,CCN3,LIF,CXCL12,FLRT3,GDF15,...    -5.370446</span></span>
+<span><span class="co">#&gt; 2:  KCTD12,SLC6A9,SLC6A6,LRRTM2,DNM1,FLRT3,...    -6.389965</span></span>
+<span><span class="co">#&gt; 3:  KCTD12,SLC6A9,DNM1,ADCY8,EPHB2,NECTIN1,...    -4.726164</span></span>
+<span><span class="co">#&gt; 4:  SLC6A9,SLC6A6,LRRTM2,FLRT3,ADCY8,EPHB2,...    -4.757042</span></span>
+<span><span class="co">#&gt; 5: KCTD12,SLC6A9,SLC6A6,LRRTM2,FLRT3,CNIH3,...    -7.070545</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
-<span>  <span class="va">neg_pws</span>,</span>
+<span>  <span class="va">neg_pws</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>,</span>
 <span>  FUN <span class="op">=</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="va"><a href="../reference/plot_GSEA_batch.html">plot_GSEA_batch</a></span>,</span>
 <span>  genecol <span class="op">=</span> <span class="st">"hgnc_symbol"</span>,</span>
 <span>  pthwys <span class="op">=</span> <span class="va">pthwys</span>,</span>
@@ -598,12 +598,6 @@ enriched pathways.</p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[3]]</span></span></code></pre>
 <p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-3.png" width="768"></p>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[4]]</span></span></code></pre>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-4.png" width="768"></p>
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[5]]</span></span></code></pre>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-5.png" width="768"></p>
 </div>
 </div>
 <div class="section level2">
