@@ -136,7 +136,7 @@ enrichment analysis.</p>
 </h2>
 <p>The package <code>airway</code> contains data from the Himes et
 al. paper in the form of a RangedSummarizedExperiment object and is
-hosted on Bioconductor. The <code>airway</code> vignette</p>
+hosted on Bioconductor.</p>
 <div class="section level3">
 <h3 id="get-airway-data-from-package">Get <code>airway</code> data from package<a class="anchor" aria-label="anchor" href="#get-airway-data-from-package"></a>
 </h3>
@@ -348,7 +348,7 @@ top left.</p>
 <span>  xlab_low <span class="op">=</span> <span class="st">"\U2191 in untreated,\n\U2193 in treated"</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="st">"All genes"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="DESeq_GSEA_files/figure-html/Volcano_plot-1.png" width="576"></p>
+<p><img src="DESeq_GSEA_files/figure-html/Volcano_plot-1.png" width="1536"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Protein coding DE genes</span></span>
@@ -393,7 +393,7 @@ top left.</p>
 <span>  xlab_low <span class="op">=</span> <span class="st">"\U2191 in untreated\n\U2193 in treated"</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="st">"Protein coding genes"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="DESeq_GSEA_files/figure-html/Volcano_plot-2.png" width="576"></p>
+<p><img src="DESeq_GSEA_files/figure-html/Volcano_plot-2.png" width="1536"></p>
 </div>
 </div>
 <div class="section level2">
@@ -429,21 +429,6 @@ MSigDB Collections</a></p>
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"msigdbr"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"msigdbr"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; 'getOption("repos")' replaces Bioconductor standard repositories, see</span></span>
-<span><span class="co">#&gt; 'help("repositories", package = "BiocManager")' for details.</span></span>
-<span><span class="co">#&gt; Replacement repositories:</span></span>
-<span><span class="co">#&gt;     CRAN: http://cran.us.r-project.org</span></span>
-<span><span class="co">#&gt; Bioconductor version 3.17 (BiocManager 1.30.20), R 4.3.0 (2023-04-21)</span></span>
-<span><span class="co">#&gt; Installing package(s) 'msigdbr'</span></span>
-<span><span class="co">#&gt; also installing the dependency 'babelgene'</span></span>
-<span><span class="co">#&gt; Installation paths not writeable, unable to update packages</span></span>
-<span><span class="co">#&gt;   path: /opt/R/4.3.0/lib/R/library</span></span>
-<span><span class="co">#&gt;   packages:</span></span>
-<span><span class="co">#&gt;     MASS</span></span>
-<span><span class="co">#&gt; Old packages: 'AnVIL', 'BiocBaseUtils', 'BiocIO', 'cBioPortalData',</span></span>
-<span><span class="co">#&gt;   'GenomicAlignments', 'GenomicDataCommons', 'GenomicFeatures',</span></span>
-<span><span class="co">#&gt;   'MultiAssayExperiment', 'RaggedExperiment', 'Rhtslib', 'Rsamtools',</span></span>
-<span><span class="co">#&gt;   'RTCGAToolbox', 'rtracklayer', 'TCGAutils', 'xml2', 'pak'</span></span>
 <span></span>
 <span><span class="fu">msigdbr</span><span class="fu">::</span><span class="fu"><a href="https://igordot.github.io/msigdbr/reference/msigdbr_collections.html" class="external-link">msigdbr_collections</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 23 × 3</span></span></span>
@@ -509,7 +494,7 @@ interpreting results.</p>
 <span>  fgseaRes <span class="op">=</span> <span class="va">gsea_results</span>,</span>
 <span>  gseaParam <span class="op">=</span> <span class="fl">0.5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_table-1.png" width="576"></p>
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_table-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="pathway-enrichment-plot">Pathway enrichment plot<a class="anchor" aria-label="anchor" href="#pathway-enrichment-plot"></a>
@@ -527,9 +512,9 @@ results.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gsea_results</span><span class="op">[</span><span class="va">gsea_results</span><span class="op">$</span><span class="va">pathway</span> <span class="op">==</span> <span class="st">"HALLMARK_ADIPOGENESIS"</span>,<span class="op">]</span></span>
 <span><span class="co">#&gt;                  pathway         pval         padj   log2err        ES      NES</span></span>
-<span><span class="co">#&gt; 1: HALLMARK_ADIPOGENESIS 3.089271e-07 0.0006730247 0.6749629 0.6955378 1.915118</span></span>
+<span><span class="co">#&gt; 1: HALLMARK_ADIPOGENESIS 4.505836e-07 0.0007826638 0.6749629 0.6955378 1.919844</span></span>
 <span><span class="co">#&gt;    size                           leadingEdge sign_log10_p</span></span>
-<span><span class="co">#&gt; 1:  196 SPARCL1,STOM,GPX3,TST,SLC5A6,SQOR,...     6.510144</span></span>
+<span><span class="co">#&gt; 1:  196 SPARCL1,STOM,GPX3,TST,SLC5A6,SQOR,...     6.346225</span></span>
 <span></span>
 <span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_GSEA_pathway.html">plot_GSEA_pathway</a></span><span class="op">(</span></span>
 <span>  sig <span class="op">=</span> <span class="va">deseq_res_hgnc_PC</span>,</span>
@@ -542,16 +527,15 @@ results.</p>
 <span>  lab_high <span class="op">=</span> <span class="st">"\U2191 in treated\n\U2193 in untreated"</span>,</span>
 <span>  lab_low <span class="op">=</span> <span class="st">"\U2191 in untreated\n\U2193 in treated"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway-1.png" width="384"></p>
-<p>For gene sets of smaller sizes, like 20 gene pathway
-“[GOBP_NEURON_FATE_SPECIFICATION](<a href="https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html" class="external-link uri">https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html</a>”,
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway-1.png" width="768"></p>
+<p>For gene sets of smaller sizes, like 20 gene pathway “<a href="https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html" class="external-link">GOBP_NEURON_FATE_SPECIFICATION</a>”,
 labeling each gene may be appropriate.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gsea_results</span><span class="op">[</span><span class="va">gsea_results</span><span class="op">$</span><span class="va">pathway</span> <span class="op">==</span> <span class="st">"GOBP_NEURON_FATE_SPECIFICATION"</span>,<span class="op">]</span></span>
 <span><span class="co">#&gt;                           pathway         pval       padj   log2err         ES</span></span>
-<span><span class="co">#&gt; 1: GOBP_NEURON_FATE_SPECIFICATION 0.0002035173 0.06238403 0.5188481 -0.8621391</span></span>
+<span><span class="co">#&gt; 1: GOBP_NEURON_FATE_SPECIFICATION 3.084947e-05 0.01786184 0.5573322 -0.8621391</span></span>
 <span><span class="co">#&gt;          NES size               leadingEdge sign_log10_p</span></span>
-<span><span class="co">#&gt; 1: -1.890085   20 GLI2,SUFU,GLI3,EYA1,EHMT2    -3.691399</span></span>
+<span><span class="co">#&gt; 1: -1.888097   20 GLI2,SUFU,GLI3,EYA1,EHMT2    -4.510752</span></span>
 <span></span>
 <span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_GSEA_pathway.html">plot_GSEA_pathway</a></span><span class="op">(</span></span>
 <span>  sig <span class="op">=</span> <span class="va">deseq_res_hgnc_PC</span>,</span>
@@ -559,12 +543,14 @@ labeling each gene may be appropriate.</p>
 <span>  genecol <span class="op">=</span> <span class="st">"hgnc_symbol"</span>,</span>
 <span>  rankcol <span class="op">=</span> <span class="st">"sign_log_p"</span>,</span>
 <span>  rankcol_name <span class="op">=</span> <span class="st">"DESeq sign log2 p-value"</span>,</span>
-<span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Airway DE Genes: GOBP_NEURON_FATE_SPECIFICATION"</span>,</span>
 <span>  lab_high <span class="op">=</span> <span class="st">"\U2191 in treated\n\U2193 in untreated"</span>,</span>
 <span>  lab_low <span class="op">=</span> <span class="st">"\U2191 in untreated\n\U2193 in treated"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_labeled-1.png" width="384"></p>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Removed 16440 rows containing missing values</span></span>
+<span><span class="co">#&gt; (`geom_text_repel()`).</span></span></code></pre></div>
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_labeled-1.png" width="768"></p>
 <p>Multiple gene set enrichment plots can be created in a batch with
 <code><a href="../reference/plot_GSEA_batch.html">Rubrary::plot_GSEA_batch</a></code>, a wrapper for
 <code><a href="../reference/plot_GSEA_pathway.html">Rubrary::plot_GSEA_pathway</a></code> that works well with
@@ -574,23 +560,23 @@ enriched pathways.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gsea_results</span><span class="op">[</span><span class="va">gsea_results</span><span class="op">$</span><span class="va">pathway</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">neg_pws</span>,<span class="op">]</span></span>
 <span><span class="co">#&gt;                                              pathway         pval         padj</span></span>
-<span><span class="co">#&gt; 1:        GOMF_SIGNALING_RECEPTOR_REGULATOR_ACTIVITY 8.786445e-06 0.0113212596</span></span>
-<span><span class="co">#&gt; 2:                            GOCC_SYNAPTIC_MEMBRANE 2.536270e-07 0.0006730247</span></span>
-<span><span class="co">#&gt; 3:     GOCC_INTRINSIC_COMPONENT_OF_SYNAPTIC_MEMBRANE 1.492781e-05 0.0129648051</span></span>
-<span><span class="co">#&gt; 4:                        GOCC_POSTSYNAPTIC_MEMBRANE 3.874638e-07 0.0006730247</span></span>
-<span><span class="co">#&gt; 5: GOCC_INTRINSIC_COMPONENT_OF_POSTSYNAPTIC_MEMBRANE 1.086285e-05 0.0113212596</span></span>
+<span><span class="co">#&gt; 1:        GOMF_SIGNALING_RECEPTOR_REGULATOR_ACTIVITY 7.663365e-06 0.0099834492</span></span>
+<span><span class="co">#&gt; 2:                            GOCC_SYNAPTIC_MEMBRANE 2.676290e-07 0.0006973074</span></span>
+<span><span class="co">#&gt; 3:                        GOCC_POSTSYNAPTIC_MEMBRANE 2.336522e-07 0.0006973074</span></span>
+<span><span class="co">#&gt; 4:     GOCC_INTRINSIC_COMPONENT_OF_SYNAPTIC_MEMBRANE 1.445414e-05 0.0125534240</span></span>
+<span><span class="co">#&gt; 5: GOCC_INTRINSIC_COMPONENT_OF_POSTSYNAPTIC_MEMBRANE 1.331605e-05 0.0125534240</span></span>
 <span><span class="co">#&gt;      log2err         ES       NES size</span></span>
-<span><span class="co">#&gt; 1: 0.5933255 -0.4721901 -1.614830  387</span></span>
-<span><span class="co">#&gt; 2: 0.6749629 -0.5283197 -1.775914  319</span></span>
-<span><span class="co">#&gt; 3: 0.5933255 -0.6182693 -1.865437  128</span></span>
-<span><span class="co">#&gt; 4: 0.6749629 -0.5817831 -1.891440  226</span></span>
-<span><span class="co">#&gt; 5: 0.5933255 -0.6684340 -1.942682   98</span></span>
+<span><span class="co">#&gt; 1: 0.5933255 -0.4721901 -1.602508  387</span></span>
+<span><span class="co">#&gt; 2: 0.6749629 -0.5283197 -1.765797  319</span></span>
+<span><span class="co">#&gt; 3: 0.6901325 -0.5817831 -1.879653  226</span></span>
+<span><span class="co">#&gt; 4: 0.5933255 -0.6182693 -1.889896  128</span></span>
+<span><span class="co">#&gt; 5: 0.5933255 -0.6684340 -1.932328   98</span></span>
 <span><span class="co">#&gt;                                    leadingEdge sign_log10_p</span></span>
-<span><span class="co">#&gt; 1:        TSLP,CCN3,LIF,CXCL12,FLRT3,GDF15,...    -5.056187</span></span>
-<span><span class="co">#&gt; 2:  KCTD12,SLC6A9,SLC6A6,LRRTM2,DNM1,FLRT3,...    -6.595805</span></span>
-<span><span class="co">#&gt; 3:  SLC6A9,SLC6A6,LRRTM2,FLRT3,ADCY8,EPHB2,...    -4.826004</span></span>
-<span><span class="co">#&gt; 4: KCTD12,SLC6A9,SLC6A6,LRRTM2,FLRT3,CNIH3,...    -6.411769</span></span>
-<span><span class="co">#&gt; 5: SLC6A9,SLC6A6,LRRTM2,FLRT3,EPHB2,ADRA2A,...    -4.964056</span></span>
+<span><span class="co">#&gt; 1:        TSLP,CCN3,LIF,CXCL12,FLRT3,GDF15,...    -5.115580</span></span>
+<span><span class="co">#&gt; 2:  KCTD12,SLC6A9,SLC6A6,LRRTM2,DNM1,FLRT3,...    -6.572467</span></span>
+<span><span class="co">#&gt; 3: KCTD12,SLC6A9,SLC6A6,LRRTM2,FLRT3,CNIH3,...    -6.631430</span></span>
+<span><span class="co">#&gt; 4:  SLC6A9,SLC6A6,LRRTM2,FLRT3,ADCY8,EPHB2,...    -4.840008</span></span>
+<span><span class="co">#&gt; 5: SLC6A9,SLC6A6,LRRTM2,FLRT3,EPHB2,ADRA2A,...    -4.875625</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
 <span>  <span class="va">neg_pws</span>,</span>
@@ -605,19 +591,24 @@ enriched pathways.</p>
 <span>  lab_low <span class="op">=</span> <span class="st">"\U2191 in untreated\n\U2193 in treated"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span></code></pre></div>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-1.png" width="384"></p>
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-1.png" width="768"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span></code></pre>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-2.png" width="384"></p>
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-2.png" width="768"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[3]]</span></span></code></pre>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-3.png" width="384"></p>
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-3.png" width="768"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[4]]</span></span></code></pre>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-4.png" width="384"></p>
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-4.png" width="768"></p>
 <pre><code><span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[5]]</span></span></code></pre>
-<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-5.png" width="384"></p>
+<p><img src="DESeq_GSEA_files/figure-html/GSEA_pathway_batch-5.png" width="768"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="citations">Citations<a class="anchor" aria-label="anchor" href="#citations"></a>
+</h2>
 <div id="refs" class="references csl-bib-body">
 <div id="ref-himesRNASeqTranscriptomeProfiling2014" class="csl-entry">
 <div class="csl-left-margin">[1] </div>
@@ -677,7 +668,6 @@ Endocrinology &amp; Metabolism 1987;64:832–5. <a href="https://doi.org/10.1210
 <div class="csl-right-inline">Pantoja C, Huff JT, Yamamoto KR. Glucocorticoid
 <span>Signaling Defines</span> a <span>Novel Commitment State</span>
 during <span>Adipogenesis In Vitro</span>. MBoC 2008;19:4032–41. <a href="https://doi.org/10.1091/mbc.e08-04-0420" class="external-link">https://doi.org/10.1091/mbc.e08-04-0420</a>.</div>
-</div>
 </div>
 </div>
 </div>
