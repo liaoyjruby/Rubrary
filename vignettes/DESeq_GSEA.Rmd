@@ -312,7 +312,7 @@ Multiple gene set enrichment plots can be created in a batch with `Rubrary::plot
 gsea_results[gsea_results$pathway %in% neg_pws,]
 
 lapply(
-  neg_pws,
+  neg_pws[1:3],
   FUN = Rubrary::plot_GSEA_batch,
   genecol = "hgnc_symbol",
   pthwys = pthwys,
