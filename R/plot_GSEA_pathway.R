@@ -1,29 +1,37 @@
 #' Plot GSEA pathway plots (waterfall + enrichment)
 #'
-#' @import ggplot2
+#' If subtitle is not specified, Kolmogorov-Smirnov enrichment p-value is calculated to check if the genes in the pathway separate from the genes not in the chosen pathway based on ranking by the desired `rankcol`.
 #'
-#' @param sig dataframe; "gene" + rankcol columns
+#' @import ggplot2
+#' @import dplyr
+#'
+#' @param sig dataframe; genecol + rankcol columns
 #' @param geneset vector; list of genes
-#' @param rankcol string; colname of values
+#' @param genecol string; colname of gene names in `sig`
+#' @param rankcol string; colname of values in `sig`
 #' @param rankcol_name string; descriptive name of values
 #' @param hightolow logical; T for high values on left, low on right
 #' @param label logical; T to label highlighted genes
-#' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)
+#' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)
 #' @param title string; plot title
 #' @param subtitle string; plot subtitle; !! overwrites p-val_enrichment
 #' @param savename string; filepath to save png under
-#' @param highlab string; description of high values
-#' @param lowlab string; description of low values
+#' @param lab_high string; description of high values
+#' @param lab_low string; description of low values
 #' @param hllab string; description of highlighted values
 #'
 #' @return grid of gene set enrichment waterfall above enrichment plot
 #' @export
 #'
-plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol, hightolow = FALSE,
+plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_name = rankcol, hightolow = FALSE,
                               label = length(geneset) < 20, legendpos = "none",
-                              highlab = NA, lowlab = NA, hllab = "Highlight",
-                              title = "", subtitle = NULL, savename = NULL){
+                              lab_high = NULL, lab_low = NULL, hllab = "Highlight",
+                              title = NULL, subtitle = NULL, savename = NULL){
   Rubrary::use_pkg("fgsea")
+
+  sig <- sig %>%
+    rename(gene = any_of(genecol)) %>%
+    select(gene, everything())
 
   path_genes <- geneset
   # Waterfall plot
@@ -31,8 +39,8 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol, hig
     sig = sig,
     label = label,
     highlight = path_genes,
-    highlab = highlab,
-    lowlab = lowlab,
+    lab_high = lab_high,
+    lab_low = lab_low,
     hllab = hllab,
     rankcol = rankcol,
     rankcol_name = rankcol_name,
@@ -76,33 +84,44 @@ plot_GSEA_pathway <- function(sig, geneset, rankcol, rankcol_name = rankcol, hig
 #'
 #' @param path_name string; name of pathway
 #' @param pthwys named list; key = geneset name, values = char vector of genes in geneset
-#' @param sig_name string; name of signature
 #' @param sig dataframe; signature
+#' @param genecol string; colname of gene names in `sig`
 #' @param rankcol string; colname of values to rank by
 #' @param rankcol_name string; descriptor of rankcol
-#' @param hightolow logical; T for high values on left, low on right
-#' @param label logical; T to label highlighted genes
 #' @param hllab string; descriptor of highlighted genes
-#' @param lowlab string; label for low rankcol values
-#' @param highlab string; label for high rankcol values
+#' @param hightolow logical; T for high values on left, low on right
+#' @param lab_low string; label for low rankcol values
+#' @param lab_high string; label for high rankcol values
+#' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)
+#' @param label logical; T to label points in plot
+#' @param sig_name string; name of signature
 #' @param savedir string; directory path for saving plot
 #'
-#' @return nothing; will save GSEA enrichment plots in savedir
+#' @return Gene set enrichment plot as ggplot object
 #' @export
-plot_GSEA_batch <- function(path_name, pthwys, sig_name, sig, rankcol, rankcol_name,
-                            hllab = "Highlight", lowlab = "Low", highlab = "High",
-                            savedir = "./", label = length(pthwys[[path_name]]) < 50,
-                            hightolow = FALSE){
+plot_GSEA_batch <- function(path_name, pthwys, sig, genecol = "gene", rankcol, rankcol_name = rankcol,
+                            hllab = "Pathway genes", hightolow = FALSE,
+                            lab_low = NULL, lab_high = NULL, legendpos = c(0.5, 0.2),
+                            label = length(pthwys[[path_name]]) < 50,
+                            sig_name = "", savedir = NULL){
+  if(!is.null(savedir)){
+    sig_name <- if(sig_name != "") paste0(sig_name,"_")
+    savename = paste0(savedir,"/",sig_name, path_name, ".png")
+  } else {
+    savename = NULL
+  }
+
   Rubrary::plot_GSEA_pathway(
-    sig = sig, legendpos = c(0.5, 0.8),
+    sig = sig, legendpos = legendpos,
+    genecol = genecol,
     rankcol = rankcol,
     rankcol_name = rankcol_name,
     geneset = pthwys[[path_name]],
     label = label,
     title = path_name,
-    lowlab = lowlab,
-    highlab = highlab,
+    lab_low = lab_low,
+    lab_high = lab_high,
     hllab = hllab,
-    savename = paste0(savedir,"/",sig_name,"_", path_name, ".png")
+    savename = savename
   )
 }

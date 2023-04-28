@@ -17,8 +17,9 @@ convert_genes <- function(genes, from_to = c("ensembl_gene_id", "hgnc_symbol"),
                           mart = NULL, table = FALSE){
   Rubrary::use_pkg("biomaRt", strict = T)
   if(is.null(mart)){
-    mart <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl",
-                                mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+    mart <- biomaRt::useDataset(
+      dataset = "hsapiens_gene_ensembl",
+      mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
   }
   conv <- biomaRt::getBM(
     filters = from_to[1],
@@ -34,6 +35,8 @@ convert_genes <- function(genes, from_to = c("ensembl_gene_id", "hgnc_symbol"),
 
 #' Retrieve protein coding genes from Ensembl BioMart
 #'
+#' @param mart biomaRt Mart object
+#'
 #' @return character vector of protein coding genes
 #' @export
 #'
@@ -41,11 +44,13 @@ convert_genes <- function(genes, from_to = c("ensembl_gene_id", "hgnc_symbol"),
 #' \donttest{
 #'   head(Rubrary::get_PC_genes())
 #' }
-get_PC_genes <- function(){
-  Rubrary::use_pkg("biomaRt")
-  # Select Homo sapiens mart
-  mart <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl",
-                              mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+get_PC_genes <- function(mart = NULL){
+  Rubrary::use_pkg("biomaRt", strict = T)
+  if(is.null(mart)){
+    mart <- biomaRt::useDataset(
+      dataset = "hsapiens_gene_ensembl",
+      mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+  }
   PC_genes <- biomaRt::getBM(attributes = c("hgnc_symbol", "gene_biotype"),
                              filters = "biotype",
                              values = "protein_coding",
@@ -57,25 +62,30 @@ get_PC_genes <- function(){
   return(PC_genes$gene)
 }
 
-#' Filter dataframe to protein coding genes
+#' Filter dataframe by list of (protein coding) genes
+#'
+#' Filter df (genes in rownames) to list of genes given.
 #'
 #' @param df dataframe; rownames must be gene symbols
-#' @param PC_genes character vector; protein coding genes
+#' @param gene_col string; colnames of genes, assumed `rownames(df)` if NULL
+#' @param genes_filt char vector; (protein coding) genes to filter by
 #' @param search logical; T to use `Seurat::UpdateSymbolList` to match gene symbols better
 #'
 #' @return dataframe with gene rownames filtered to protein coding only
 #' @export
-filter_PC_genes <- function(df, PC_genes = Rubrary::get_PC_genes(),
-                            search = FALSE){
-  nomatch <- rownames(df)[!(rownames(df) %in% PC_genes)]
-  warning(paste0("Genes not found in gene list: \n",
-                 paste(nomatch, collapse = ", ")),
-          call. = FALSE, immediate. = TRUE)
+filter_genes <- function(df, genes_filt = Rubrary::get_PC_genes(),
+                         gene_col = NULL, search = FALSE){
+  genes_orig <- ifelse(is.null(gene_col), rownames(df), df[,gene_col])
+  nomatch <- genes_orig[!(genes_orig %in% genes_filt)]
+  if (length(nomatch) > 0) {
+    warning(paste0("Genes not found in gene list: \n",
+                   paste(nomatch, collapse = ", ")),
+            call. = FALSE, immediate. = TRUE)
+  }
 
   # Seurat symbol update if desired
   if ((search == FALSE) && (length(nomatch) > 0)){
-    if (utils::menu(c("Yes", "No"),
-                    title = "\nSearch gene symbols?") == "1") {
+    if (utils::menu(c("Yes", "No"), title = "\nSearch gene symbols?") == "1") {
       search = TRUE
     }
   }
@@ -84,13 +94,17 @@ filter_PC_genes <- function(df, PC_genes = Rubrary::get_PC_genes(),
     updated <- Seurat::UpdateSymbolList(symbols = nomatch)
     names(updated) <- nomatch
     for(g in names(updated)){
-      PC_genes[PC_genes == updated[g]] <- g
+      genes_filt[genes_filt == updated[g]] <- g
     }
   }
 
-  # Filter gene rownames
-  df_pc <- df[rownames(df) %in% PC_genes,,drop = F]
-  return(df_pc)
+  if(is.null(gene_col)){
+    df_filt <- df[rownames(df) %in% genes_filt,,drop = F]
+  } else {
+    df_filt <- df[df[,gene_col] %in% genes_filt,,drop = F]
+  }
+
+  return(df_filt)
 }
 
 #' Get gene description from BioMart

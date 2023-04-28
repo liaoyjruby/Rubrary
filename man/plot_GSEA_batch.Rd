@@ -7,16 +7,18 @@
 plot_GSEA_batch(
   path_name,
   pthwys,
-  sig_name,
   sig,
+  genecol = "gene",
   rankcol,
-  rankcol_name,
-  hllab = "Highlight",
-  lowlab = "Low",
-  highlab = "High",
-  savedir = "./",
+  rankcol_name = rankcol,
+  hllab = "Pathway genes",
+  hightolow = FALSE,
+  lab_low = NULL,
+  lab_high = NULL,
+  legendpos = c(0.5, 0.2),
   label = length(pthwys[[path_name]]) < 50,
-  hightolow = FALSE
+  sig_name = "",
+  savedir = NULL
 )
 }
 \arguments{
@@ -24,9 +26,9 @@ plot_GSEA_batch(
 
 \item{pthwys}{named list; key = geneset name, values = char vector of genes in geneset}
 
-\item{sig_name}{string; name of signature}
-
 \item{sig}{dataframe; signature}
+
+\item{genecol}{string; colname of gene names in \code{sig}}
 
 \item{rankcol}{string; colname of values to rank by}
 
@@ -34,18 +36,22 @@ plot_GSEA_batch(
 
 \item{hllab}{string; descriptor of highlighted genes}
 
-\item{lowlab}{string; label for low rankcol values}
+\item{hightolow}{logical; T for high values on left, low on right}
 
-\item{highlab}{string; label for high rankcol values}
+\item{lab_low}{string; label for low rankcol values}
+
+\item{lab_high}{string; label for high rankcol values}
+
+\item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)}
+
+\item{label}{logical; T to label points in plot}
+
+\item{sig_name}{string; name of signature}
 
 \item{savedir}{string; directory path for saving plot}
-
-\item{label}{logical; T to label highlighted genes}
-
-\item{hightolow}{logical; T for high values on left, low on right}
 }
 \value{
-nothing; will save GSEA enrichment plots in savedir
+Gene set enrichment plot as ggplot object
 }
 \description{
 \code{plot_GSEA_pathway} that works nicely with \code{lapply}

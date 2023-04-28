@@ -2,21 +2,23 @@ utils::globalVariables(c(
   ".data", "label_pos", "label"
 ))
 
-#' Plot waterfall plot (with optional density)
+#' Plot horizontal waterfall plot (with optional density)
 #'
 #' @param sig dataframe; name (1st column) + rankcol columns
 #' @param highlight vector; list of names to highlight in waterfall
 #' @param rankcol string; colname of values
 #' @param rankcol_name string; descriptive name of values
 #' @param hightolow logical; T for x-axis by decreasing value
+#' @param vert (NOT TESTED) logical; T for columns to be horizontal
 #' @param label logical; T to label highlighted values
-#' @param vert logical; T for columns to be horizontal (not optimized)
+#' @param replab_size numeric; size of gene label
 #' @param density logical; T to output aligned density plot w/ wf
 #' @param hllab string; description of highlighted values
 #' @param otherlab string; description of non-highlighted values
 #' @param pval logical; T to include KS enrichment pvalue
-#' @param highlab string; descriptor for high rankcol values
-#' @param lowlab string; descriptor for low rankcol values
+#' @param lab_high string; descriptor for high rankcol values
+#' @param lab_low string; descriptor for low rankcol values
+#' @param lab_size numeric; size of value annotation label
 #' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)
 #' @param title string; plot title
 #' @param colors vector; two colors, for highlight vs. other
@@ -28,16 +30,17 @@ utils::globalVariables(c(
 #' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales element_text
 #' @export
 #'
-plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, label = TRUE, hightolow = FALSE,
-                           vert = FALSE, density = FALSE, hllab = "Highlight", otherlab = "Others",
-                           pval = TRUE, highlab = NA, lowlab = NA, legendpos = "none",
+plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, hightolow = FALSE,
+                           vert = FALSE, label = TRUE, replab_size = 3.5, density = FALSE,
+                           hllab = "Highlight", otherlab = "Others", pval = TRUE,
+                           lab_high = NULL, lab_low = NULL, lab_size = 6, legendpos = "none",
                            title = NULL, colors = c("firebrick3", "gray"),
                            width = 10, height = 5,
                            savename = NULL) {
   if(hightolow){
-    tmp = highlab
-    highlab = lowlab
-    lowlab = tmp
+    tmp = lab_high
+    lab_high = lab_low
+    lab_low = tmp
   }
 
   # Rank DF by rankcol values
@@ -66,15 +69,27 @@ plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, labe
   # Figure out dimensions and scale for label position
   layer <- layer_scales(wf)
   yrange <- layer$y$range$range # rankcol range
-  ypos <- (yrange[which.max(abs(yrange))] / 2)
-  ypos_left <- (min(yrange) / 2) # 4) * 3
-  ypos_right <- (max(yrange) / 4) * 3
+  ypos_low <- (min(yrange) / 2) # 4) * 3
+  ypos_high <- (max(yrange) / 4) * 3
   xrange <- layer$x$range$range # number of ranked items
   xpos_bot <- max(xrange) / 5
   xpos_mid <- max(xrange) / 2
   xpos_top <- (max(xrange) / 5) * 4
-  lab_size <- 6
-  replab_size <- 3.5
+
+  # Try to determine optimal label placement if rankcol both pos and neg
+  # If more space above y = 0, then put label above y = 0
+  # If more space below y = 0, put labels below y = 0
+  # If about even, one above, one below?
+  if (yrange[1] < 0) {
+    yrng = yrange[2] - yrange[1]
+    ydiff = abs(yrange[2]) - abs(yrange[1])
+    if(abs(yrange[1]) < abs(yrange[2])){ # More space above
+      ypos = ypos_high
+    } else { # More space below
+      ypos = ypos_low
+    }
+  }
+
 
   sig$label_pos <- ifelse(sig[, rankcol] < 0, 0, sig[, rankcol])
   nudge_lab <- max(sig$label_pos) / 10
@@ -84,8 +99,8 @@ plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, labe
     wf_lab <- wf +
       geom_segment(data = sig_hl, aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ), color = colors[1]) +
       coord_flip() +
-      {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_left, label = highlab, size = lab_size)} +
-      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_right, label = lowlab, size = lab_size)} +
+      {if (!is.null(lab_high)) geom_text(x = xpos_top, y = ypos_low, label = lab_high, size = lab_size)} +
+      {if (!is.null(lab_low)) geom_text(x = xpos_bot, y = ypos_high, label = lab_low, size = lab_size)} +
       {if (label) ggrepel::geom_text_repel(
         data = sig,
         aes(x = rank, y = label_pos, label = label),
@@ -105,8 +120,8 @@ plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, labe
         aes(x = rank, xend = rank, y = 0, yend = .data[[rankcol]], ),
         color = colors[1]
       ) +
-      {if (!is.na(highlab)) geom_text(x = xpos_top, y = ypos_left, label = highlab, size=lab_size)} +
-      {if (!is.na(lowlab)) geom_text(x = xpos_bot, y = ypos_left, label = lowlab, size=lab_size)}
+      {if (!is.null(lab_high)) geom_text(x = xpos_top, y = ypos, label = lab_high, size=lab_size)} +
+      {if (!is.null(lab_low)) geom_text(x = xpos_bot, y = ypos, label = lab_low, size=lab_size)}
   }
 
   # Add pvalue, remove legend title

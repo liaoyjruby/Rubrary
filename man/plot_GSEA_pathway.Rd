@@ -7,25 +7,28 @@
 plot_GSEA_pathway(
   sig,
   geneset,
+  genecol = "gene",
   rankcol,
   rankcol_name = rankcol,
   hightolow = FALSE,
   label = length(geneset) < 20,
   legendpos = "none",
-  highlab = NA,
-  lowlab = NA,
+  lab_high = NULL,
+  lab_low = NULL,
   hllab = "Highlight",
-  title = "",
+  title = NULL,
   subtitle = NULL,
   savename = NULL
 )
 }
 \arguments{
-\item{sig}{dataframe; "gene" + rankcol columns}
+\item{sig}{dataframe; genecol + rankcol columns}
 
 \item{geneset}{vector; list of genes}
 
-\item{rankcol}{string; colname of values}
+\item{genecol}{string; colname of gene names in \code{sig}}
+
+\item{rankcol}{string; colname of values in \code{sig}}
 
 \item{rankcol_name}{string; descriptive name of values}
 
@@ -33,11 +36,11 @@ plot_GSEA_pathway(
 
 \item{label}{logical; T to label highlighted genes}
 
-\item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)}
+\item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)}
 
-\item{highlab}{string; description of high values}
+\item{lab_high}{string; description of high values}
 
-\item{lowlab}{string; description of low values}
+\item{lab_low}{string; description of low values}
 
 \item{hllab}{string; description of highlighted values}
 
@@ -51,5 +54,5 @@ plot_GSEA_pathway(
 grid of gene set enrichment waterfall above enrichment plot
 }
 \description{
-Plot GSEA pathway plots (waterfall + enrichment)
+If subtitle is not specified, Kolmogorov-Smirnov enrichment p-value is calculated to check if the genes in the pathway separate from the genes not in the chosen pathway based on ranking by the desired \code{rankcol}.
 }

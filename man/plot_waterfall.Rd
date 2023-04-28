@@ -2,22 +2,24 @@
 % Please edit documentation in R/plot_waterfall.R
 \name{plot_waterfall}
 \alias{plot_waterfall}
-\title{Plot waterfall plot (with optional density)}
+\title{Plot horizontal waterfall plot (with optional density)}
 \usage{
 plot_waterfall(
   sig,
   highlight,
   rankcol,
   rankcol_name = rankcol,
-  label = TRUE,
   hightolow = FALSE,
   vert = FALSE,
+  label = TRUE,
+  replab_size = 3.5,
   density = FALSE,
   hllab = "Highlight",
   otherlab = "Others",
   pval = TRUE,
-  highlab = NA,
-  lowlab = NA,
+  lab_high = NULL,
+  lab_low = NULL,
+  lab_size = 6,
   legendpos = "none",
   title = NULL,
   colors = c("firebrick3", "gray"),
@@ -35,11 +37,13 @@ plot_waterfall(
 
 \item{rankcol_name}{string; descriptive name of values}
 
-\item{label}{logical; T to label highlighted values}
-
 \item{hightolow}{logical; T for x-axis by decreasing value}
 
-\item{vert}{logical; T for columns to be horizontal (not optimized)}
+\item{vert}{(NOT TESTED) logical; T for columns to be horizontal}
+
+\item{label}{logical; T to label highlighted values}
+
+\item{replab_size}{numeric; size of gene label}
 
 \item{density}{logical; T to output aligned density plot w/ wf}
 
@@ -49,9 +53,11 @@ plot_waterfall(
 
 \item{pval}{logical; T to include KS enrichment pvalue}
 
-\item{highlab}{string; descriptor for high rankcol values}
+\item{lab_high}{string; descriptor for high rankcol values}
 
-\item{lowlab}{string; descriptor for low rankcol values}
+\item{lab_low}{string; descriptor for low rankcol values}
+
+\item{lab_size}{numeric; size of value annotation label}
 
 \item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)}
 
@@ -69,5 +75,5 @@ plot_waterfall(
 Waterfall plot
 }
 \description{
-Plot waterfall plot (with optional density)
+Plot horizontal waterfall plot (with optional density)
 }

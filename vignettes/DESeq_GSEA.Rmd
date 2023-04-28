@@ -8,6 +8,8 @@ output:
     toc: true
     number_sections: true
     df_print: paged
+bibliography: vignettes.bib
+csl: elsevier-vancouver.csl
 vignette: >
   %\VignetteIndexEntry{DESeq / GSEA}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,7 +23,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, echo=FALSE}
+Setup
+
+```{r setup}
 library(Rubrary)
 library(dplyr)
 library(tibble)
@@ -32,11 +36,26 @@ r["CRAN"] = "http://cran.us.r-project.org"
 options(repos = r)
 ```
 
+# Introduction
+
+The example dataset for this vignette comes from the paper [@himesRNASeqTranscriptomeProfiling2014] below:
+
+> Himes et al. (2014). "RNA-Seq Transcriptome Profiling Identifies CRISPLD2 as a Glucocorticoid Responsive Gene that Modulates Cytokine Function in Airway Smooth Muscle Cells." PLoS ONE, 9(6), e99625. <https://doi.org/10.1371/journal.pone.0099625>.
+
+From the abstract:
+
+> Using RNA-Seq, a high-throughput sequencing method, we characterized transcriptomic changes in four primary human ASM cell lines that were treated with dexamethasone---a potent synthetic glucocorticoid (1 µM for 18 hours).
+
+The experiment was performed on human airway smooth muscle (ASM) cells. Glucocorticoids are a commonly used drug to treat asthma for its anti-inflammatory effects in lung tissue. The goal of the experiment was to characterize the mechanism of glucocorticoid inflammation suppression through RNAseq. Himes et al. found a number of glucocorticoid-responsive genes such as DUSP1 and CRISPLD2. They also identified enrichment in functional annotation of terms such as "glycoprotein/extracellular matrix", "vasculature development", and "circulatory system process".
+
+In the original paper, the authors used [Cuffdiff 2](https://www.nature.com/articles/nbt.2450) to find differential gene expression and used the [NIH Database for Annotation, Visualization, and Integrated Discovery (DAVID)](https://david.ncifcrf.gov/) for gene set enrichment analysis.
+
 # Load data
 
-Himes, E. B, Jiang, X., Wagner, P., Hu, R., Wang, Q., Klanderman, B., Whitaker, M. R, Duan, Q., Lasky-Su, J., Nikolos, C., Jester, W., Johnson, M., Panettieri, A. R, Tantisira, G. K, Weiss, T. S, Lu, Q. (2014). “RNA-Seq Transcriptome Profiling Identifies CRISPLD2 as a Glucocorticoid Responsive Gene that Modulates Cytokine Function in Airway Smooth Muscle Cells.” PLoS ONE, 9(6), e99625. https://doi.org/10.1371/journal.pone.0099625.
+The package `airway` contains data from the Himes et al. paper in the form of a RangedSummarizedExperiment object and is hosted on Bioconductor. The `airway` vignette
 
 ## Get `airway` data from package
+
 ```{r Load airway data, message=FALSE}
 if (!requireNamespace("airway", quietly = TRUE)){
   BiocManager::install("airway")
@@ -46,27 +65,38 @@ library(airway)
 data(airway)
 ```
 
-## Get counts and annotations from SummarizedExperiment
-```{r Get counts and annotations from SummarizedExperiment}
+## Get counts and sample annotation
+
+The gene expression data is represented in counts. There are 4 samples treated with dexamethasone (`anno$dex == "trt"`) and 4 untreated samples (`anno$dex == "untrt"`).
+
+```{r Get counts and annotation}
 # Counts
 cts <- assay(airway, "counts")
 # Annotation
 anno <- colData(airway) %>%
   as.data.frame()
 anno$dex <- relevel(anno$dex, "untrt") # Set untreated as first factor
+
+head(cts)
+head(anno)
 ```
 
 ## Visualize samples w/ PCA
+
 ```{r Visualize samples w/ PCA}
 # log2UQ
 # Rubrary::run_PCA
 # Rubrary::plot_PCA
 ```
 
-
 # `DESeq2` differentially expressed genes
 
+`DESeq2` [@loveModeratedEstimationFold2014] performs differential gene expression analysis my modeling counts as a negative binomial distribution.
+
 ## Create DESeqDataSet object and run DESeq
+
+`Rubrary::output_DESeq` takes the DESeqResults object, transforms it to a dataframe, and adds a sign log2 p-value column.
+
 ```{r Create DESeqDataSet object and run DESeq}
 library(DESeq2)
 
@@ -77,55 +107,121 @@ dds <- DESeqDataSetFromMatrix(
 
 dds <- DESeq(dds)
 res <- results(dds, contrast = c("dex", "trt", "untrt"))
-res_df <- Rubrary::output_DESeq(res)
+deseq_res_df <- Rubrary::output_DESeq(res)
 ```
 
-## Replace Ensembl ID w/ HGNC symbol
+### Replace Ensembl ID w/ HGNC symbol
+
+`airway` gene names are given in [Ensembl ID](http://www.ensembl.org/info/genome/stable_ids/index.html), but [HGNC gene symbols](https://www.genenames.org/about/guidelines/) can be easier to interpret in downstream analysis and more compatible with gene set enrichment analysis (GSEA) tools.
+
 ```{r Replace Ensembl ID w/ HGNC symbol}
+# Gene format is currently in Ensembl ID format
+head(deseq_res_df$gene)
+
 library(biomaRt)
-mart <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl",
-                                mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+# Load Mart object - database of Homo sapiens genes from Ensembl
+mart <- biomaRt::useDataset(
+  dataset = "hsapiens_gene_ensembl",
+  mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+
 conv <- Rubrary::convert_genes(
-    genes = res_df$gene,
+    genes = deseq_res_df$gene,
     from_to = c("ensembl_gene_id", "hgnc_symbol"),
     mart = mart, table = T) %>%
-  filter(hgnc_symbol != "") %>%
-  distinct(ensembl_gene_id, .keep_all = T) %>%
-  mutate(hgnc_symbol = make.names(hgnc_symbol, unique = T))
+  filter(hgnc_symbol != "") %>% # Exclude unmatched HGNC symbols
+  distinct(hgnc_symbol, .keep_all = T)
 
-res_hgnc <- dplyr::left_join(conv, res_df, by = join_by(ensembl_gene_id == gene)) %>%
-  # column_to_rownames(var = "hgnc_symbol") %>%
+deseq_res_hgnc <- dplyr::left_join( # Join stats with HGNC symbol table
+  conv, deseq_res_df, by = join_by(ensembl_gene_id == gene)) %>%
   arrange(desc(sign_log_p))
 
-res_hgnc
+# Genes now have associated HGNC symbols
+head(deseq_res_hgnc)
+```
+
+## Filter to protein coding genes
+
+For ease of interpretation, the DE genes results can also be filtered to protein coding genes only. `Rubrary::filter_genes()` can filter with the list of protein coding genes retrieved with `Rubrary::get_PC_genes()`. Since we already created the `Mart` object when converting gene symbols, we can reuse it to avoid querying the BioMart database again and load protein coding genes efficiently.
+
+```{r PC genes}
+deseq_res_hgnc_PC <- Rubrary::filter_genes(
+  df = deseq_res_hgnc,
+  gene_col = "hgnc_symbol",
+  genes_filt = Rubrary::get_PC_genes(mart)
+)
+```
+
+## Volcano plot
+
+DESeq results can be visualized through volcano plots. Volcano plots show that top and bottom differentially expressed genes when sorted by decreasing signed log p value present as outliers on the top right and top left.
+
+```{r Volcano_plot, fig.height=4, fig.width=6}
+# All DE genes
+head(deseq_res_hgnc[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
+tail(deseq_res_hgnc[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
+
+Rubrary::plot_volcano(
+  df_deg = deseq_res_hgnc,
+  names = "hgnc_symbol",
+  x = "log2FoldChange", y = "pvalue",
+  FCcutoff = 1, pCutoff = 5e-04,
+  title = "Airway Treated vs. Untreated DE Genes",
+  xlab_high = "\U2191 in treated,\n\U2193 in untreated",
+  xlab_low = "\U2191 in untreated,\n\U2193 in treated",
+  subtitle = "All genes"
+)
+
+# Protein coding DE genes
+head(deseq_res_hgnc_PC[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
+tail(deseq_res_hgnc_PC[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
+
+Rubrary::plot_volcano(
+  df_deg = deseq_res_hgnc_PC,
+  names = "hgnc_symbol",
+  x = "log2FoldChange", y = "pvalue",
+  FCcutoff = 1, pCutoff = 5e-04,
+  title = "Airway Treated vs. Untreated DE Genes",
+  xlab_high = "\U2191 in treated\n\U2193 in untreated",
+  xlab_low = "\U2191 in untreated\n\U2193 in treated",
+  subtitle = "Protein coding genes"
+)
 ```
 
 # `fgsea` gene set enrichment analysis
 
+`fgsea` [@korotkevichFastGeneSet2016] is an implementation of an algorithm for fast gene set enrichment analysis (GSEA), based on the original GSEA algorithm [@subramanianGeneSetEnrichment2005].
+
 ## Get pathways from `msigdbr`
 
-[Human MSigDB Collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp)
-- C2CP: curated gene sets, canonical pathways
-- C5GO: ontology gene sets, Gene Ontology gene sets
-  - BP: GO Biological Process ontology
-  - CC: GO Cellular Component ontology
-  - MF: GO Molecular Function ontology
-- H: hallmark gene sets
+Gene set enrichment analysis relies on inputting gene sets / pathways related to biological function. The Molecular Signatures Database (MSigDB) [@liberzonMolecularSignaturesDatabase2011] was published as a database of annotated pathways to facilitate GSEA and is accessible through the R package `msigdbr` [@dolgalevMsigdbrMSigDBGene2022].
+
+[Human MSigDB Collections](https://www.gsea-msigdb.org/gsea/msigdb/human/collection_details.jsp)
+
+-   C2CP: curated gene sets, canonical pathways
+
+-   C5GO: ontology gene sets, Gene Ontology gene sets
+
+    -   BP: GO Biological Process ontology
+
+    -   CC: GO Cellular Component ontology
+
+    -   MF: GO Molecular Function ontology
+
+-   H: hallmark gene sets [@liberzonMolecularSignaturesDatabase2015]
 
 ```{r Get pathways from `msigdbr`}
 if (!requireNamespace("msigdbr", quietly = TRUE)){
   BiocManager::install("msigdbr")
 }
-library(msigdbr)
 
 msigdbr::msigdbr_collections()
 
 pthwys <- rbind(
-  msigdbr(category = "C2", subcategory = "CP"),
-  msigdbr(category = "C5", subcategory = "GO:BP"),
-  msigdbr(category = "C5", subcategory = "GO:CC"),
-  msigdbr(category = "C5", subcategory = "GO:MF"),
-  msigdbr(category = "H")
+  msigdbr::msigdbr(category = "C2", subcategory = "CP"),
+  msigdbr::msigdbr(category = "C5", subcategory = "GO:BP"),
+  msigdbr::msigdbr(category = "C5", subcategory = "GO:CC"),
+  msigdbr::msigdbr(category = "C5", subcategory = "GO:MF"),
+  msigdbr::msigdbr(category = "H")
 ) %>%
   split(x = .$gene_symbol, f = .$gs_name) # Named list of pathways
 ```
@@ -135,8 +231,8 @@ pthwys <- rbind(
 ```{r Run fgsea}
 # `fgsea` requires a named numeric vector as input to the `stats` argument
 deseq_stats <- setNames(
-    res_hgnc[,"sign_log_p"], 
-    res_hgnc[,"hgnc_symbol"]
+    deseq_res_hgnc_PC[,"sign_log_p"], 
+    deseq_res_hgnc_PC[,"hgnc_symbol"]
 )
 
 gsea_results <- fgsea::fgsea(
@@ -146,7 +242,86 @@ gsea_results <- fgsea::fgsea(
   minSize = 15,
   maxSize  = 500) %>%
   arrange(desc(NES)) %>%
-  mutate(sign_log10_p = sign(NES) * -log10(pval))
+  mutate(sign_log10_p = sign(NES) * -log10(pval)) # Create sign_log10_p column
+
 ```
 
+## Visualize GSEA results as a table
 
+See the [GSEA User Guide: Interpreting GSEA Results](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideTEXT.htm#_Interpreting_GSEA_Results) for detailed explanation in interpreting results.
+
+```{r GSEA_table, fig.width=6, fig.height=3}
+# Get top significant pathways by positive/negative enrichment score (ES)
+pos_pws <- gsea_results[ES > 0][head(order(pval), n = 5), pathway]
+neg_pws <- gsea_results[ES < 0][head(order(pval), n = 5), pathway]
+top_pws <- c(pos_pws, rev(neg_pws))
+
+fgsea::plotGseaTable(
+  pathways = pthwys[top_pws],
+  stats = deseq_stats,
+  fgseaRes = gsea_results,
+  gseaParam = 0.5
+)
+```
+
+## Pathway enrichment plot
+
+Specific pathways of interest can be plotted in GSEA Java app-like enrichment plots that combine a waterfall and mountain plot.
+
+The top enriched pathway from our GSEA results is "[HALLMARK_ADIPOGENESIS](https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_ADIPOGENESIS.html)", a collection of 196 genes up-regulated during adipocyte (fat cell) differentiation. This is in line with studies reporting the complex effects of glucocorticoids on adipose tissue biology, including differentiation of adipocyte precursors and adipogenesis [@haunerGlucocorticoidsInsulinPromote1987; @pantojaGlucocorticoidSignalingDefines2008].
+
+The maximum absolute value in the Enrichment Score mountain plot corresponds to the `ES` value reported in the GSEA results.
+
+```{r GSEA_pathway, fig.width=4, fig.height=3}
+gsea_results[gsea_results$pathway == "HALLMARK_ADIPOGENESIS",]
+
+Rubrary::plot_GSEA_pathway(
+  sig = deseq_res_hgnc_PC,
+  geneset = pthwys[["HALLMARK_ADIPOGENESIS"]],
+  genecol = "hgnc_symbol",
+  rankcol = "sign_log_p",
+  rankcol_name = "DESeq sign log2 p-value",
+  label = FALSE,
+  title = "Airway DE Genes: HALLMARK_ADIPOGENESIS",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated"
+)
+```
+
+For gene sets of smaller sizes, like 20 gene pathway "[GOBP_NEURON_FATE_SPECIFICATION](<https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html>", labeling each gene may be appropriate.
+
+```{r GSEA_pathway_labeled, fig.width=4, fig.height=3}
+gsea_results[gsea_results$pathway == "GOBP_NEURON_FATE_SPECIFICATION",]
+
+Rubrary::plot_GSEA_pathway(
+  sig = deseq_res_hgnc_PC,
+  geneset = pthwys[["GOBP_NEURON_FATE_SPECIFICATION"]],
+  genecol = "hgnc_symbol",
+  rankcol = "sign_log_p",
+  rankcol_name = "DESeq sign log2 p-value",
+  label = FALSE,
+  title = "Airway DE Genes: GOBP_NEURON_FATE_SPECIFICATION",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated"
+)
+```
+
+Multiple gene set enrichment plots can be created in a batch with `Rubrary::plot_GSEA_batch`, a wrapper for `Rubrary::plot_GSEA_pathway` that works well with `lapply`. We can use the `neg_pws` list of pathway names to plot gene enrichment plots for the most significant negatively enriched pathways.
+
+```{r GSEA_pathway_batch, fig.width=4, fig.height=3}
+gsea_results[gsea_results$pathway %in% neg_pws,]
+
+lapply(
+  neg_pws,
+  FUN = Rubrary::plot_GSEA_batch,
+  genecol = "hgnc_symbol",
+  pthwys = pthwys,
+  sig = deseq_res_hgnc_PC,
+  rankcol = "sign_log_p",
+  rankcol_name = "DESeq sign log2 p-value",
+  hllab = "Pathway genes",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated"
+)
+
+```
