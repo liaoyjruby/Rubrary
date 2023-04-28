@@ -61,16 +61,18 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_GSEA_batch</span><span class="op">(</span></span>
 <span>  <span class="va">path_name</span>,</span>
 <span>  <span class="va">pthwys</span>,</span>
-<span>  <span class="va">sig_name</span>,</span>
 <span>  <span class="va">sig</span>,</span>
+<span>  genecol <span class="op">=</span> <span class="st">"gene"</span>,</span>
 <span>  <span class="va">rankcol</span>,</span>
-<span>  <span class="va">rankcol_name</span>,</span>
-<span>  hllab <span class="op">=</span> <span class="st">"Highlight"</span>,</span>
-<span>  lowlab <span class="op">=</span> <span class="st">"Low"</span>,</span>
-<span>  highlab <span class="op">=</span> <span class="st">"High"</span>,</span>
-<span>  savedir <span class="op">=</span> <span class="st">"./"</span>,</span>
+<span>  rankcol_name <span class="op">=</span> <span class="va">rankcol</span>,</span>
+<span>  hllab <span class="op">=</span> <span class="st">"Pathway genes"</span>,</span>
+<span>  hightolow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  lab_low <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lab_high <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  legendpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
 <span>  label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pthwys</span><span class="op">[[</span><span class="va">path_name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">50</span>,</span>
-<span>  hightolow <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  sig_name <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  savedir <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -84,12 +86,12 @@
 <dd><p>named list; key = geneset name, values = char vector of genes in geneset</p></dd>
 
 
-<dt>sig_name</dt>
-<dd><p>string; name of signature</p></dd>
-
-
 <dt>sig</dt>
 <dd><p>dataframe; signature</p></dd>
+
+
+<dt>genecol</dt>
+<dd><p>string; colname of gene names in <code>sig</code></p></dd>
 
 
 <dt>rankcol</dt>
@@ -104,31 +106,39 @@
 <dd><p>string; descriptor of highlighted genes</p></dd>
 
 
-<dt>lowlab</dt>
+<dt>hightolow</dt>
+<dd><p>logical; T for high values on left, low on right</p></dd>
+
+
+<dt>lab_low</dt>
 <dd><p>string; label for low rankcol values</p></dd>
 
 
-<dt>highlab</dt>
+<dt>lab_high</dt>
 <dd><p>string; label for high rankcol values</p></dd>
+
+
+<dt>legendpos</dt>
+<dd><p>vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)</p></dd>
+
+
+<dt>label</dt>
+<dd><p>logical; T to label points in plot</p></dd>
+
+
+<dt>sig_name</dt>
+<dd><p>string; name of signature</p></dd>
 
 
 <dt>savedir</dt>
 <dd><p>string; directory path for saving plot</p></dd>
-
-
-<dt>label</dt>
-<dd><p>logical; T to label highlighted genes</p></dd>
-
-
-<dt>hightolow</dt>
-<dd><p>logical; T for high values on left, low on right</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>nothing; will save GSEA enrichment plots in savedir</p>
+<p>Gene set enrichment plot as ggplot object</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -49,7 +49,7 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_DESeq_PC.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_PC_genes.html</loc>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_genes.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/full_join_rownames.html</loc>
@@ -100,9 +100,6 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_DESeq_scatter.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_DESeq_volcano.html</loc>
-  </url>
-  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_GSEA_batch.html</loc>
   </url>
   <url>
@@ -140,6 +137,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_screeplot.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_volcano.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_waterfall.html</loc>
