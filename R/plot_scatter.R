@@ -1,5 +1,7 @@
 #' Plot simple scatter
 #'
+#' Correlation value and method gets placed in plot caption / bottom-right.
+#'
 #' @import ggplot2
 #'
 #' @param df dataframe; includes both signatures
@@ -8,6 +10,7 @@
 #' @param label string; colname for point labels
 #' @param savename string; filepath to save figure under
 #' @param title string; plot title
+#' @param subtitle string; plot subtitle
 #' @param rank logical; change metric to rank
 #' @param xlabel string; xval description
 #' @param ylabel string; yval description
@@ -30,7 +33,7 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
                          ylabel = ifelse(methods::is(yval, "character"), xval, "Y"),
                          cormethod = c("pearson", "spearman"), guides = TRUE,
                          alpha = 1, heatmap = FALSE, hm_palette = "Spectral",
-                         reverse = FALSE, title = paste0(xval, " vs. ", yval),
+                         reverse = FALSE, title = NULL, subtitle = NULL,
                          savename = NULL) {
   cormethod <- match.arg(cormethod)
 
@@ -66,12 +69,6 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
     corcoef <- "R"
   }
 
-  # if (eqlims) {
-  #   xrange <- c(min(df[, xval], na.rm = T), max(df[, xval], na.rm = T))
-  #   yrange <- c(min(df[, yval], na.rm = T), max(df[, yval], na.rm = T))
-  #   limits <- c(min(xrange, yrange) * 1.1, max(xrange, yrange) * 1.1)
-  # }
-
   corr <- signif(cor(
     x = df[, xval],
     y = df[, yval],
@@ -85,12 +82,12 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
       colors = rev(RColorBrewer::brewer.pal(11, hm_palette)),
       breaks = scales::pretty_breaks(5)) } +
     geom_point(alpha = alpha, size = 0.5) +
-    # ggpubr::stat_cor(method = cormethod, cor.coef.name = corcoef) +
     xlab(xlabel) +
     ylab(ylabel) +
     labs(
       title = title,
-      subtitle = paste0(corcoef, " = ", corr, "; ", tools::toTitleCase(cormethod), " correlation")
+      subtitle = subtitle,
+      caption = paste0(corcoef, " = ", corr, "; ", tools::toTitleCase(cormethod), " correlation")
     ) +
     theme_classic() +
     {if(reverse) scale_x_reverse()} +

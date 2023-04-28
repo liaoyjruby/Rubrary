@@ -1,0 +1,180 @@
+---
+title: "Gene Set Enrichment Analysis (GSEA)"
+output: 
+  html_document:
+    df_print: paged
+    fig_width: 6
+    fig_height: 4
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    number_sections: true
+bibliography: vignettes.bib
+csl: elsevier-vancouver.csl
+vignette: >
+  %\VignetteIndexEntry{Gene Set Enrichment Analysis (GSEA)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Setup
+
+This is a continuation of the ["Differential Gene Expression" vignette](https://www.liaoyjruby.com/Rubrary/articles/DESeq_GSEA.html) and loads in the `airway` DESeq2 results to further investigate gene sets.
+
+```{r setup}
+library(Rubrary)
+library(dplyr)
+library(tibble)
+
+airway_deseq_res
+```
+
+# `fgsea` Gene Set Enrichment Analysis
+
+`fgsea` [@korotkevichFastGeneSet2016] is an implementation of an algorithm for fast gene set enrichment analysis (GSEA), based on the original GSEA algorithm [@subramanianGeneSetEnrichment2005].
+
+## Get pathways from `msigdbr`
+
+Gene set enrichment analysis relies on inputting gene sets / pathways related to biological function. The Molecular Signatures Database (MSigDB) [@liberzonMolecularSignaturesDatabase2011] was published as a database of annotated pathways to facilitate GSEA and is accessible through the R package `msigdbr` [@dolgalevMsigdbrMSigDBGene2022].
+
+[Human MSigDB Collections](https://www.gsea-msigdb.org/gsea/msigdb/human/collection_details.jsp)
+
+-   C2CP: curated gene sets, canonical pathways
+
+-   C5GO: ontology gene sets, Gene Ontology gene sets
+
+    -   BP: GO Biological Process ontology
+
+    -   CC: GO Cellular Component ontology
+
+    -   MF: GO Molecular Function ontology
+
+-   H: hallmark gene sets [@liberzonMolecularSignaturesDatabase2015]
+
+```{r Get pathways from `msigdbr`}
+if (!requireNamespace("msigdbr", quietly = TRUE)){
+  BiocManager::install("msigdbr")
+}
+
+msigdbr::msigdbr_collections()
+
+pthwys <- rbind(
+  msigdbr::msigdbr(category = "C2", subcategory = "CP"),
+  msigdbr::msigdbr(category = "C5", subcategory = "GO:BP"),
+  msigdbr::msigdbr(category = "C5", subcategory = "GO:CC"),
+  msigdbr::msigdbr(category = "C5", subcategory = "GO:MF"),
+  msigdbr::msigdbr(category = "H")
+) %>%
+  split(x = .$gene_symbol, f = .$gs_name) # Named list of pathways
+```
+
+## Run `fgsea`
+
+```{r Run fgsea}
+# `fgsea` requires a named numeric vector as input to the `stats` argument
+deseq_stats <- setNames(
+    airway_deseq_res[,"sign_log_p"], 
+    airway_deseq_res[,"hgnc_symbol"]
+)
+
+gsea_results <- fgsea::fgsea(
+  pathways = pthwys,
+  stats = deseq_stats,
+  eps = 0.0,
+  minSize = 15,
+  maxSize  = 500) %>%
+  arrange(desc(NES)) %>%
+  mutate(sign_log10_p = sign(NES) * -log10(pval)) # Create sign_log10_p column
+
+```
+
+## Visualize GSEA results as a table
+
+See the [GSEA User Guide: Interpreting GSEA Results](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideTEXT.htm#_Interpreting_GSEA_Results) for detailed explanation in interpreting results.
+
+```{r GSEA_table, fig.width=12, fig.height=6}
+# Get top significant pathways by positive/negative enrichment score (ES)
+pos_pws <- gsea_results[ES > 0][head(order(pval), n = 5), pathway]
+neg_pws <- gsea_results[ES < 0][head(order(pval), n = 5), pathway]
+top_pws <- c(pos_pws, rev(neg_pws))
+
+fgsea::plotGseaTable(
+  pathways = pthwys[top_pws],
+  stats = deseq_stats,
+  fgseaRes = gsea_results,
+  gseaParam = 0.5
+)
+```
+
+## Pathway enrichment plot
+
+Specific pathways of interest can be plotted in GSEA Java app-like enrichment plots that combine a waterfall and mountain plot.
+
+The top enriched pathway from our GSEA results is "[HALLMARK_ADIPOGENESIS](https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HALLMARK_ADIPOGENESIS.html)", a collection of 196 genes up-regulated during adipocyte (fat cell) differentiation. This is in line with studies reporting the complex effects of glucocorticoids on adipose tissue biology, including differentiation of adipocyte precursors and adipogenesis [@haunerGlucocorticoidsInsulinPromote1987; @pantojaGlucocorticoidSignalingDefines2008].
+
+The maximum absolute value in the Enrichment Score mountain plot corresponds to the `ES` value reported in the GSEA results.
+
+```{r GSEA_pathway, fig.width=8, fig.height=6}
+gsea_results[gsea_results$pathway == "HALLMARK_ADIPOGENESIS",]
+
+Rubrary::plot_GSEA_pathway(
+  sig = airway_deseq_res,
+  geneset = pthwys[["HALLMARK_ADIPOGENESIS"]],
+  genecol = "hgnc_symbol",
+  rankcol = "sign_log_p",
+  rankcol_name = "DESeq sign log2 p-value",
+  label = FALSE,
+  title = "Airway DE Genes: HALLMARK_ADIPOGENESIS",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated"
+)
+```
+
+For smaller gene sets, like 20-gene pathway "[GOBP_NEURON_FATE_SPECIFICATION](https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html)", labeling each gene may be appropriate.
+
+```{r GSEA_pathway_labeled, fig.width=8, fig.height=6}
+gsea_results[gsea_results$pathway == "GOBP_NEURON_FATE_SPECIFICATION",]
+
+Rubrary::plot_GSEA_pathway(
+  sig = airway_deseq_res,
+  geneset = pthwys[["GOBP_NEURON_FATE_SPECIFICATION"]],
+  genecol = "hgnc_symbol",
+  rankcol = "sign_log_p",
+  rankcol_name = "DESeq sign log2 p-value",
+  label = TRUE,
+  title = "Airway DE Genes: GOBP_NEURON_FATE_SPECIFICATION",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated"
+)
+```
+
+Multiple gene set enrichment plots can be created in a batch with `Rubrary::plot_GSEA_batch`, a wrapper for `Rubrary::plot_GSEA_pathway` that works well with `lapply`. We can use the `neg_pws` list of pathway names to plot gene enrichment plots for the most significant negatively enriched pathways.
+
+```{r GSEA_pathway_batch_tbl, fig.width=8, fig.height=6}
+gsea_results[gsea_results$pathway %in% neg_pws,]
+```
+
+```{r GSEA_pathway_batch, fig.width=8, fig.height=6, message=FALSE}
+lapply(
+  neg_pws[1:3],
+  FUN = Rubrary::plot_GSEA_batch,
+  genecol = "hgnc_symbol",
+  pthwys = pthwys,
+  sig = airway_deseq_res,
+  rankcol = "sign_log_p",
+  rankcol_name = "DESeq sign log2 p-value",
+  hllab = "Pathway genes",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated"
+)
+```
+
+# Citations

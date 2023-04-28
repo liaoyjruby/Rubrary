@@ -2,10 +2,13 @@
 title: "Principal Components Analysis (PCA)"
 author: "Yi Jou (Ruby) Liao"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
     fig_width: 6
     fig_height: 4
     toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
     number_sections: true
     df_print: paged
 vignette: >
@@ -22,7 +25,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message = FALSE}
 library(Rubrary)
 library(dplyr)
 
@@ -45,13 +48,13 @@ if (!requireNamespace("palmerpenguins", quietly = TRUE)){
 }
 library(palmerpenguins)
 
-names(penguins)
-data("penguins")
 penguins <- penguins %>%
   as.data.frame() %>%
   mutate(Sample_ID = paste0(penguins_raw$`Individual ID`, "_", penguins_raw$`Sample Number`))
   
 rownames(penguins) <- penguins$Sample_ID
+
+penguins
 ```
 
 # Run PCA
@@ -83,7 +86,7 @@ Rubrary::plot_PCA(
   annotype = "species",
   title = "Palmer Penguins PCA Scores - Species",
   label = FALSE,
-  density = T
+  density = TRUE
 )
 ```
 
@@ -96,7 +99,7 @@ Rubrary::plot_PCA(
   annotype = "sex",
   title = "Palmer Penguins PCA Scores - Sex",
   label = FALSE,
-  density = T
+  density = TRUE
 )
 ```
 
