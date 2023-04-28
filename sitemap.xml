@@ -10,7 +10,10 @@
     <loc>https://liaoyjruby.github.io/Rubrary/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/articles/DESeq_GSEA.html</loc>
+    <loc>https://liaoyjruby.github.io/Rubrary/articles/DE_Genes.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/articles/GSEA.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/articles/PCA.html</loc>
@@ -26,6 +29,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/news/index.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/airway_deseq_res.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/calc_sumZscore.html</loc>
