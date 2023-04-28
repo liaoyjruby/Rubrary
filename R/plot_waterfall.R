@@ -4,6 +4,10 @@ utils::globalVariables(c(
 
 #' Plot horizontal waterfall plot (with optional density)
 #'
+#' If `ggtext` package is installed, will do fancy version of p_enrichment. :)
+#'
+#' @import ggplot2
+#'
 #' @param sig dataframe; name (1st column) + rankcol columns
 #' @param highlight vector; list of names to highlight in waterfall
 #' @param rankcol string; colname of values
@@ -26,8 +30,7 @@ utils::globalVariables(c(
 #' @param height numeric; height of plot
 #' @param savename string; filepath to save figure under
 #'
-#' @return Waterfall plot
-#' @importFrom ggplot2 ggplot aes geom_segment labs coord_flip layer_scales element_text
+#' @return Waterfall plot ggplot2 object
 #' @export
 #'
 plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, hightolow = FALSE,
@@ -124,13 +127,21 @@ plot_waterfall <- function(sig, highlight, rankcol, rankcol_name = rankcol, high
       {if (!is.null(lab_low)) geom_text(x = xpos_bot, y = ypos, label = lab_low, size=lab_size)}
   }
 
+  if (!requireNamespace("ggtext", quietly = TRUE)){
+    sbt <- "KS enrich. p-value = "
+    plsbt <- element_text(size = 15)
+  } else {
+    sbt <- "p-val<sub>enrichment</sub> = "
+    plsbt <- ggtext::element_markdown(size = 15)
+  }
+
   # Add pvalue, remove legend title
   wf_lab <- wf_lab +
-    {if (pval) labs(subtitle = paste0("p-val<sub>enrichment</sub> = ",
+    {if (pval) labs(subtitle = paste0(sbt,
                                       signif(Rubrary::get_kspval(sig, rankcol, "type", hllab), digits = 4)))} + # "KS enrich. p-value = "
     theme(legend.title = element_blank(),
           legend.position = legendpos,
-          plot.subtitle = ggtext::element_markdown(size = 15))
+          plot.subtitle = plsbt)
 
   # Save
   if (!is.null(savename)) {

@@ -3,11 +3,11 @@ title: "DESeq / GSEA"
 author: "Yi Jou (Ruby) Liao"
 output: 
   rmarkdown::html_vignette:
+    df_print: paged
     fig_width: 6
     fig_height: 4
     toc: true
     number_sections: true
-    df_print: paged
 bibliography: vignettes.bib
 csl: elsevier-vancouver.csl
 vignette: >
@@ -52,7 +52,7 @@ In the original paper, the authors used [Cuffdiff 2](https://www.nature.com/arti
 
 # Load data
 
-The package `airway` contains data from the Himes et al. paper in the form of a RangedSummarizedExperiment object and is hosted on Bioconductor. The `airway` vignette
+The package `airway` contains data from the Himes et al. paper in the form of a RangedSummarizedExperiment object and is hosted on Bioconductor.
 
 ## Get `airway` data from package
 
@@ -155,7 +155,7 @@ deseq_res_hgnc_PC <- Rubrary::filter_genes(
 
 DESeq results can be visualized through volcano plots. Volcano plots show that top and bottom differentially expressed genes when sorted by decreasing signed log p value present as outliers on the top right and top left.
 
-```{r Volcano_plot, fig.height=4, fig.width=6}
+```{r Volcano_plot, fig.height=12, fig.width=16}
 # All DE genes
 head(deseq_res_hgnc[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
 tail(deseq_res_hgnc[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
@@ -250,7 +250,7 @@ gsea_results <- fgsea::fgsea(
 
 See the [GSEA User Guide: Interpreting GSEA Results](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideTEXT.htm#_Interpreting_GSEA_Results) for detailed explanation in interpreting results.
 
-```{r GSEA_table, fig.width=6, fig.height=3}
+```{r GSEA_table, fig.width=12, fig.height=6}
 # Get top significant pathways by positive/negative enrichment score (ES)
 pos_pws <- gsea_results[ES > 0][head(order(pval), n = 5), pathway]
 neg_pws <- gsea_results[ES < 0][head(order(pval), n = 5), pathway]
@@ -272,7 +272,7 @@ The top enriched pathway from our GSEA results is "[HALLMARK_ADIPOGENESIS](https
 
 The maximum absolute value in the Enrichment Score mountain plot corresponds to the `ES` value reported in the GSEA results.
 
-```{r GSEA_pathway, fig.width=4, fig.height=3}
+```{r GSEA_pathway, fig.width=8, fig.height=6}
 gsea_results[gsea_results$pathway == "HALLMARK_ADIPOGENESIS",]
 
 Rubrary::plot_GSEA_pathway(
@@ -288,9 +288,9 @@ Rubrary::plot_GSEA_pathway(
 )
 ```
 
-For gene sets of smaller sizes, like 20 gene pathway "[GOBP_NEURON_FATE_SPECIFICATION](<https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html>", labeling each gene may be appropriate.
+For gene sets of smaller sizes, like 20 gene pathway "[GOBP_NEURON_FATE_SPECIFICATION](https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html)", labeling each gene may be appropriate.
 
-```{r GSEA_pathway_labeled, fig.width=4, fig.height=3}
+```{r GSEA_pathway_labeled, fig.width=8, fig.height=6}
 gsea_results[gsea_results$pathway == "GOBP_NEURON_FATE_SPECIFICATION",]
 
 Rubrary::plot_GSEA_pathway(
@@ -299,7 +299,7 @@ Rubrary::plot_GSEA_pathway(
   genecol = "hgnc_symbol",
   rankcol = "sign_log_p",
   rankcol_name = "DESeq sign log2 p-value",
-  label = FALSE,
+  label = TRUE,
   title = "Airway DE Genes: GOBP_NEURON_FATE_SPECIFICATION",
   lab_high = "\U2191 in treated\n\U2193 in untreated",
   lab_low = "\U2191 in untreated\n\U2193 in treated"
@@ -308,7 +308,7 @@ Rubrary::plot_GSEA_pathway(
 
 Multiple gene set enrichment plots can be created in a batch with `Rubrary::plot_GSEA_batch`, a wrapper for `Rubrary::plot_GSEA_pathway` that works well with `lapply`. We can use the `neg_pws` list of pathway names to plot gene enrichment plots for the most significant negatively enriched pathways.
 
-```{r GSEA_pathway_batch, fig.width=4, fig.height=3}
+```{r GSEA_pathway_batch, fig.width=8, fig.height=6}
 gsea_results[gsea_results$pathway %in% neg_pws,]
 
 lapply(
@@ -325,3 +325,5 @@ lapply(
 )
 
 ```
+
+# Citations

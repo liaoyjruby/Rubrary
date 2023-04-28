@@ -72,8 +72,8 @@ plot_waterfall(
 \item{savename}{string; filepath to save figure under}
 }
 \value{
-Waterfall plot
+Waterfall plot ggplot2 object
 }
 \description{
-Plot horizontal waterfall plot (with optional density)
+If \code{ggtext} package is installed, will do fancy version of p_enrichment. :)
 }
