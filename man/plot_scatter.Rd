@@ -18,7 +18,8 @@ plot_scatter(
   heatmap = FALSE,
   hm_palette = "Spectral",
   reverse = FALSE,
-  title = paste0(xval, " vs. ", yval),
+  title = NULL,
+  subtitle = NULL,
   savename = NULL
 )
 }
@@ -51,13 +52,15 @@ plot_scatter(
 
 \item{title}{string; plot title}
 
+\item{subtitle}{string; plot subtitle}
+
 \item{savename}{string; filepath to save figure under}
 }
 \value{
 Simple scatter plot as ggplot2
 }
 \description{
-Plot simple scatter
+Correlation value and method gets placed in plot caption / bottom-right.
 }
 \examples{
 df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10])

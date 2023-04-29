@@ -11,6 +11,8 @@ output:
       smooth_scroll: false
     number_sections: true
     df_print: paged
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Principal Components Analysis (PCA)}
   %\VignetteEngine{knitr::rmarkdown}

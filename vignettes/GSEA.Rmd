@@ -10,6 +10,8 @@ output:
       collapsed: false
       smooth_scroll: false
     number_sections: true
+pkgdown:
+  as_is: true
 bibliography: vignettes.bib
 csl: elsevier-vancouver.csl
 vignette: >
