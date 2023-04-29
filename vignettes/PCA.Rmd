@@ -3,6 +3,7 @@ title: "Principal Components Analysis (PCA)"
 author: "Yi Jou (Ruby) Liao"
 output: 
   html_document:
+    df_print: "paged"
     fig_width: 6
     fig_height: 4
     toc: true
@@ -10,9 +11,6 @@ output:
       collapsed: false
       smooth_scroll: false
     number_sections: true
-    df_print: paged
-pkgdown:
-  as_is: true
 vignette: >
   %\VignetteIndexEntry{Principal Components Analysis (PCA)}
   %\VignetteEngine{knitr::rmarkdown}
@@ -56,7 +54,7 @@ penguins <- penguins %>%
   
 rownames(penguins) <- penguins$Sample_ID
 
-penguins
+rmarkdown::paged_table(penguins)
 ```
 
 # Run PCA

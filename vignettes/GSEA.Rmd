@@ -2,7 +2,7 @@
 title: "Gene Set Enrichment Analysis (GSEA)"
 output: 
   html_document:
-    df_print: paged
+    df_print: "paged"
     fig_width: 6
     fig_height: 4
     toc: true
@@ -10,8 +10,6 @@ output:
       collapsed: false
       smooth_scroll: false
     number_sections: true
-pkgdown:
-  as_is: true
 bibliography: vignettes.bib
 csl: elsevier-vancouver.csl
 vignette: >
@@ -29,14 +27,16 @@ knitr::opts_chunk$set(
 
 # Setup
 
-This is a continuation of the ["Differential Gene Expression" vignette](https://www.liaoyjruby.com/Rubrary/articles/DESeq_GSEA.html) and loads in the `airway` DESeq2 results to further investigate gene sets.
-
 ```{r setup}
 library(Rubrary)
 library(dplyr)
 library(tibble)
+```
 
-airway_deseq_res
+This is a continuation of the ["Differential Gene Expression" vignette](https://www.liaoyjruby.com/Rubrary/articles/DESeq_GSEA.html) and loads in the `airway` DESeq2 results to further investigate gene sets.
+
+```{r airway results}
+rmarkdown::paged_table(airway_deseq_res)
 ```
 
 # `fgsea` Gene Set Enrichment Analysis
@@ -66,7 +66,7 @@ if (!requireNamespace("msigdbr", quietly = TRUE)){
   BiocManager::install("msigdbr")
 }
 
-msigdbr::msigdbr_collections()
+rmarkdown::paged_table(msigdbr::msigdbr_collections())
 
 pthwys <- rbind(
   msigdbr::msigdbr(category = "C2", subcategory = "CP"),
@@ -96,6 +96,7 @@ gsea_results <- fgsea::fgsea(
   arrange(desc(NES)) %>%
   mutate(sign_log10_p = sign(NES) * -log10(pval)) # Create sign_log10_p column
 
+rmarkdown::paged_table(gsea_results)
 ```
 
 ## Visualize GSEA results as a table
@@ -124,8 +125,9 @@ The top enriched pathway from our GSEA results is "[HALLMARK_ADIPOGENESIS](https
 
 The maximum absolute value in the Enrichment Score mountain plot corresponds to the `ES` value reported in the GSEA results.
 
-```{r GSEA_pathway, fig.width=8, fig.height=6}
-gsea_results[gsea_results$pathway == "HALLMARK_ADIPOGENESIS",]
+```{r GSEA_pathway, fig.width=9, fig.height=7}
+rmarkdown::paged_table(
+  gsea_results[gsea_results$pathway == "HALLMARK_ADIPOGENESIS",])
 
 Rubrary::plot_GSEA_pathway(
   sig = airway_deseq_res,
@@ -143,7 +145,8 @@ Rubrary::plot_GSEA_pathway(
 For smaller gene sets, like 20-gene pathway "[GOBP_NEURON_FATE_SPECIFICATION](https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GOBP_NEURON_FATE_SPECIFICATION.html)", labeling each gene may be appropriate.
 
 ```{r GSEA_pathway_labeled, fig.width=8, fig.height=6}
-gsea_results[gsea_results$pathway == "GOBP_NEURON_FATE_SPECIFICATION",]
+rmarkdown::paged_table(
+  gsea_results[gsea_results$pathway == "GOBP_NEURON_FATE_SPECIFICATION",])
 
 Rubrary::plot_GSEA_pathway(
   sig = airway_deseq_res,
@@ -161,7 +164,8 @@ Rubrary::plot_GSEA_pathway(
 Multiple gene set enrichment plots can be created in a batch with `Rubrary::plot_GSEA_batch`, a wrapper for `Rubrary::plot_GSEA_pathway` that works well with `lapply`. We can use the `neg_pws` list of pathway names to plot gene enrichment plots for the most significant negatively enriched pathways.
 
 ```{r GSEA_pathway_batch_tbl, fig.width=8, fig.height=6}
-gsea_results[gsea_results$pathway %in% neg_pws,]
+rmarkdown::paged_table(
+  gsea_results[gsea_results$pathway %in% neg_pws[1:3],])
 ```
 
 ```{r GSEA_pathway_batch, fig.width=8, fig.height=6, message=FALSE}
@@ -178,5 +182,7 @@ lapply(
   lab_low = "\U2191 in untreated\n\U2193 in treated"
 )
 ```
+
+# Resources
 
 # Citations

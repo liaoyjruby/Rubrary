@@ -2,6 +2,7 @@
 title: "Differential Gene Expression"
 output: 
   html_document:
+    df_print: "paged"
     fig_width: 6
     fig_height: 4
     toc: true
@@ -9,8 +10,6 @@ output:
       collapsed: false
       smooth_scroll: false
     number_sections: true
-pkgdown:
-  as_is: true
 bibliography: vignettes.bib
 csl: elsevier-vancouver.csl
 vignette: >
@@ -80,8 +79,8 @@ anno <- colData(airway) %>%
   as.data.frame()
 anno$dex <- relevel(anno$dex, "untrt") # Set untreated as first factor
 
-head(cts)
-head(anno)
+rmarkdown::paged_table(data.frame(cts))
+rmarkdown::paged_table(anno)
 ```
 
 ## Visualize samples w/ PCA
@@ -145,7 +144,7 @@ deseq_res_hgnc <- dplyr::left_join( # Join stats with HGNC symbol table
   arrange(desc(sign_log_p))
 
 # Genes now have associated HGNC symbols
-head(deseq_res_hgnc)
+rmarkdown::paged_table(deseq_res_hgnc)
 ```
 
 ## Filter to protein coding genes
@@ -165,24 +164,10 @@ deseq_res_hgnc_PC <- Rubrary::filter_genes(
 DESeq results can be visualized through volcano plots. Volcano plots show that top and bottom differentially expressed genes when sorted by decreasing signed log p value present as outliers on the top right and top left.
 
 ```{r Volcano_plot, fig.height=12, fig.width=16}
-# All DE genes
-head(deseq_res_hgnc[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
-tail(deseq_res_hgnc[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
-
-Rubrary::plot_volcano(
-  df_deg = deseq_res_hgnc,
-  names = "hgnc_symbol",
-  x = "log2FoldChange", y = "pvalue",
-  FCcutoff = 1, pCutoff = 5e-04,
-  title = "Airway Treated vs. Untreated DE Genes",
-  xlab_high = "\U2191 in treated,\n\U2193 in untreated",
-  xlab_low = "\U2191 in untreated,\n\U2193 in treated",
-  subtitle = "All genes"
-)
-
-# Protein coding DE genes
-head(deseq_res_hgnc_PC[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
-tail(deseq_res_hgnc_PC[order(deseq_res_hgnc$sign_log_p, decreasing = T),])
+rmarkdown::paged_table(
+  head(deseq_res_hgnc_PC[order(deseq_res_hgnc_PC$sign_log_p, decreasing = T),]))
+rmarkdown::paged_table(
+  tail(deseq_res_hgnc_PC[order(deseq_res_hgnc_PC$sign_log_p, decreasing = T),]))
 
 Rubrary::plot_volcano(
   df_deg = deseq_res_hgnc_PC,
