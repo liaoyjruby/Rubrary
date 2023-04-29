@@ -69,8 +69,6 @@
 </nav><div class="container template-article">
 
 
-
-
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Differential Gene Expression</h1>
@@ -82,8 +80,9 @@
 
     
     
-<div class="section level2">
-<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+<div class="section level2" number="1">
+<h2 id="setup">
+<span class="header-section-number">1</span> Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://liaoyjruby.github.io/Rubrary/">Rubrary</a></span><span class="op">)</span></span>
@@ -103,8 +102,9 @@
 <span><span class="va">r</span><span class="op">[</span><span class="st">"CRAN"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"http://cran.us.r-project.org"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<div class="section level2" number="2">
+<h2 id="introduction">
+<span class="header-section-number">2</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>The example dataset for this vignette comes from the paper <span class="citation">[1]</span> below:</p>
 <blockquote>
@@ -133,14 +133,17 @@ differential gene expression and used the <a href="https://david.ncifcrf.gov/" c
 Visualization, and Integrated Discovery (DAVID)</a> for gene set
 enrichment analysis.</p>
 </div>
-<div class="section level2">
-<h2 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
+<div class="section level2" number="3">
+<h2 id="load-data">
+<span class="header-section-number">3</span> Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
 </h2>
 <p>The package <code>airway</code> contains data from the Himes et
 al. paper in the form of a RangedSummarizedExperiment object and is
 hosted on Bioconductor.</p>
-<div class="section level3">
-<h3 id="get-airway-data-from-package">Get <code>airway</code> data from package<a class="anchor" aria-label="anchor" href="#get-airway-data-from-package"></a>
+<div class="section level3" number="3.1">
+<h3 id="get-airway-data-from-package">
+<span class="header-section-number">3.1</span> Get
+<code>airway</code> data from package<a class="anchor" aria-label="anchor" href="#get-airway-data-from-package"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"airway"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
@@ -150,8 +153,10 @@ hosted on Bioconductor.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">airway</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">airway</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="get-counts-and-sample-annotation">Get counts and sample annotation<a class="anchor" aria-label="anchor" href="#get-counts-and-sample-annotation"></a>
+<div class="section level3" number="3.2">
+<h3 id="get-counts-and-sample-annotation">
+<span class="header-section-number">3.2</span> Get counts and sample
+annotation<a class="anchor" aria-label="anchor" href="#get-counts-and-sample-annotation"></a>
 </h3>
 <p>The gene expression data is represented in counts. There are 4
 samples treated with dexamethasone (<code>anno$dex == "trt"</code>) and
@@ -195,8 +200,10 @@ samples treated with dexamethasone (<code>anno$dex == "trt"</code>) and
 <span><span class="co">#&gt; SRR1039516 SRS508575 SAMN02422682</span></span>
 <span><span class="co">#&gt; SRR1039517 SRS508576 SAMN02422673</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="visualize-samples-w-pca">Visualize samples w/ PCA<a class="anchor" aria-label="anchor" href="#visualize-samples-w-pca"></a>
+<div class="section level3" number="3.3">
+<h3 id="visualize-samples-w-pca">
+<span class="header-section-number">3.3</span> Visualize samples w/
+PCA<a class="anchor" aria-label="anchor" href="#visualize-samples-w-pca"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># log2UQ</span></span>
@@ -204,15 +211,18 @@ samples treated with dexamethasone (<code>anno$dex == "trt"</code>) and
 <span><span class="co"># Rubrary::plot_PCA</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
+<div class="section level2" number="4">
 <h2 id="deseq2-differentially-expressed-genes">
-<code>DESeq2</code> differentially expressed genes<a class="anchor" aria-label="anchor" href="#deseq2-differentially-expressed-genes"></a>
+<span class="header-section-number">4</span> <code>DESeq2</code>
+differentially expressed genes<a class="anchor" aria-label="anchor" href="#deseq2-differentially-expressed-genes"></a>
 </h2>
 <p><code>DESeq2</code> <span class="citation">[2]</span> performs
 differential gene expression analysis my modeling counts as a negative
 binomial distribution.</p>
-<div class="section level3">
-<h3 id="create-deseqdataset-object-and-run-deseq">Create DESeqDataSet object and run DESeq<a class="anchor" aria-label="anchor" href="#create-deseqdataset-object-and-run-deseq"></a>
+<div class="section level3" number="4.1">
+<h3 id="create-deseqdataset-object-and-run-deseq">
+<span class="header-section-number">4.1</span> Create DESeqDataSet
+object and run DESeq<a class="anchor" aria-label="anchor" href="#create-deseqdataset-object-and-run-deseq"></a>
 </h3>
 <p>From <code><a href="https://rdrr.io/pkg/DESeq2/man/results.html" class="external-link">DESeq2::results</a></code> documentation, the
 <code>contrast</code> argument can be formatted as:</p>
@@ -247,8 +257,10 @@ transforms it to a dataframe, and adds a sign log2 p-value column.</p>
 <span><span class="co">#&gt; fitting model and testing</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DESeq2/man/results.html" class="external-link">results</a></span><span class="op">(</span><span class="va">dds</span>, contrast <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dex"</span>, <span class="st">"trt"</span>, <span class="st">"untrt"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">deseq_res_df</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/output_DESeq.html">output_DESeq</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="replace-ensembl-id-w-hgnc-symbol">Replace Ensembl ID w/ HGNC symbol<a class="anchor" aria-label="anchor" href="#replace-ensembl-id-w-hgnc-symbol"></a>
+<div class="section level4" number="4.1.1">
+<h4 id="replace-ensembl-id-w-hgnc-symbol">
+<span class="header-section-number">4.1.1</span> Replace Ensembl ID
+w/ HGNC symbol<a class="anchor" aria-label="anchor" href="#replace-ensembl-id-w-hgnc-symbol"></a>
 </h4>
 <p><code>airway</code> gene names are given in <a href="http://www.ensembl.org/info/genome/stable_ids/index.html" class="external-link">Ensembl
 ID</a>, but <a href="https://www.genenames.org/about/guidelines/" class="external-link">HGNC
@@ -297,8 +309,10 @@ more compatible with gene set enrichment analysis (GSEA) tools.</p>
 <span><span class="co">#&gt; 6  1.891923e-48  5.860231e-45   158.5327</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level3">
-<h3 id="filter-to-protein-coding-genes">Filter to protein coding genes<a class="anchor" aria-label="anchor" href="#filter-to-protein-coding-genes"></a>
+<div class="section level3" number="4.2">
+<h3 id="filter-to-protein-coding-genes">
+<span class="header-section-number">4.2</span> Filter to protein
+coding genes<a class="anchor" aria-label="anchor" href="#filter-to-protein-coding-genes"></a>
 </h3>
 <p>For ease of interpretation, the DE genes results can also be filtered
 to protein coding genes only. <code><a href="../reference/filter_genes.html">Rubrary::filter_genes()</a></code> can
@@ -314,8 +328,9 @@ genes efficiently.</p>
 <span>  genes_filt <span class="op">=</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/get_PC_genes.html">get_PC_genes</a></span><span class="op">(</span><span class="va">mart</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="volcano-plot">Volcano plot<a class="anchor" aria-label="anchor" href="#volcano-plot"></a>
+<div class="section level3" number="4.3">
+<h3 id="volcano-plot">
+<span class="header-section-number">4.3</span> Volcano plot<a class="anchor" aria-label="anchor" href="#volcano-plot"></a>
 </h3>
 <p>DESeq results can be visualized through volcano plots. Volcano plots
 show that top and bottom differentially expressed genes when sorted by
