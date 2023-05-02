@@ -9,7 +9,9 @@ run_LISI(
   labels,
   reduction = c("umap", "pca", "tsne"),
   title = NULL,
-  savename = NULL
+  savename = NULL,
+  width = NULL,
+  height = NULL
 )
 }
 \arguments{

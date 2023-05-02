@@ -9,15 +9,19 @@
 #' @param reduction c("umap", "pca", "tsne"); dimensional reduction method
 #' @param title string; plot title
 #' @param savename string; filepath to save results and figure under (no ext.)
+#' @param width numeric; plot width
+#' @param height numeric; plot height
 #'
 #' @return Dataframe of LISI values
 #' @export
 #'
 run_LISI <- function(sobj, labels, reduction = c("umap", "pca", "tsne"),
-                     title = NULL, savename = NULL){
+                     title = NULL, savename = NULL, width = NULL, height = NULL){
   Rubrary::use_pkg("Seurat", "lisi")
 
   reduction <- match.arg(reduction)
+  wd <- width
+  ht <- height
 
   # Resolve missing values
   meta <- sobj@meta.data %>%
@@ -36,12 +40,16 @@ run_LISI <- function(sobj, labels, reduction = c("umap", "pca", "tsne"),
 
   if(length(labels) > 1){
     nc <- length(labels)
-    wd <- nc * 7 + 2
-    ht <- 15
+    if(is.null(wd) || is.null(ht)){
+      wd <- nc * 6 + 2
+      ht <- 15
+    }
   } else { # Single row plot
     nc <- 2
-    wd <- 15
-    ht <- 4
+    if(is.null(wd) || is.null(ht)){
+      wd <- 15
+      ht <- 5
+    }
   }
 
   # LISI dimplot set
