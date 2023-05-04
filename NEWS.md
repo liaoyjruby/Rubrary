@@ -1,6 +1,9 @@
 General
 
 New
+- `assess_integration`: `run_LISI` but more general, incorporating `Seurat::MixingMetric`
+  - `run_LISI`: wrapper for `assess_integration` specific to `LISI`
+  - `run_MixingMetric`: wrapper for `assess_integration` specific to `LISI`
 
 Improved
 
