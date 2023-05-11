@@ -64,18 +64,23 @@
 <span>  <span class="va">xval</span>,</span>
 <span>  <span class="va">yval</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rank <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  xlabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/is.html" class="external-link">is</a></span><span class="op">(</span><span class="va">xval</span>, <span class="st">"character"</span><span class="op">)</span>, <span class="va">xval</span>, <span class="st">"X"</span><span class="op">)</span>,</span>
-<span>  ylabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/is.html" class="external-link">is</a></span><span class="op">(</span><span class="va">yval</span>, <span class="st">"character"</span><span class="op">)</span>, <span class="va">xval</span>, <span class="st">"Y"</span><span class="op">)</span>,</span>
+<span>  ylabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/is.html" class="external-link">is</a></span><span class="op">(</span><span class="va">yval</span>, <span class="st">"character"</span><span class="op">)</span>, <span class="va">yval</span>, <span class="st">"Y"</span><span class="op">)</span>,</span>
 <span>  cormethod <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pearson"</span>, <span class="st">"spearman"</span><span class="op">)</span>,</span>
 <span>  guides <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  pt_size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  pt_alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  lbl_size <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  heatmap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  hm_palette <span class="op">=</span> <span class="st">"Spectral"</span>,</span>
 <span>  reverse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  savename <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  savename <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  height <span class="op">=</span> <span class="fl">8</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,6 +100,10 @@
 
 <dt>label</dt>
 <dd><p>string; colname for point labels</p></dd>
+
+
+<dt>group</dt>
+<dd><p>string; colname for group color</p></dd>
 
 
 <dt>rank</dt>
@@ -117,8 +126,16 @@
 <dd><p>logical; T to include fitted line</p></dd>
 
 
-<dt>alpha</dt>
+<dt>pt_size</dt>
+<dd><p>numeric; point size</p></dd>
+
+
+<dt>pt_alpha</dt>
 <dd><p>numeric; point alpha value</p></dd>
+
+
+<dt>lbl_size</dt>
+<dd><p>numeric; label text size</p></dd>
 
 
 <dt>heatmap</dt>
@@ -144,6 +161,14 @@
 <dt>savename</dt>
 <dd><p>string; filepath to save figure under</p></dd>
 
+
+<dt>width</dt>
+<dd><p>numeric; plot width</p></dd>
+
+
+<dt>height</dt>
+<dd><p>numeric; plot height</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -154,8 +179,8 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, B <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, C <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">plot_scatter</span><span class="op">(</span><span class="va">df</span>, xval <span class="op">=</span> <span class="st">"A"</span>, yval <span class="op">=</span> <span class="st">"B"</span>, label <span class="op">=</span> <span class="st">"C"</span>, title <span class="op">=</span> <span class="st">"Example Scatter"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, B <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, C <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, D <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_scatter</span><span class="op">(</span><span class="va">df</span>, xval <span class="op">=</span> <span class="st">"A"</span>, yval <span class="op">=</span> <span class="st">"B"</span>, label <span class="op">=</span> <span class="st">"C"</span>, group <span class="op">=</span> <span class="st">"D"</span>, title <span class="op">=</span> <span class="st">"Example Scatter"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_scatter-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
