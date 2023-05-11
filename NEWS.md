@@ -1,6 +1,7 @@
 General
 
 New
+
 - `assess_integration`: `run_LISI` but more general, incorporating `Seurat::MixingMetric`
   - `run_LISI`: wrapper for `assess_integration` specific to `LISI`
   - `run_MixingMetric`: wrapper for `assess_integration` specific to `LISI`
@@ -11,6 +12,7 @@ Improved
 -   `genes` functions: added `Mart` arg to functions that try to query BioMart
     -   `plot_PC_genes` -\> `plot_genes`, still defaults to filtering by PC genes but technically any gene list can be passed in to filter dataframe by
 -   `plot_waterfall`: a little smarter on where to place high/low value labels but still quite dumb
+- `plot_scatter`: color by group, more text options
 
 Vignettes
 

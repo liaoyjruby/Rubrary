@@ -9,18 +9,23 @@ plot_scatter(
   xval,
   yval,
   label = NULL,
+  group = NULL,
   rank = FALSE,
   xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
-  ylabel = ifelse(methods::is(yval, "character"), xval, "Y"),
+  ylabel = ifelse(methods::is(yval, "character"), yval, "Y"),
   cormethod = c("pearson", "spearman"),
   guides = TRUE,
-  alpha = 1,
+  pt_size = 2,
+  pt_alpha = 1,
+  lbl_size = 3,
   heatmap = FALSE,
   hm_palette = "Spectral",
   reverse = FALSE,
   title = NULL,
   subtitle = NULL,
-  savename = NULL
+  savename = NULL,
+  width = 8,
+  height = 8
 )
 }
 \arguments{
@@ -32,6 +37,8 @@ plot_scatter(
 
 \item{label}{string; colname for point labels}
 
+\item{group}{string; colname for group color}
+
 \item{rank}{logical; change metric to rank}
 
 \item{xlabel}{string; xval description}
@@ -42,7 +49,11 @@ plot_scatter(
 
 \item{guides}{logical; T to include fitted line}
 
-\item{alpha}{numeric; point alpha value}
+\item{pt_size}{numeric; point size}
+
+\item{pt_alpha}{numeric; point alpha value}
+
+\item{lbl_size}{numeric; label text size}
 
 \item{heatmap}{logical; T for underlying heatmap (untested)}
 
@@ -55,6 +66,10 @@ plot_scatter(
 \item{subtitle}{string; plot subtitle}
 
 \item{savename}{string; filepath to save figure under}
+
+\item{width}{numeric; plot width}
+
+\item{height}{numeric; plot height}
 }
 \value{
 Simple scatter plot as ggplot2
@@ -63,7 +78,7 @@ Simple scatter plot as ggplot2
 Correlation value and method gets placed in plot caption / bottom-right.
 }
 \examples{
-df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10])
-plot_scatter(df, xval = "A", yval = "B", label = "C", title = "Example Scatter")
+df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10], D = rep(LETTERS[1:5], each = 2))
+plot_scatter(df, xval = "A", yval = "B", label = "C", group = "D", title = "Example Scatter")
 
 }

@@ -8,33 +8,39 @@
 #' @param xval string/numeric vector; colname for x axis
 #' @param yval string/numeric vector; colname for y axis
 #' @param label string; colname for point labels
-#' @param savename string; filepath to save figure under
+#' @param group string; colname for group color
 #' @param title string; plot title
 #' @param subtitle string; plot subtitle
 #' @param rank logical; change metric to rank
 #' @param xlabel string; xval description
 #' @param ylabel string; yval description
 #' @param cormethod string; correlation method for stats::cor()
-#' @param alpha numeric; point alpha value
+#' @param pt_size numeric; point size
+#' @param pt_alpha numeric; point alpha value
+#' @param lbl_size numeric; label text size
 #' @param guides logical; T to include fitted line
 #' @param reverse logical; T to reverse both axes
 #' @param heatmap logical; T for underlying heatmap (untested)
 #' @param hm_palette string; RColorBrewer continuous palette name (untested)
+#' @param savename string; filepath to save figure under
+#' @param width numeric; plot width
+#' @param height numeric; plot height
 #'
 #' @return Simple scatter plot as ggplot2
 #' @export
 #'
 #' @examples
-#' df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10])
-#' plot_scatter(df, xval = "A", yval = "B", label = "C", title = "Example Scatter")
+#' df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10], D = rep(LETTERS[1:5], each = 2))
+#' plot_scatter(df, xval = "A", yval = "B", label = "C", group = "D", title = "Example Scatter")
 #'
-plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
+plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, rank = FALSE,
                          xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
-                         ylabel = ifelse(methods::is(yval, "character"), xval, "Y"),
+                         ylabel = ifelse(methods::is(yval, "character"), yval, "Y"),
                          cormethod = c("pearson", "spearman"), guides = TRUE,
-                         alpha = 1, heatmap = FALSE, hm_palette = "Spectral",
+                         pt_size = 2, pt_alpha = 1, lbl_size = 3,
+                         heatmap = FALSE, hm_palette = "Spectral",
                          reverse = FALSE, title = NULL, subtitle = NULL,
-                         savename = NULL) {
+                         savename = NULL, width = 8, height = 8) {
   cormethod <- match.arg(cormethod)
 
   if(is.null(df)){
@@ -47,11 +53,7 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
     yval <- "yval"
     label <- "label"
   } else {
-    if (!is.null(label)){
-      df <- df[, c(xval, yval, label)]
-    } else {
-      df <- df[, c(xval, yval)]
-    }
+      df <- df[, c(xval, yval, label, group)]
   }
 
   if (rank) {
@@ -81,7 +83,8 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
     {if(heatmap) scale_fill_gradientn(
       colors = rev(RColorBrewer::brewer.pal(11, hm_palette)),
       breaks = scales::pretty_breaks(5)) } +
-    geom_point(alpha = alpha, size = 0.5) +
+    geom_point(alpha = pt_alpha, size = pt_size) +
+    {if(!is.null(group)) geom_point(aes(color = .data[[group]]), alpha = pt_alpha, size = pt_size)} +
     xlab(xlabel) +
     ylab(ylabel) +
     labs(
@@ -92,14 +95,14 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, rank = FALSE,
     theme_classic() +
     {if(reverse) scale_x_reverse()} +
     {if(reverse) scale_y_reverse()} +
-    {if(!is.null(label)) ggrepel::geom_text_repel(aes(label = .data[[label]]), max.overlaps = Inf)}
+    {if(!is.null(label)) ggrepel::geom_text_repel(aes(label = .data[[label]]), max.overlaps = Inf, size = lbl_size)}
 
   if (!is.null(savename)) {
     ggplot2::ggsave(
       filename = savename,
       plot = plt,
-      height = 8,
-      width = 8
+      height = height,
+      width = width
     )
   }
 
