@@ -16,7 +16,10 @@
     <loc>https://liaoyjruby.github.io/Rubrary/articles/GSEA.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/articles/PCA.html</loc>
+    <loc>https://liaoyjruby.github.io/Rubrary/articles/PCA_Quickstart.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/articles/PCA_Walkthrough.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/articles/index.html</loc>
@@ -74,6 +77,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/get_kspval.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/get_loadings.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/get_log2_coding_geneexp.html</loc>
@@ -161,6 +167,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/reload_pkg.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/rotate_varimax.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/run_DESeq.html</loc>

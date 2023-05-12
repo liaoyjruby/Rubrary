@@ -26,7 +26,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/DE_Genes.html">Differential Gene Expression</a>
     <a class="dropdown-item" href="../articles/GSEA.html">Gene Set Enrichment Analysis (GSEA)</a>
-    <a class="dropdown-item" href="../articles/PCA.html">Principal Components Analysis (PCA)</a>
+    <a class="dropdown-item" href="../articles/PCA_Quickstart.html">Principal Components Analysis (PCA) Quickstart</a>
+    <a class="dropdown-item" href="../articles/PCA_Walkthrough.html">Principal Components Analysis (PCA) Walkthrough</a>
   </div>
 </li>
 <li class="nav-item">
@@ -68,7 +69,7 @@
 <span>  rank <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  xlabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/is.html" class="external-link">is</a></span><span class="op">(</span><span class="va">xval</span>, <span class="st">"character"</span><span class="op">)</span>, <span class="va">xval</span>, <span class="st">"X"</span><span class="op">)</span>,</span>
 <span>  ylabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">methods</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/methods/is.html" class="external-link">is</a></span><span class="op">(</span><span class="va">yval</span>, <span class="st">"character"</span><span class="op">)</span>, <span class="va">yval</span>, <span class="st">"Y"</span><span class="op">)</span>,</span>
-<span>  cormethod <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pearson"</span>, <span class="st">"spearman"</span><span class="op">)</span>,</span>
+<span>  cormethod <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pearson"</span>, <span class="st">"spearman"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
 <span>  guides <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  pt_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  pt_alpha <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -119,7 +120,7 @@
 
 
 <dt>cormethod</dt>
-<dd><p>string; correlation method for stats::cor()</p></dd>
+<dd><p>string; correlation method for stats::cor() or "none"</p></dd>
 
 
 <dt>guides</dt>

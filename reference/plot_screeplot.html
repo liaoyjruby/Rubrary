@@ -26,7 +26,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/DE_Genes.html">Differential Gene Expression</a>
     <a class="dropdown-item" href="../articles/GSEA.html">Gene Set Enrichment Analysis (GSEA)</a>
-    <a class="dropdown-item" href="../articles/PCA.html">Principal Components Analysis (PCA)</a>
+    <a class="dropdown-item" href="../articles/PCA_Quickstart.html">Principal Components Analysis (PCA) Quickstart</a>
+    <a class="dropdown-item" href="../articles/PCA_Walkthrough.html">Principal Components Analysis (PCA) Walkthrough</a>
   </div>
 </li>
 <li class="nav-item">
@@ -49,7 +50,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Plot screeplot from prcomp</h1>
-      <small class="dont-index">Source: <a href="https://github.com/liaoyjruby/Rubrary/blob/HEAD/R/plot_screeplot.R" class="external-link"><code>R/plot_screeplot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/liaoyjruby/Rubrary/blob/HEAD/R/PCA.R" class="external-link"><code>R/PCA.R</code></a></small>
       <div class="d-none name"><code>plot_screeplot.Rd</code></div>
     </div>
 
@@ -97,6 +98,16 @@
 <p>Screeplot as ggplot object</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">PCA_iris</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="run_PCA.html">run_PCA</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, screeplot <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">plot_screeplot</span><span class="op">(</span><span class="va">PCA_iris</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Cumulative var. exp. &gt;= 80% at PC 2 (95.8%)</span>
+<span class="r-plt img"><img src="plot_screeplot-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
