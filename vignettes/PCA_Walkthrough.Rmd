@@ -1,0 +1,168 @@
+---
+title: "Principal Components Analysis (PCA) Walkthrough"
+output: 
+  html_document:
+    df_print: "paged"
+    fig_width: 5
+    fig_height: 5
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    number_sections: true
+bibliography: vignettes.bib
+csl: elsevier-vancouver.csl
+vignette: >
+  %\VignetteIndexEntry{Principal Components Analysis (PCA) Walkthrough}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Rubrary)
+library(dplyr)
+library(ggplot2)
+```
+
+# Toy dataset
+
+Replicating the PCA step-by-step from Lindsay Smith's wonderful PCA tutorial @smithTutorialPrincipalComponents2002...
+
+## Original Dataset
+
+```{r Fig3.1, }
+Data <- data.frame(
+  x = c(2.5, 0.5, 2.2, 1.9, 3.1, 2.3, 2, 1, 1.5, 1.1),
+  y = c(2.4, 0.7, 2.9, 2.2, 3.0, 2.7, 1.6, 1.1, 1.6, 0.9)
+)
+Data
+
+DataAdjust <- Data %>%
+  scale(., center = T, scale = F) %>%
+  as.data.frame()
+DataAdjust
+
+Rubrary::plot_scatter(
+  df = Data,
+  xval = "x", yval = "y",
+  title = "Figure 3.1: Original PCA Data",
+  guides = F, cormethod = "none"
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  scale_x_continuous(limits = c(-1, 4), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(-1, 4), expand = c(0, 0))
+```
+
+## Eigendecomposition of covariance matrix
+
+```{r eigen_cov}
+# Covariance matrix
+cov_mtx <- cov(DataAdjust)
+cov_mtx
+# Eigenvalues
+eigenvalues = matrix(eigen(cov_mtx)$values)
+eigenvalues
+# Eigenvectors
+eigenvectors = as.matrix(eigen(cov_mtx)$vectors)
+eigenvectors
+```
+
+```{r Fig3.2, }
+Rubrary::plot_scatter(
+  df = DataAdjust, # Mean adjusted data
+  xval = "x", yval = "y",
+  title = "Figure 3.2: Centered data w/ eigenvectors",
+  guides = F, cormethod = "none"
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_abline(intercept = 0, linetype = "dashed",
+              slope = eigenvectors[2,1] / eigenvectors[1,1]) + # Eigenvector 1
+  geom_abline(intercept = 0, linetype = "dashed",
+              slope = eigenvectors[2,2] / eigenvectors[1,2]) + # Eigenvector 2
+  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9)) +
+  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9))
+```
+
+## Deriving new data set
+
+```{r FeatureVector & FinalData}
+FeatureVector = cbind(eigenvectors[,1], eigenvectors[,2])
+FeatureVector
+FinalData = t(t(FeatureVector) %*% t(DataAdjust)) %>%
+  as.data.frame() %>%
+  rename(PC1 = "V1", PC2 = "V2")
+FinalData
+```
+
+```{r Fig3.3, }
+PCA_scores_manual <- Rubrary::plot_scatter(
+  df = FinalData, # Mean adjusted data
+  xval = "PC1", yval = "PC2",
+  title = "Figure 3.3: Data transformed with 2 eigenvectors",
+  guides = F, cormethod = "none"
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9)) +
+  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9))
+
+PCA_scores_manual
+```
+
+## Transforming back to original data
+
+```{r orig_data}
+RowFinalData = t(FinalData)
+RowDataAdjust_1 = solve(t(FeatureVector)) %*% RowFinalData
+RowDataAdjust_1
+RowDataAdjust_2 = FeatureVector %*% RowFinalData
+RowDataAdjust_2
+
+OriginalMean = c(mean(Data[,1]), mean(Data[,2]))
+OriginalData = t(RowDataAdjust_2) %>%
+  as.data.frame() %>%
+  rename(x = "V1", y = "V2") %>%
+  mutate(x = x + OriginalMean[1],
+         y = y + OriginalMean[2])
+OriginalData
+
+Rubrary::plot_scatter(
+  df = OriginalData,
+  xval = "x", yval = "y",
+  title = "Recovered Original PCA Data",
+  guides = F, cormethod = "none"
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  scale_x_continuous(limits = c(-1, 4), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(-1, 4), expand = c(0, 0))
+```
+
+```{r Using Rubrary functions}
+PCA <- Rubrary::run_PCA(
+  df = t(Data), # 1 point per column
+  center = T, scale = F, tol = 0, screeplot = F
+)
+
+Rubrary::plot_PCA(
+  PCA,
+  title = "PCA Scores",
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9)) +
+  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9))
+```
+
+# Varimax
+
+# References

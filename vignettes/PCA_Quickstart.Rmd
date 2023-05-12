@@ -1,5 +1,5 @@
 ---
-title: "Principal Components Analysis (PCA)"
+title: "Principal Components Analysis (PCA) Quickstart"
 author: "Yi Jou (Ruby) Liao"
 output: 
   html_document:
@@ -12,7 +12,7 @@ output:
       smooth_scroll: false
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Principal Components Analysis (PCA)}
+  %\VignetteIndexEntry{Principal Components Analysis (PCA) Quickstart}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

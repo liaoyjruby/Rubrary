@@ -13,7 +13,7 @@ plot_scatter(
   rank = FALSE,
   xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
   ylabel = ifelse(methods::is(yval, "character"), yval, "Y"),
-  cormethod = c("pearson", "spearman"),
+  cormethod = c("pearson", "spearman", "none"),
   guides = TRUE,
   pt_size = 2,
   pt_alpha = 1,
@@ -45,7 +45,7 @@ plot_scatter(
 
 \item{ylabel}{string; yval description}
 
-\item{cormethod}{string; correlation method for stats::cor()}
+\item{cormethod}{string; correlation method for stats::cor() or "none"}
 
 \item{guides}{logical; T to include fitted line}
 

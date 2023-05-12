@@ -14,7 +14,7 @@
 #' @param rank logical; change metric to rank
 #' @param xlabel string; xval description
 #' @param ylabel string; yval description
-#' @param cormethod string; correlation method for stats::cor()
+#' @param cormethod string; correlation method for stats::cor() or "none"
 #' @param pt_size numeric; point size
 #' @param pt_alpha numeric; point alpha value
 #' @param lbl_size numeric; label text size
@@ -36,7 +36,7 @@
 plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, rank = FALSE,
                          xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
                          ylabel = ifelse(methods::is(yval, "character"), yval, "Y"),
-                         cormethod = c("pearson", "spearman"), guides = TRUE,
+                         cormethod = c("pearson", "spearman", "none"), guides = TRUE,
                          pt_size = 2, pt_alpha = 1, lbl_size = 3,
                          heatmap = FALSE, hm_palette = "Spectral",
                          reverse = FALSE, title = NULL, subtitle = NULL,
@@ -71,11 +71,14 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, rank
     corcoef <- "R"
   }
 
-  corr <- signif(cor(
-    x = df[, xval],
-    y = df[, yval],
-    method = cormethod
-  ), 2)
+  if(cormethod != "none"){
+    corr <- signif(cor(
+      x = df[, xval],
+      y = df[, yval],
+      method = cormethod
+    ), 2)
+  }
+
 
   plt <- ggplot(df, aes(x = .data[[xval]], y = .data[[yval]])) +
     {if(guides) geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")} +
@@ -89,9 +92,10 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, rank
     ylab(ylabel) +
     labs(
       title = title,
-      subtitle = subtitle,
-      caption = paste0(corcoef, " = ", corr, "; ", tools::toTitleCase(cormethod), " correlation")
+      subtitle = subtitle
     ) +
+    {if(cormethod != "none") labs(caption = paste0(
+      corcoef, " = ", corr, "; ", tools::toTitleCase(cormethod), " correlation"))} +
     theme_classic() +
     {if(reverse) scale_x_reverse()} +
     {if(reverse) scale_y_reverse()} +
