@@ -1,13 +1,18 @@
 General
 
+- PCA improvements + associated vignettes
+- scRNA integration assessment metrics
+
 New
 
+- `rotate_varimax`: Varimax rotation for prcomp output
 - `assess_integration`: `run_LISI` but more general, incorporating `Seurat::MixingMetric`
   - `run_LISI`: wrapper for `assess_integration` specific to `LISI`
   - `run_MixingMetric`: wrapper for `assess_integration` specific to `LISI`
 
 Improved
 
+- `run_PCA`: fix eigenvector / loadings distinction
 -   `plot_volcano`: rewritten terms + args to be more general and align better w/ `EnhancedVolcano` documentation
 -   `genes` functions: added `Mart` arg to functions that try to query BioMart
     -   `plot_PC_genes` -\> `plot_genes`, still defaults to filtering by PC genes but technically any gene list can be passed in to filter dataframe by
@@ -16,6 +21,7 @@ Improved
 
 Vignettes
 
+- `PCA_Walkthrough`: based on Lindsey Smith's PCA tutorial, a more step by step toy dataset for PCA
 -   `DESeq_GSEA`: fgsea section + loads of properly cited citations
 -   possibly split vignette into DE genes and GSEA separately? can do comparative DE methods if so and RRHO it out
 
