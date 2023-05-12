@@ -47,7 +47,7 @@ plot_scatter(
 
 \item{cormethod}{string; correlation method for stats::cor() or "none"}
 
-\item{guides}{logical; T to include fitted line}
+\item{guides}{logical; T to include fitted linear model line}
 
 \item{pt_size}{numeric; point size}
 

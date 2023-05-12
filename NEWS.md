@@ -21,7 +21,9 @@ Improved
 
 Vignettes
 
-- `PCA_Walkthrough`: based on Lindsey Smith's PCA tutorial, a more step by step toy dataset for PCA
+- `PCA_Walkthrough`: based on Lindsey Smith's PCA tutorial, a more step by step toy dataset for PCA including some of the math behind it
+  - TODO: Varimax section... once I get visualization working for plotting varimax
+- `PCA_Quickstart`: very basic Palmer Penguin demonstration of plotting scripts
 -   `DESeq_GSEA`: fgsea section + loads of properly cited citations
 -   possibly split vignette into DE genes and GSEA separately? can do comparative DE methods if so and RRHO it out
 

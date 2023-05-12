@@ -18,7 +18,7 @@
 #' @param pt_size numeric; point size
 #' @param pt_alpha numeric; point alpha value
 #' @param lbl_size numeric; label text size
-#' @param guides logical; T to include fitted line
+#' @param guides logical; T to include fitted linear model line
 #' @param reverse logical; T to reverse both axes
 #' @param heatmap logical; T for underlying heatmap (untested)
 #' @param hm_palette string; RColorBrewer continuous palette name (untested)

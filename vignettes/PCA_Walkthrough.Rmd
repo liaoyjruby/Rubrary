@@ -1,5 +1,6 @@
 ---
-title: "Principal Components Analysis (PCA) Walkthrough"
+title: "Principal Component Analysis (PCA) Walkthrough"
+author: "Yi Jou (Ruby) Liao"
 output: 
   html_document:
     df_print: "paged"
@@ -13,7 +14,7 @@ output:
 bibliography: vignettes.bib
 csl: elsevier-vancouver.csl
 vignette: >
-  %\VignetteIndexEntry{Principal Components Analysis (PCA) Walkthrough}
+  %\VignetteIndexEntry{Principal Component Analysis (PCA) Walkthrough}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,30 +26,143 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message = FALSE}
 library(Rubrary)
 library(dplyr)
 library(ggplot2)
 ```
 
-# Toy dataset
+# Background
 
-Replicating the PCA step-by-step from Lindsay Smith's wonderful PCA tutorial @smithTutorialPrincipalComponents2002...
+Heavily adapted from [Lindsay Smith's PCA tutorial](https://ourarchive.otago.ac.nz/bitstream/handle/10523/7534/OUCS-2002-12.pdf?sequence=1&isAllowed=y)!@smithTutorialPrincipalComponents2002 HIGHLY recommend reading through to help develop intuitive understanding of PCA, starting from very basic math prerequisites.
 
-## Original Dataset
+## Why?
 
-```{r Fig3.1, }
+-   Identify patterns in high dimensional data
+-   Express data in way to highlight similarities + differences
+-   Patterns in data "compressed" to lower dimensions without much loss of information
+
+Synonymous terms
+
+-   Dimension: feature, gene
+-   Sample: observation
+-   Adjusted: mean-adjusted, centered
+-   Scale: variance
+
+## Statistics
+
+### Variance
+
+-   Measure of spread in 1-dimensional data
+
+$$var(X) = \frac{\Sigma_{i=1}^n (X_i - \bar{X})(X_i - \bar{X})}{n-1}$$
+
+-   $X_i$: individual value
+-   $\bar{X}$: (sample) mean of all values
+-   $n$: sample size
+
+### Covariance
+
+-   Found between 2 dimensions
+-   Measure of how much the dimensions vary from the mean *with respect to each other*
+-   $cov$ btwn one dimension and self is the variance
+-   $cov(X, Y) = cov(Y, X)$ because multiplication is commutative
+
+$$cov(X) = \frac{\Sigma_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{n-1}$$ Interpretation
+
+-   Sign: positive or negative
+    -   Positive: both dimensions increase together
+    -   Negative: as one dimension increases, the other decreases
+-   Zero: two dimensions are independent of each other
+
+### Covariance matrix
+
+-   $n$-dimensional set: $\frac{n!}{(n-2)! \cdot 2}$ total pairwise covariance values
+-   Represent all covariances as covariance matrix
+
+$$C^{n \times n} = (c_{i, j}, c_{i, j} = cov(Dim_i, Dim_j))$$
+
+-   $C^{n \times n}$: matrix w/ $n$ rows & $n$ columns (square)
+-   $Dim_x$: $x$th dimension
+-   Entry in $(2, 3)$ of covariance matrix is $cov(Dim_2, Dim_3)$
+-   Main diagonal: variance of dimension
+-   Symmetrical about the main diagonal
+
+Ex. Covariance matrix for 3 dimensions/features $x$, $y$, $z$
+
+$$C = \pmatrix{
+cov(x,x) = var(x) & cov(x,y) & cov(x,z) \\
+cov(y,x) & cov(y,y) = var(y) & cov(y,z) \\
+cov(z,x) & cov(z,y) & cov(z,z) = var(z)}$$
+
+## Matrix algebra
+
+### Eigenvectors
+
+"Direction" part of PCA decomposition, the angle of the orthogonal "rotation" which PCA amounts to.
+
+-   Can only be found for *square* matrices
+    -   Not all square matrices have eigenvectors
+    -   In $n \times n$ matrix w/ eigenvectors, there are $n$ eigenvectors
+-   Even if scaled by some amt before multiplication, still get multiple as a result
+    -   Length of vector doesn't affect if it's an eigenvector or not, direction does
+    -   To keep eigenvector standard, usually scale all to length = 1 (unit length)
+-   All eigenvectors of matrix are *perpendicular / orthogonal*
+    -   Can express data in terms of eigenvectors, instead of expressing in terms of $x$ and $y$ axes
+    -   Core concept of PCA!
+
+Non-eigenvector:
+
+$$\pmatrix{2 & 3 \\ 2 & 1} \times \pmatrix{1 \\ 3} = \pmatrix{11 \\ 5}$$
+
+Eigenvector:
+
+$$\pmatrix{2 & 3 \\ 2 & 1} \times \pmatrix{3 \\ 2} = \pmatrix{12 \\ 8} = 4 \times \pmatrix{3 \\ 2}$$
+
+Scaled eigenvector is still an eigenvector:
+
+$$2 \times \pmatrix{3 \\ 2} = \pmatrix{6 \\ 4}$$ $$\pmatrix{2 & 3 \\ 2 & 1} \times \pmatrix{6 \\ 4} = \pmatrix{24 \\ 16} = 4 \times \pmatrix{6 \\ 4}$$
+
+Scaling eigenvector to unit length:
+
+Eigenvector: $\pmatrix{3 \\ 2}$ -\> Length = $\sqrt{(3^2 + 2^2)} = \sqrt{13}$ -\> Scaled: $\pmatrix{3 \\ 2} \div \sqrt{13} = \pmatrix{\frac{3}{\sqrt{13}} \\ \frac{2}{\sqrt{13}}}$
+
+### Eigenvalues
+
+"Scale" part of PCA decomposition
+
+-   Amount by which original vector was scaled after multiplication by the square matrix
+-   In above eigendecomposition example, eigenvalue = 4
+-   Usually if eigenvectors are found through machine solving, eigenvalues are also returned
+
+# General steps
+
+1.  Get $n$-dimensional data set
+2.  Standardize data
+3.  Calculate covariance matrix
+4.  Calculate eigenvectors + eigenvalues of covariance matrix
+5.  Choose components + form a feature vector
+6.  Derive new data set
+
+# 2D PCA walkthrough
+
+Replicating Lindsay Smith's PCA tutorial @smithTutorialPrincipalComponents2002, step by step.
+
+## Get $n$-dimensional data set
+
+-   2-dimensional / 2 features
+-   $x$ dimension & $y$ dimension
+
+```{r 2d_data}
 Data <- data.frame(
   x = c(2.5, 0.5, 2.2, 1.9, 3.1, 2.3, 2, 1, 1.5, 1.1),
   y = c(2.4, 0.7, 2.9, 2.2, 3.0, 2.7, 1.6, 1.1, 1.6, 0.9)
 )
 Data
+```
 
-DataAdjust <- Data %>%
-  scale(., center = T, scale = F) %>%
-  as.data.frame()
-DataAdjust
-
+Visualize original, unadjusted data
+```{r Fig3.1, }
 Rubrary::plot_scatter(
   df = Data,
   xval = "x", yval = "y",
@@ -61,21 +175,61 @@ Rubrary::plot_scatter(
   scale_y_continuous(limits = c(-1, 4), expand = c(0, 0))
 ```
 
-## Eigendecomposition of covariance matrix
+## Standardize / adjust data
 
-```{r eigen_cov}
+-   Center data: subtract mean for each point per dimension
+    -   $x - \bar{x}$, $y - \bar{y}$
+-   Adjusted data set overall has mean of 0
+
+```{r 2d_dataadjust}
+# Mean adjust / center
+DataAdjust <- Data %>%
+  scale(., center = T, scale = F) %>%
+  as.data.frame()
+DataAdjust
+```
+
+## Calculate covariance matrix
+```{r cov_mtx}
 # Covariance matrix
 cov_mtx <- cov(DataAdjust)
 cov_mtx
+```
+
+## Eigendecomposition of covariance matrix
+
+- Covariance matrix is square -> can find eigenvectors + eigenvalues
+- Eigenvectors are _unit_ eigenvectors
+
+```{r Eigendecomposition}
 # Eigenvalues
-eigenvalues = matrix(eigen(cov_mtx)$values)
+eigenvalues = as.matrix(eigen(cov_mtx)$values)
 eigenvalues
 # Eigenvectors
 eigenvectors = as.matrix(eigen(cov_mtx)$vectors)
 eigenvectors
 ```
 
-```{r Fig3.2, }
+## Choosing components
+
+- 2 dimensional data > $2 \times 2$ covariance matrix -> 2 eigenvectors
+- Ordering eigenvectors by highest to lowest eigenvalues is same as ordering by significance
+- For larger dimensional data, can exclude uninformative / lower eigenvalue eigenvectors
+- Feature vector is formed by matrix of vectors constructed by eigenvectors kept
+  - $FeatureVector = \pmatrix{eig_1 & eig_2 & eig_3 & ... & eig_n}$
+
+```{r FeatureVector}
+FeatureVector = cbind(eigenvectors[,1], eigenvectors[,2])
+FeatureVector
+```
+
+Visualizing eigenvectors / PCs on adjusted data
+
+- Eigenvectors are perpendicular, lines that characterize data
+- Eigenvector with largest eigenvalue is PC1 (blue dashed line)
+  - Aligns with maximum variance in data, most significant relationship btwn data dimensions
+- 2nd largest eigenvalue is PC2 (red dashed line)
+```{r Fig3.2_eigenplot}
 Rubrary::plot_scatter(
   df = DataAdjust, # Mean adjusted data
   xval = "x", yval = "y",
@@ -84,26 +238,30 @@ Rubrary::plot_scatter(
 ) +
   geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
   geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
-  geom_abline(intercept = 0, linetype = "dashed",
-              slope = eigenvectors[2,1] / eigenvectors[1,1]) + # Eigenvector 1
-  geom_abline(intercept = 0, linetype = "dashed",
-              slope = eigenvectors[2,2] / eigenvectors[1,2]) + # Eigenvector 2
+  geom_abline(intercept = 0, linetype = "dashed", color = "red",
+              slope = eigenvectors[2,1] / eigenvectors[1,1]) + # EV 1 / PC1
+  geom_abline(intercept = 0, linetype = "dashed", color = "blue",
+              slope = eigenvectors[2,2] / eigenvectors[1,2]) + # EV 2 / PC2
   scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9)) +
   scale_y_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9))
 ```
 
 ## Deriving new data set
 
-```{r FeatureVector & FinalData}
-FeatureVector = cbind(eigenvectors[,1], eigenvectors[,2])
-FeatureVector
-FinalData = t(t(FeatureVector) %*% t(DataAdjust)) %>%
+The final data ("scores") can be found by using the FeatureVector / selected eigenvectors to rotate the centered data. 
+
+```{r FinalData}
+FinalData <- t(t(FeatureVector) %*% t(DataAdjust)) %>%
   as.data.frame() %>%
-  rename(PC1 = "V1", PC2 = "V2")
+  dplyr::rename(PC1 = V1, PC2 = V2)
 FinalData
 ```
 
-```{r Fig3.3, }
+Visualizing the final data
+
+- PC1, now the x-axis, is along the direction of highest variance in data
+- PC2, now the y-axis, is orthogonal / perpendicular to PC1 and is along the direction of 2nd highest variance in the data
+```{r Fig3.3}
 PCA_scores_manual <- Rubrary::plot_scatter(
   df = FinalData, # Mean adjusted data
   xval = "PC1", yval = "PC2",
@@ -112,9 +270,10 @@ PCA_scores_manual <- Rubrary::plot_scatter(
 ) +
   geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
   geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
-  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9)) +
-  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9))
-
+  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0),
+                     breaks = seq(-2, 2, length.out = 9)) +
+  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0),
+                     breaks = seq(-2, 2, length.out = 9))
 PCA_scores_manual
 ```
 
@@ -126,15 +285,15 @@ RowDataAdjust_1 = solve(t(FeatureVector)) %*% RowFinalData
 RowDataAdjust_1
 RowDataAdjust_2 = FeatureVector %*% RowFinalData
 RowDataAdjust_2
-
+# "Uncenter" by adding back original means
 OriginalMean = c(mean(Data[,1]), mean(Data[,2]))
 OriginalData = t(RowDataAdjust_2) %>%
   as.data.frame() %>%
-  rename(x = "V1", y = "V2") %>%
+  dplyr::rename(x = V1, y = V2) %>%
   mutate(x = x + OriginalMean[1],
          y = y + OriginalMean[2])
 OriginalData
-
+# Visualize recovered data
 Rubrary::plot_scatter(
   df = OriginalData,
   xval = "x", yval = "y",
@@ -147,22 +306,154 @@ Rubrary::plot_scatter(
   scale_y_continuous(limits = c(-1, 4), expand = c(0, 0))
 ```
 
+## Rubrary
+
+`Rubrary::run_PCA` is a wrapper for `stats::prcomp`.
+
 ```{r Using Rubrary functions}
 PCA <- Rubrary::run_PCA(
   df = t(Data), # 1 point per column
   center = T, scale = F, tol = 0, screeplot = F
 )
-
+# Visualize
 Rubrary::plot_PCA(
   PCA,
   title = "PCA Scores",
 ) +
   geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
   geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
-  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9)) +
-  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0), breaks = seq(-2, 2, length.out = 9))
+  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0),
+                     breaks = seq(-2, 2, length.out = 9)) +
+  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0),
+                     breaks = seq(-2, 2, length.out = 9))
 ```
 
+# Standardization
+
+-   Center feature means at 0
+-   Scale variance per feature to unit variance
+
+In general, should standardize data (Z-score normalize) before PCA!
+
+Links
+
+-   [Cross Validated: How does centering the data get rid of the intercept in regression and PCA?](https://stats.stackexchange.com/a/22331)
+-   [Cross Validated: How does centering make a difference in PCA (for SVD and eigen decomposition)?](https://stats.stackexchange.com/a/189902)
+
+## Centering
+
+-   PCA is a regressional model *without* intercept
+    -   Principal components inevitably come through the origin
+-   Technically, PCA maximizes (by 1st PC) the sum-of-squared deviations from the origin
+    -   PCA only maximizes variance if data is preliminarily centered
+
+### Centering example
+
+Using transformed version of previous 2D data set to emphasize effect
+
+1.  Center / mean adjust
+2.  Reflect across y-axis (positive -\> negative correlation)
+3.  Uncenter
+
+```{r 2d_transformed}
+Data2 <- Data %>%
+  scale(., center = T) %>%
+  as.data.frame() %>%
+  mutate(x = -1 * x) %>%
+  mutate(x = x + OriginalMean[1],
+         y = y + OriginalMean[2])
+Data2
+```
+
+Scatter plot shows result of transformation. Red guide line is fitted linear regression line.
+
+```{r 2d_transformed visual}
+Rubrary::plot_scatter(
+  df = Data2,
+  xval = "x", yval = "y",
+  title = "Transformed PCA Data",
+  guides = T, cormethod = "none"
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  scale_x_continuous(limits = c(-1, 4), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(-1, 4), expand = c(0, 0))
+```
+
+### PCA without centering
+
+```{r no_centering}
+PCA2_NoCenter <- Rubrary::run_PCA(
+  df = t(Data2), # 1 point per column
+  center = F, scale = F, tol = 0, screeplot = F
+)
+# Extract eigenvectors
+evs_NoCenter <- PCA2_NoCenter$rotation
+```
+
+Plotting the first eigenvector (dashed line) with uncentered data shows the 1st principal component piercing the cloud of points through the origin, and not along the main direction of the cloud.
+
+```{r no_centering_visual}
+Rubrary::plot_scatter(
+  df = Data2, # Uncentered data
+  xval = "x", yval = "y",
+  title = "Uncentered data w/ PC1",
+  guides = T, cormethod = "none"
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_abline(intercept = 0, linetype = "dashed",
+              slope = evs_NoCenter[2,1] / evs_NoCenter[1,1]) + # EV / PC 1
+  scale_x_continuous(limits = c(-1, 4), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(-1, 4), expand = c(0, 0))
+```
+
+### PCA with centering
+
+```{r centering}
+PCA2_Center <- Rubrary::run_PCA(
+  df = t(Data2), # 1 point per column
+  center = T, scale = F, tol = 0, screeplot = F
+)
+# Extract eigenvectors
+evs_Center <- PCA2_Center$rotation
+```
+
+With centered data, the first eigenvector (PC1) crosses the origin along the direction of the cloud of points.
+
+```{r centering_visual}
+Rubrary::plot_scatter(
+  df = as.data.frame(scale(Data2, center = T)), # Centered data
+  xval = "x", yval = "y",
+  title = "Centered data w/ PC1",
+  guides = F, cormethod = "none"
+) +
+  geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
+  geom_abline(intercept = 0, linetype = "dashed",
+              slope = evs_Center[2,1] / evs_Center[1,1]) + # EV / PC1
+  scale_x_continuous(limits = c(-2, 2), expand = c(0, 0)) +
+  scale_y_continuous(limits = c(-2, 2), expand = c(0, 0))
+```
+
+## Scaling
+
+Somewhat subjective depending on what you're interested in investigating.
+
+Not scaling: performing PCA on covariance matrix
+-   Generally okay if variable scales are similar or variables have same unit of measure
+
+Scaling: performing PCA on correlation matrix
+-   Generally preferred if variable scales are different or variables have different unit of measure
+-   PCA on correlation mtx is SAME as PCA with *standardization* of each variable
+
+
+Links
+
+-   [Cross Validated: PCA on correlation or covariance?](https://stats.stackexchange.com/a/78)
+
 # Varimax
+
+# Projection
 
 # References

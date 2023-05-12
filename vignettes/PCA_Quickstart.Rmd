@@ -1,5 +1,5 @@
 ---
-title: "Principal Components Analysis (PCA) Quickstart"
+title: "Principal Component Analysis (PCA) Quickstart"
 author: "Yi Jou (Ruby) Liao"
 output: 
   html_document:
