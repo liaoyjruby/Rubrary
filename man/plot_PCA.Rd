@@ -70,8 +70,7 @@ data(iris)
 iris$Sample = rownames(iris)
 PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]))
 # Scores
-Rubrary::plot_PCA(df_pca = PCA_iris, anno = iris[,c("Sample", "Species")],
-  annoname = "Sample", annotype = "Species", title = "Iris PCA Scores by Species")
+Rubrary::plot_PCA(df_pca = PCA_iris, anno = iris[,c("Sample", "Species")], annoname = "Sample", annotype = "Species", title = "Iris PCA Scores by Species")
 # Loadings
 Rubrary::plot_PCA(df_pca = PCA_iris, type = "Loadings", title = "Iris PCA Loadings", label = T)
 

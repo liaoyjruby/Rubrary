@@ -7,13 +7,13 @@
 rotate_varimax(obj_prcomp, ncomp = 2, normalize = T, savename = NULL)
 }
 \arguments{
+\item{obj_prcomp}{\code{prcomp} object}
+
 \item{ncomp}{integer; number of components to perform rotation with}
 
 \item{normalize}{logical; T for Kaiser normalization: rows scaled to unit length before rotation, then scaled back afterwards}
 
 \item{savename}{string; filepath (no ext.) to save results under}
-
-\item{pca}{prcomp object}
 }
 \value{
 List with varimax rotated loadings matrix and varimax rotated scores matrices

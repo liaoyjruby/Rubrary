@@ -141,8 +141,7 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' iris$Sample = rownames(iris)
 #' PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]))
 #' # Scores
-#' Rubrary::plot_PCA(df_pca = PCA_iris, anno = iris[,c("Sample", "Species")],
-#'   annoname = "Sample", annotype = "Species", title = "Iris PCA Scores by Species")
+#' Rubrary::plot_PCA(df_pca = PCA_iris, anno = iris[,c("Sample", "Species")], annoname = "Sample", annotype = "Species", title = "Iris PCA Scores by Species")
 #' # Loadings
 #' Rubrary::plot_PCA(df_pca = PCA_iris, type = "Loadings", title = "Iris PCA Loadings", label = T)
 #'
@@ -399,7 +398,7 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 #'
 #' [StackExchange reference](https://stats.stackexchange.com/questions/59213/how-to-compute-varimax-rotated-principal-components-in-r)
 #'
-#' @param pca prcomp object
+#' @param obj_prcomp `prcomp` object
 #' @param ncomp integer; number of components to perform rotation with
 #' @param normalize logical; T for Kaiser normalization: rows scaled to unit length before rotation, then scaled back afterwards
 #' @param savename string; filepath (no ext.) to save results under

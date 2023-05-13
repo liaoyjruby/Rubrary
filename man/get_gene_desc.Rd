@@ -31,5 +31,8 @@ Get gene description from BioMart
 }
 \examples{
 genes <- c("POU5F1", "SOX2", "KLF4", "MYC")
-get_gene_desc(genes)
+\donttest{
+  head(Rubrary::get_gene_desc(genes))
+}
+
 }

@@ -120,7 +120,10 @@ filter_genes <- function(df, genes_filt = Rubrary::get_PC_genes(),
 #'
 #' @examples
 #' genes <- c("POU5F1", "SOX2", "KLF4", "MYC")
-#' get_gene_desc(genes)
+#' \donttest{
+#'   head(Rubrary::get_gene_desc(genes))
+#' }
+#'
 get_gene_desc <- function(genes,
                           attrs = c("hgnc_symbol", "description"),
                           clean_desc = TRUE, mart = NULL, verbose = FALSE){
