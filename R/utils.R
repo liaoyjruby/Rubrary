@@ -118,3 +118,39 @@ corner <- function(df, n = 10){
   nc <- ifelse(n > ncol(df), ncol(df), n)
   return(df[1:nr, 1:nc])
 }
+
+#' Split text into multiple lines
+#'
+#' @param text string
+#' @param chars integer; rough # of characters per line
+#' @param lines integer; desired # of lines
+#'
+#' @return `text` split into lines if longer than `split_nchar`
+#' @export
+#'
+#' @examples
+#' lipsum <- "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+#' writeLines(split_line(lipsum, chars = 50))
+#' writeLines(split_line(lipsum, lines = 3))
+#' writeLines(split_line("Short line of text!"))
+#' writeLines(split_line("Short line of text!", lines = 2))
+split_line <- function(text, chars = 40, lines = NULL){
+  if(nchar(text) > chars || !is.null(lines)){
+    words <- unlist(strsplit(text, " "))
+    n_lines <- ifelse(
+      is.null(lines), ceiling(nchar(text)/chars), lines)
+    idx <- floor(seq(from = 1, to = length(words), length.out = n_lines + 1))
+    idx <- sort(c(idx, idx[-1] + 1))
+    lines <- c()
+    for(i in 1:(n_lines*2)){
+      if(i %% 2 == 1){ # Odd indices
+        # message(paste0("Indices: ", i, " -> ", i+1))
+        line <- paste(words[idx[i]:idx[i+1]], collapse = " ")
+        # message(paste0("** Line: ", line))
+        lines <- c(lines,line)
+      }
+    }
+    text <- paste(lines, collapse = "\n")
+  }
+  return(text)
+}

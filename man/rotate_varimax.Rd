@@ -4,7 +4,7 @@
 \alias{rotate_varimax}
 \title{Apply varimax rotation to PCA scores}
 \usage{
-rotate_varimax(obj_prcomp, ncomp = 2, normalize = T, savename = NULL)
+rotate_varimax(obj_prcomp, ncomp = 2, normalize = TRUE, savename = NULL)
 }
 \arguments{
 \item{obj_prcomp}{\code{prcomp} object}

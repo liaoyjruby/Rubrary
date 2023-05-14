@@ -28,7 +28,7 @@
 #' @param MM_flip logical; use `max.k - MixingMetric` instead of `MixingMetric` only
 #'
 #' @return Dataframe of integration assessment values
-#' @seealso [Seurat::MixingMetric()], [lisi::compute_lisi()]
+#' @seealso [Seurat::MixingMetric()]
 #' @export
 #'
 assess_integration <- function(sobj, group.var, method = c("LISI", "MixingMetric"),

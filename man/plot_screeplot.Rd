@@ -31,7 +31,7 @@ Plot screeplot from prcomp
 }
 \examples{
 data(iris)
-PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]), screeplot = F)
+PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]), screeplot = FALSE)
 Rubrary::plot_screeplot(PCA_iris)
 
 }

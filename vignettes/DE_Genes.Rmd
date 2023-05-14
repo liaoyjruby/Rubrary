@@ -130,7 +130,8 @@ library(biomaRt)
 # Load Mart object - database of Homo sapiens genes from Ensembl
 mart <- biomaRt::useDataset(
   dataset = "hsapiens_gene_ensembl",
-  mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+  mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL",
+                          host="https://useast.ensembl.org"))
 
 conv <- Rubrary::convert_genes(
     genes = deseq_res_df$gene,

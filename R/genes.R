@@ -19,7 +19,8 @@ convert_genes <- function(genes, from_to = c("ensembl_gene_id", "hgnc_symbol"),
   if(is.null(mart)){
     mart <- biomaRt::useDataset(
       dataset = "hsapiens_gene_ensembl",
-      mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+      mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL",
+                              host = "https://useast.ensembl.org"))
   }
   conv <- biomaRt::getBM(
     filters = from_to[1],
@@ -49,7 +50,8 @@ get_PC_genes <- function(mart = NULL){
   if(is.null(mart)){
     mart <- biomaRt::useDataset(
       dataset = "hsapiens_gene_ensembl",
-      mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL"))
+      mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL",
+                              host = "https://useast.ensembl.org"))
   }
   PC_genes <- biomaRt::getBM(attributes = c("hgnc_symbol", "gene_biotype"),
                              filters = "biotype",
@@ -130,10 +132,13 @@ get_gene_desc <- function(genes,
   Rubrary::use_pkg("biomaRt")
   # Select Homo sapiens mart
   if(is.null(mart)){
-    mart <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl",
-                                mart = biomaRt::useMart(
-                                  "ENSEMBL_MART_ENSEMBL", verbose = verbose),
-                                verbose = verbose)
+    mart <- biomaRt::useDataset(
+      dataset = "hsapiens_gene_ensembl",
+      mart = biomaRt::useMart(
+        "ENSEMBL_MART_ENSEMBL",
+        host="https://useast.ensembl.org",
+        verbose = verbose),
+      verbose = verbose)
   }
 
   # Run biomaRt query

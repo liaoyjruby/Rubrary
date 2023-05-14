@@ -91,5 +91,5 @@ Wrapper for \code{Seurat::MixingMetric} from Seurat v3 paper. Assesses local nei
 
 }}
 \seealso{
-\code{\link[Seurat:MixingMetric]{Seurat::MixingMetric()}}, \code{\link[lisi:compute_lisi]{lisi::compute_lisi()}}
+\code{\link[Seurat:MixingMetric]{Seurat::MixingMetric()}}
 }

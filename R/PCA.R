@@ -141,9 +141,13 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' iris$Sample = rownames(iris)
 #' PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]))
 #' # Scores
-#' Rubrary::plot_PCA(df_pca = PCA_iris, anno = iris[,c("Sample", "Species")], annoname = "Sample", annotype = "Species", title = "Iris PCA Scores by Species")
+#' Rubrary::plot_PCA(df_pca = PCA_iris,
+#'   anno = iris[,c("Sample", "Species")],
+#'   annoname = "Sample", annotype = "Species",
+#'   title = "Iris PCA Scores by Species")
 #' # Loadings
-#' Rubrary::plot_PCA(df_pca = PCA_iris, type = "Loadings", title = "Iris PCA Loadings", label = T)
+#' Rubrary::plot_PCA(df_pca = PCA_iris,
+#'   type = "Loadings", title = "Iris PCA Loadings", label = TRUE)
 #'
 plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Scores", "Loadings"),
                      label = FALSE, annoname = "Sample", annotype = "Batch", annotype2 = NULL,
@@ -345,7 +349,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
 #' @export
 #' @examples
 #' data(iris)
-#' PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]), screeplot = F)
+#' PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]), screeplot = FALSE)
 #' Rubrary::plot_screeplot(PCA_iris)
 #'
 plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
@@ -414,10 +418,10 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 #' head(PCA_iris_varimax$scores)
 #' head(PCA_iris_varimax$loadings)
 #'
-rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = T, savename = NULL){
+rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = NULL){
   scores <- obj_prcomp$x[, 1:ncomp]
   loadings <- Rubrary::get_loadings(obj_prcomp)[, 1:ncomp]
-  varimax_rotation <- varimax(loadings, normalize = normalize)
+  varimax_rotation <- stats::varimax(loadings, normalize = normalize)
   scores_varimax <- scale(scores) %*% varimax_rotation$rotmat # Scores must be standardized / scaled
   loadings_varimax <- as.matrix(unlist(varimax_rotation$loadings))
   rownames(loadings_varimax) <- rownames(loadings)

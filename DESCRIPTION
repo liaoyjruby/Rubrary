@@ -6,7 +6,6 @@ Authors@R:
            comment = c(ORCID = "0000-0002-2853-5475"))
 Description: Miscellaneous collection of functions, mostly for Graeber Lab
     projects. FDB project, OV project, Metabolomics, etc.
-License: MIT + file LICENSE
 URL: https://liaoyjruby.github.io/Rubrary/,
     https://github.com/liaoyjruby/Rubrary
 BugReports: https://github.com/liaoyjruby/Rubrary/issues
@@ -50,10 +49,13 @@ Suggests:
     BiocManager,
     lisi,
     biomaRt,
-    ggtext
+    ggtext,
+    ggpattern,
+    stringr
 Remotes:
   immunogenomics/lisi
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
 LazyData: true
+License: MIT + file LICENSE
