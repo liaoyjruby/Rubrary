@@ -250,7 +250,8 @@ more compatible with gene set enrichment analysis (GSEA) tools.</p>
 <span><span class="co"># Load Mart object - database of Homo sapiens genes from Ensembl</span></span>
 <span><span class="va">mart</span> <span class="op">&lt;-</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biomaRt/man/useDataset.html" class="external-link">useDataset</a></span><span class="op">(</span></span>
 <span>  dataset <span class="op">=</span> <span class="st">"hsapiens_gene_ensembl"</span>,</span>
-<span>  mart <span class="op">=</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biomaRt/man/useMart.html" class="external-link">useMart</a></span><span class="op">(</span><span class="st">"ENSEMBL_MART_ENSEMBL"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  mart <span class="op">=</span> <span class="fu">biomaRt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/biomaRt/man/useMart.html" class="external-link">useMart</a></span><span class="op">(</span><span class="st">"ENSEMBL_MART_ENSEMBL"</span>,</span>
+<span>                          host<span class="op">=</span><span class="st">"https://useast.ensembl.org"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">conv</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/convert_genes.html">convert_genes</a></span><span class="op">(</span></span>
 <span>    genes <span class="op">=</span> <span class="va">deseq_res_df</span><span class="op">$</span><span class="va">gene</span>,</span>

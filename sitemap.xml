@@ -4,6 +4,9 @@
     <loc>https://liaoyjruby.github.io/Rubrary/404.html</loc>
   </url>
   <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/LICENSE-text.html</loc>
+  </url>
+  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/LICENSE.html</loc>
   </url>
   <url>
@@ -61,6 +64,9 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_genes.html</loc>
   </url>
   <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/format_GSEA_name.html</loc>
+  </url>
+  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/full_join_rownames.html</loc>
   </url>
   <url>
@@ -112,10 +118,13 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_DESeq_scatter.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_GSEA_batch.html</loc>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_GSEA_barplot.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_GSEA_pathway.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_GSEA_pathway_batch.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_PCA.html</loc>
@@ -176,6 +185,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/run_RRHO.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/split_line.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/use_pkg.html</loc>
