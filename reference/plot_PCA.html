@@ -70,6 +70,8 @@
 <span>  annoname <span class="op">=</span> <span class="st">"Sample"</span>,</span>
 <span>  annotype <span class="op">=</span> <span class="st">"Batch"</span>,</span>
 <span>  annotype2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ellipse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ks_grob <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  highlight <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -84,7 +86,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df_pca</dt>
-<dd><p>string or prcomp obj; (path to) PCA output</p></dd>
+<dd><p>string or <code>prcomp</code> obj; (path to) PCA output</p></dd>
 
 
 <dt>anno</dt>
@@ -119,12 +121,20 @@
 <dd><p>string; Colname in <code>anno</code> with info to change shape by</p></dd>
 
 
+<dt>ellipse</dt>
+<dd><p>logical; Draw <code><a href="https://ggplot2.tidyverse.org/reference/stat_ellipse.html" class="external-link">ggplot2::stat_ellipse</a></code> data ellipse w/ default params - this is NOT a confidence ellipse</p></dd>
+
+
+<dt>ks_grob</dt>
+<dd><p>logical; Display ks-pvalue as grob instead of caption</p></dd>
+
+
 <dt>highlight</dt>
 <dd><p>char vector; Specific points to shape differently &amp; label</p></dd>
 
 
 <dt>colors</dt>
-<dd><p>char vector; length should be number of unique <code>annotype</code>s</p></dd>
+<dd><p>char vector; Length should be number of unique <code>annotype</code>s</p></dd>
 
 
 <dt>title</dt>
@@ -140,15 +150,15 @@
 
 
 <dt>savename</dt>
-<dd><p>string; filepath to save plot under</p></dd>
+<dd><p>string; File path to save plot under</p></dd>
 
 
 <dt>width</dt>
-<dd><p>numeric; plot width</p></dd>
+<dd><p>numeric; Saved plot width</p></dd>
 
 
 <dt>height</dt>
-<dd><p>numeric; plot width</p></dd>
+<dd><p>numeric; Saved plot height</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -169,7 +179,8 @@
 <span class="r-in"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">plot_PCA</span><span class="op">(</span>df_pca <span class="op">=</span> <span class="va">PCA_iris</span>,</span></span>
 <span class="r-in"><span>  anno <span class="op">=</span> <span class="va">iris</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="st">"Species"</span><span class="op">)</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>  annoname <span class="op">=</span> <span class="st">"Sample"</span>, annotype <span class="op">=</span> <span class="st">"Species"</span>,</span></span>
-<span class="r-in"><span>  title <span class="op">=</span> <span class="st">"Iris PCA Scores by Species"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  title <span class="op">=</span> <span class="st">"Iris PCA Scores by Species"</span>,</span></span>
+<span class="r-in"><span>  ellipse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_PCA-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># Loadings</span></span></span>
 <span class="r-in"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">plot_PCA</span><span class="op">(</span>df_pca <span class="op">=</span> <span class="va">PCA_iris</span>,</span></span>
