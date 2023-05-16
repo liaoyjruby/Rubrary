@@ -1,7 +1,8 @@
 
 utils::globalVariables(c(
   "PC", "value", "variable",
-  "Highlight", ".", "var"
+  "Highlight", ".", "var",
+  "kp_grob"
 ))
 
 #' Extract loadings from `prcomp` object
@@ -23,7 +24,8 @@ get_loadings <- function(obj_prcomp){
   # `sdev` output from prcomp is sqrt(eigenvalues) of cor/cov mtx
   # diag(obj_prcomp$sdev)` is a square mtx w/ sqrt eigenvalues on diagonal
   # these are ACTUAL loadings, NOT eigenvectors
-  loadings <- obj_prcomp$rotation %*% diag(obj_prcomp$sdev) %>%
+  rotmtx <- obj_prcomp$rotation
+  loadings <- rotmtx %*% diag(obj_prcomp$sdev[1:ncol(rotmtx)]) %>%
     as.data.frame() %>%
     `colnames<-`(sub("V", "PC", colnames(.))) %>%
     as.matrix()
@@ -40,6 +42,7 @@ get_loadings <- function(obj_prcomp){
 #'
 #' `scale = T`: If one feature varies more than others, the feature will dominate resulting principal components. Scaling will also result in components in the same order of magnitude.
 #'
+#' @import dplyr
 #' @importFrom utils write.table
 #'
 #' @param df (path to) numeric dataframe; samples as columns, genes/features as rows
@@ -69,6 +72,7 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
   t.df=t(df) # Transpose
 
   pca <- stats::prcomp(t.df, center=center, scale = scale, tol = tol)
+  if(summary){summary(pca)}
 
   pca_scores <- pca$x %>%
     as.data.frame() %>%
@@ -114,9 +118,10 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' Plot PCA with annotation
 #'
 #' @import ggplot2
+#' @import dplyr
 #' @importFrom utils read.delim
 #'
-#' @param df_pca string or prcomp obj; (path to) PCA output
+#' @param df_pca string or `prcomp` obj; (path to) PCA output
 #' @param anno string or df; Annotation info for DF
 #' @param PCx string; Component on x-axis
 #' @param PCy string; Component on y-axis
@@ -125,14 +130,16 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' @param annoname string; Colname in `anno` matching point name
 #' @param annotype string; Colname in `anno` with info to color by
 #' @param annotype2 string; Colname in `anno` with info to change shape by
+#' @param ellipse logical; Draw `ggplot2::stat_ellipse` data ellipse w/ default params - this is NOT a confidence ellipse
+#' @param ks_grob logical; Display ks-pvalue as grob instead of caption
 #' @param title string; Plot title
 #' @param subtitle string; Subtitle for plot
 #' @param density logical; Show density plot along both axes
 #' @param highlight char vector; Specific points to shape differently & label
-#' @param colors char vector; length should be number of unique `annotype`s
-#' @param savename string; filepath to save plot under
-#' @param width numeric; plot width
-#' @param height numeric; plot width
+#' @param colors char vector; Length should be number of unique `annotype`s
+#' @param savename string; File path to save plot under
+#' @param height numeric; Saved plot height
+#' @param width numeric; Saved plot width
 #'
 #' @return PCA output plotted with annotation
 #' @export
@@ -144,16 +151,19 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' Rubrary::plot_PCA(df_pca = PCA_iris,
 #'   anno = iris[,c("Sample", "Species")],
 #'   annoname = "Sample", annotype = "Species",
-#'   title = "Iris PCA Scores by Species")
+#'   title = "Iris PCA Scores by Species",
+#'   ellipse = TRUE)
 #' # Loadings
 #' Rubrary::plot_PCA(df_pca = PCA_iris,
 #'   type = "Loadings", title = "Iris PCA Loadings", label = TRUE)
 #'
 plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Scores", "Loadings"),
                      label = FALSE, annoname = "Sample", annotype = "Batch", annotype2 = NULL,
-                     highlight = NULL, colors = NULL, title = NULL, subtitle = NULL, density = FALSE,
+                     ellipse = FALSE, ks_grob = FALSE, highlight = NULL, colors = NULL,
+                     title = NULL, subtitle = NULL, density = FALSE,
                      savename = NULL, width = 8, height = 8) {
   type <- match.arg(type)
+  lab_type <- type
 
   if (is.character(df_pca)) { # PCA results as path to txt
     dfpath <- df_pca
@@ -167,18 +177,22 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
 
     if (grepl("score", dfpath, ignore.case = T)) {
       type <- "Scores"
-    } else {
+    } else if(grepl("loading", dfpath, ignore.case = T)){
       type <- "Loadings"
     }
   } else if (methods::is(df_pca, "prcomp")){ # prcomp object
-    if(type == "Scores"){
-      df <- df_pca$x %>%
-        as.data.frame() %>%
-        tibble::rownames_to_column(var = "Scores")
-    } else {
-      df <- Rubrary::get_loadings(df_pca) %>%
-        as.data.frame() %>%
-        tibble::rownames_to_column(var = "Loadings")
+    df_sc <- df_pca$x %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "Scores")
+
+    df_lo <- Rubrary::get_loadings(df_pca) %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "Loadings")
+
+    if(type == "Loadings"){
+      df <- df_lo
+    } else { # Scores or biplot
+      df <- df_sc
     }
 
     sdev <- df_pca$sdev %>%
@@ -187,7 +201,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
              pve = round(var / sum(var) * 100, digits = 2)) %>%
       `rownames<-`(paste0("PC", rownames(.)))
 
-  } else {
+  } else { # PCA results directly as dataframe
     df <- df_pca
   }
 
@@ -199,77 +213,79 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
     PCylab <- PCy
   }
 
+  if (is.character(anno)) {
+    anno <- read.delim(anno)
+  }
+
+  if(!is.null(anno)){
+    df <- df %>%
+      left_join(., anno, by = setNames(nm = type, annoname))
+  }
+
   if (all(is.null(anno))) { # No coloring / annotation
     plt <- ggplot(df, aes(x = .data[[PCx]], y = .data[[PCy]])) +
-      geom_point(size = 2) +
+      geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.5) +
+      geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.5) +
+      {if (type == "Scores" || type == "Biplot") geom_point(size = 2)} +
+      {if (type == "Loadings") geom_segment(
+        data = df_lo, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),
+        arrow = arrow(length = unit(0.025, "npc")))} +
       labs(title = title,
            x = PCxlab,
            y = PCylab) +
-      theme_classic() +
-      {if (label) ggrepel::geom_text_repel(label = df[, type])}
+      {if (label) ggrepel::geom_text_repel(label = df[, lab_type])} +
+    theme_classic()
   } else {
-    if (is.character(anno)) {
-      anno <- read.delim(anno)
-    }
-    df[, 2:ncol(df)] <- sapply(df[, 2:ncol(df)], as.numeric)
-
-    if (is.null(annotype2)) {
-      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype)],
-                                    by = structure(names = type, .Data = annoname))
-      df_merged <- df_merged[, c(type, PCx, PCy, annotype)]
-    } else {
-      df_merged <- dplyr::left_join(df, anno[, c(annoname, annotype, annotype2)],
-                                    by = structure(names = type, .Data = annoname))
-      df_merged <- df_merged[, c(type, PCx, PCy, annotype, annotype2)]
-    }
-
     # Two groups, calc KS p-value for both PCx and PCy
-    if (length(unique(df_merged[, annotype])) == 2) {
-      kpX <- Rubrary::get_kspval(df_merged, PCx, annotype,unique(df_merged[, annotype])[1])
-      kpY <- Rubrary::get_kspval(df_merged, PCy, annotype, unique(df_merged[, annotype])[1])
-
-      grobX <- grid::grobTree(
-        grid::textGrob(
-          paste0(
-            sub("comp", "C", PCx), ": KS enrich. p = ",
-            format.pval(kpX, digits = 3, eps = 0.001, nsmall = 3)
-          ),
-          x = 0.95, y = 0.95, just = "right",
-          gp = grid::gpar(col = "black", fontsize = 15, fontface = "italic")
-        )
+    ks_cap <- waiver()
+    if (length(unique(df[, annotype])) == 2) {
+      kpX <- Rubrary::get_kspval(df, PCx, annotype, unique(df[, annotype])[1])
+      kpY <- Rubrary::get_kspval(df, PCy, annotype, unique(df[, annotype])[1])
+      kpX_text <- paste0(
+        sub("comp", "C", PCx), ": KS enrich. p = ",
+        format.pval(kpX, digits = 3, eps = 0.001, nsmall = 3)
       )
-
-      grobY <- grid::grobTree(
-        grid::textGrob(
-          paste0(
-            sub("comp", "C", PCy), ": KS enrich. p = ",
-            format.pval(kpY, digits = 3, eps = 0.001, nsmall = 3)
-          ),
-          x = 0.95, y = 0.9, just = "right",
-          gp = grid::gpar(col = "black", fontsize = 15, fontface = "italic")
-        )
+      kpY_text <- paste0(
+        sub("comp", "C", PCy), ": KS enrich. p = ",
+        format.pval(kpY, digits = 3, eps = 0.001, nsmall = 3)
       )
-      df_merged <- df_merged[order(as.numeric(row.names(df_merged))), ]
+      if (ks_grob){
+        grobX <- grid::grobTree(
+          grid::textGrob(kpX_text,
+            x = 0.95, y = 0.95, just = "right",
+            gp = grid::gpar(col = "black", fontsize = 15, fontface = "italic")
+          )
+        )
+        grobY <- grid::grobTree(
+          grid::textGrob(kpY_text,
+            x = 0.95, y = 0.9, just = "right",
+            gp = grid::gpar(col = "black", fontsize = 15, fontface = "italic")
+          )
+        )
+      }
+      ks_cap <- ifelse(kp_grob, waiver(), paste0(kpX_text, "; ", kpY_text))
     }
 
     # Manage alpha if many points
-    alpha <- ifelse(nrow(df_merged) > 10000, 0.7, 1)
+    alpha <- ifelse(nrow(df) > 10000, 0.7, 1)
 
     # Manage colors
-    if(is.null(colors)){
+    if(is.null(colors) && !is.numeric(df[, annotype])){
       Rubrary::use_pkg("scales")
-      cols = scales::hue_pal()(length(unique(df_merged[, annotype])))
-    } else if (colors == "alpha"){
+      cols = scales::hue_pal()(length(unique(df[, annotype])))
+    } else if (!is.null(colors) && colors == "alpha"){
       Rubrary::use_pkg("pals")
-      cols = unname(pals::alphabet2(n = length(unique(df_merged[, annotype]))))
+      cols = unname(pals::alphabet2(n = length(unique(df[, annotype]))))
     } else {
       cols = colors
     }
 
     # Manage legend title + colors if numeric
-    if (is.numeric(df_merged[, annotype])) {
+    if (is.numeric(df[, annotype])) {
       guidetitle <- guide_colorbar(title = annotype)
       if(is.null(colors)){cols <- c("blue", "red")}
+      density = F
+      ellipse = F # NO ELLIPSE ALLOWED
     } else {
       guidetitle <- guide_legend(title = annotype)
     }
@@ -277,21 +293,34 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
     # Manage highlights / add'l annos
     if (!all(is.null(highlight))) {
       label <- F
-      df_merged$Highlight <- ifelse(df_merged$Score %in% highlight, "HL", "")
-      ggplt <- ggplot(df_merged, aes(x = .data[[PCx]], y = .data[[PCy]], color = .data[[annotype]], shape = "Highlight"))
+      df$Highlight <- ifelse(df$Score %in% highlight, "HL", "")
+      ggplt <- ggplot(df, aes(x = .data[[PCx]], y = .data[[PCy]], color = .data[[annotype]], shape = "Highlight"))
     } else if (!is.null(annotype2)) {
-      ggplt <- ggplot(df_merged, aes(x = .data[[PCx]], y = .data[[PCy]], color = .data[[annotype]], shape = .data[[annotype2]]))
+      ggplt <- ggplot(df, aes(x = .data[[PCx]], y = .data[[PCy]], color = .data[[annotype]], shape = .data[[annotype2]]))
     } else {
-      ggplt <- ggplot(df_merged, aes(x = .data[[PCx]], y = .data[[PCy]], color = .data[[annotype]]))
+      ggplt <- ggplot(df, aes(x = .data[[PCx]], y = .data[[PCy]], color = .data[[annotype]]))
     }
 
     plt <- ggplt +
-      geom_point(size = 2, alpha = alpha) +
-      {if (!is.numeric(df_merged[, annotype])) scale_fill_manual(values=cols)} +
-      {if (is.numeric(df_merged[, annotype])) scale_color_gradient(
-        low = cols[1], high = , guide = "colourbar")} +
+      # X/Y axes
+      geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.5) +
+      geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.5) +
+      # Loadings arrow plot
+      {if (type == "Loadings") geom_segment(
+        data = df, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),
+        arrow = arrow(length = unit(0.025, "npc")))} +
+      # Scores scatter plot
+      {if (type == "Scores") geom_point(size = 2, alpha = alpha)} +
+      # Color
+      {if (!is.numeric(df[, annotype])) scale_fill_manual(values=cols)} + # Categorical anno
+      {if (is.numeric(df[, annotype])) scale_color_gradient( # Numeric anno
+        low = cols[1], high = cols[2], guide = "colourbar")} +
+      # Ellipse
+      {if (ellipse) stat_ellipse(
+        data = df, aes(color = .data[[annotype]]))} +
       labs(
         title = title,
+        caption = ks_cap,
         x = PCxlab,
         y = PCylab) +
       {if (!is.null(subtitle)) labs(subtitle = subtitle)} +
@@ -299,7 +328,8 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
       theme_classic() +
       {if (label) ggrepel::geom_text_repel(label = df[, type], max.overlaps = 30, color = "black")} +
       {if (!all(is.null(highlight))) ggrepel::geom_text_repel(
-        aes(label = ifelse(Highlight == "HL", df[, type], "")), color = "black", max.overlaps = 30, size = 3)}
+        aes(label = ifelse(Highlight == "HL", df[, type], "")),
+        color = "black", max.overlaps = 30, size = 3)}
   }
 
   if (!is.null(savename)) {
@@ -312,7 +342,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
   }
 
   if (density && !is.null(anno)) {
-    if (length(unique(df_merged[, annotype])) == 2) {
+    if (length(unique(df[, annotype])) == 2 && ks_grob) {
       plt <- plt + annotation_custom(grobX) + annotation_custom(grobY)
     }
     mplt <- ggExtra::ggMarginal(plt,
@@ -396,6 +426,121 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
   }
 
   return(scrplt)
+}
+
+#' Plot "proper" PCA biplot
+#'
+#' For PCA SVD \eqn{X = USV^T}, uses standardized principal components for data points (\eqn{\bf{U}\sqrt{n - 1}}) and loadings (\eqn{\bf{VS}/\sqrt{n-1}}) and plots onto the same scale - a "proper" PCA biplot according to [this Stack Exchange thread](https://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot/141531) citing the [Gabriel 1971 paper on PCA biplots](https://doi.org/10.2307/2334381).
+#'
+#' @param obj_prcomp `prcomp` object
+#' @param PCx string; Component on x-axis
+#' @param PCy string; Component on y-axis
+#' @param anno df; Annotation info for observations
+#' @param annoname string; Colname in `anno` matching data points
+#' @param annotype string; Colname in `anno` for desired coloring
+#' @param label c("Both", "Loadings", "Scores", "None"); what points to label
+#' @param colors char vector; Length should be number of unique `annotype`s
+#' @param col_load string; Color for loading arrow segments
+#' @param title string; Plot title
+#' @param ellipse logical; Draw `ggplot2::stat_ellipse` data ellipse w/ default params - this is NOT a confidence ellipse
+#' @param savename string; File path to save plot under
+#' @param height numeric; Saved plot height
+#' @param width numeric; Saved plot width
+#'
+#' @return Biplot as `ggplot` object
+#' @export
+#'
+#' @examples
+#' data(iris)
+#' iris$Sample = rownames(iris)
+#' PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]),
+#'   center = TRUE, scale = FALSE, screeplot = FALSE)
+#' Rubrary::plot_PCA_biplot(
+#'   obj_prcomp = PCA_iris,
+#'   anno = iris[,c("Sample", "Species")],
+#'   annoname = "Sample", annotype = "Species",
+#'   label = "Loadings", ellipse = TRUE, title = "Iris PCA Biplot")
+plot_PCA_biplot <- function(obj_prcomp, PCx = "PC1", PCy = "PC2",
+                            anno = NULL, annoname = "Sample", annotype = "Batch",
+                            label = c("Both", "Loadings", "Scores", "None"),
+                            colors = NULL, col_load = "firebrick", title = NULL,
+                            ellipse = FALSE, savename = NULL, height = 8, width = 8){
+  label = match.arg(label)
+
+  df_sc <- obj_prcomp$x %>%
+    as.data.frame() %>%
+    mutate(across(everything(), ~./sd(.))) %>% # Standardized PC scores, div by std dev for unit variance
+    tibble::rownames_to_column(var = "Scores")
+
+  if(!is.null(anno)){
+    df_sc <- df_sc %>%
+      left_join(., anno, by = stats::setNames(nm = "Scores", annoname))
+  }
+
+  df_lo <- Rubrary::get_loadings(obj_prcomp) %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "Loadings")
+
+  sdev <- obj_prcomp$sdev %>%
+    as.data.frame() %>%
+    mutate(var = .^2,
+           pve = round(var / sum(var) * 100, digits = 2)) %>%
+    `rownames<-`(paste0("PC", rownames(.)))
+
+  # Variance explained
+  PCxlab <- paste0(PCx, " (", sdev$pve[match(PCx, rownames(sdev))], "%)")
+  PCylab <- paste0(PCy, " (", sdev$pve[match(PCy, rownames(sdev))], "%)")
+
+  # Manage colors
+  if(is.null(colors) && !is.numeric(df_sc[, annotype])){
+    Rubrary::use_pkg("scales")
+    cols = scales::hue_pal()(length(unique(df_sc[, annotype])))
+  } else if (!is.null(colors) && colors == "alpha"){
+    Rubrary::use_pkg("pals")
+    cols = unname(pals::alphabet2(n = length(unique(df_sc[, annotype]))))
+  } else {
+    cols = colors
+  }
+
+  plt <- ggplot(df_sc, aes(x = .data[[PCx]], y = .data[[PCy]])) + # Scores df input
+    # X/Y axes
+    geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.5) +
+    geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.5) +
+    # Loadings
+    geom_segment(
+      data = df_lo, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),
+      arrow = arrow(length = unit(0.025, "npc")), color = col_load) +
+    # Scores
+    {if (is.null(anno)) geom_point()} +
+    {if (!is.null(anno)) geom_point(
+      data = df_sc,
+      mapping = aes(color = .data[[annotype]])
+    )} +
+    # Scores data ellipse
+    {if (ellipse) stat_ellipse(
+      data = df_sc, aes(color = .data[[annotype]]))} +
+    # Labels
+    labs(title = title,
+         x = PCxlab,
+         y = PCylab) +
+    {if (label != "Loadings" && label != "None")
+      ggrepel::geom_text_repel(label = df_sc[, "Scores"], max.overlaps = Inf)} + # Scores
+    {if (label != "Scores" && label != "None")
+      ggrepel::geom_label_repel( # Loadings
+        data = df_lo,
+        label = df_lo[, "Loadings"], max.overlaps = Inf, size = 2.5)} + # Loadings only
+    theme_classic()
+
+  if (!is.null(savename)) {
+    ggsave(
+      plot = plt,
+      filename = savename,
+      height = height,
+      width = width
+    )
+  }
+
+  return(plt)
 }
 
 #' Apply varimax rotation to PCA scores

@@ -14,6 +14,8 @@ plot_PCA(
   annoname = "Sample",
   annotype = "Batch",
   annotype2 = NULL,
+  ellipse = FALSE,
+  ks_grob = FALSE,
   highlight = NULL,
   colors = NULL,
   title = NULL,
@@ -25,7 +27,7 @@ plot_PCA(
 )
 }
 \arguments{
-\item{df_pca}{string or prcomp obj; (path to) PCA output}
+\item{df_pca}{string or \code{prcomp} obj; (path to) PCA output}
 
 \item{anno}{string or df; Annotation info for DF}
 
@@ -43,9 +45,13 @@ plot_PCA(
 
 \item{annotype2}{string; Colname in \code{anno} with info to change shape by}
 
+\item{ellipse}{logical; Draw \code{ggplot2::stat_ellipse} data ellipse w/ default params - this is NOT a confidence ellipse}
+
+\item{ks_grob}{logical; Display ks-pvalue as grob instead of caption}
+
 \item{highlight}{char vector; Specific points to shape differently & label}
 
-\item{colors}{char vector; length should be number of unique \code{annotype}s}
+\item{colors}{char vector; Length should be number of unique \code{annotype}s}
 
 \item{title}{string; Plot title}
 
@@ -53,11 +59,11 @@ plot_PCA(
 
 \item{density}{logical; Show density plot along both axes}
 
-\item{savename}{string; filepath to save plot under}
+\item{savename}{string; File path to save plot under}
 
-\item{width}{numeric; plot width}
+\item{width}{numeric; Saved plot width}
 
-\item{height}{numeric; plot width}
+\item{height}{numeric; Saved plot height}
 }
 \value{
 PCA output plotted with annotation
@@ -73,7 +79,8 @@ PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]))
 Rubrary::plot_PCA(df_pca = PCA_iris,
   anno = iris[,c("Sample", "Species")],
   annoname = "Sample", annotype = "Species",
-  title = "Iris PCA Scores by Species")
+  title = "Iris PCA Scores by Species",
+  ellipse = TRUE)
 # Loadings
 Rubrary::plot_PCA(df_pca = PCA_iris,
   type = "Loadings", title = "Iris PCA Loadings", label = TRUE)

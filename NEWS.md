@@ -5,7 +5,7 @@ General
 - GSEA barplot + associated helper functions
 
 New
-
+- `plot_PCA_biplot`
 - `plot_GSEA_barplot`: function-ified version of horizontal barplot originally made for Jack
   - `format_GSEA_name`: cleans up MSigDB underscore + all caps names a bit
   - `split_line`: splits long text to multiple lines based on number of char or lines
