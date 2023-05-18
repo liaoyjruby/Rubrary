@@ -51,7 +51,10 @@ Suggests:
     biomaRt,
     ggtext,
     ggpattern,
-    stringr
+    stringr,
+    SingleCellExperiment,
+    CellMixS,
+    BiocParallel
 Remotes:
   immunogenomics/lisi
 VignetteBuilder: knitr

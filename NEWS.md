@@ -10,9 +10,10 @@ New
   - `format_GSEA_name`: cleans up MSigDB underscore + all caps names a bit
   - `split_line`: splits long text to multiple lines based on number of char or lines
 - `rotate_varimax`: Varimax rotation for prcomp output
-- `assess_integration`: `run_LISI` but more general, incorporating `Seurat::MixingMetric`
+- `assess_integration`: `run_LISI` but more general, incorporating `Seurat::MixingMetric` + `CellMixS::cms`
   - `run_LISI`: wrapper for `assess_integration` specific to `LISI`
-  - `run_MixingMetric`: wrapper for `assess_integration` specific to `LISI`
+  - `run_MixingMetric`: wrapper for `assess_integration` specific to `MixingMetric`
+  - `run_CellMixS`: wrapper for `assess_integration` specific to `cms`
 
 Improved
 

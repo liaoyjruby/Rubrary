@@ -224,8 +224,8 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
 
   if (all(is.null(anno))) { # No coloring / annotation
     plt <- ggplot(df, aes(x = .data[[PCx]], y = .data[[PCy]])) +
-      geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.5) +
-      geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.5) +
+      geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+      geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
       {if (type == "Scores" || type == "Biplot") geom_point(size = 2)} +
       {if (type == "Loadings") geom_segment(
         data = df_lo, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),
@@ -303,8 +303,8 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
 
     plt <- ggplt +
       # X/Y axes
-      geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.5) +
-      geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.5) +
+      geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+      geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
       # Loadings arrow plot
       {if (type == "Loadings") geom_segment(
         data = df, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),
@@ -504,8 +504,8 @@ plot_PCA_biplot <- function(obj_prcomp, PCx = "PC1", PCy = "PC2",
 
   plt <- ggplot(df_sc, aes(x = .data[[PCx]], y = .data[[PCy]])) + # Scores df input
     # X/Y axes
-    geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.5) +
-    geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.5) +
+    geom_vline(xintercept = 0, linetype = "dotted", alpha = 0.25) +
+    geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
     # Loadings
     geom_segment(
       data = df_lo, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),

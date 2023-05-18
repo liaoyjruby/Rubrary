@@ -4,13 +4,15 @@
 \alias{assess_integration}
 \alias{run_LISI}
 \alias{run_MixingMetric}
-\title{Compute and plot integration assessment methods for Seurat object}
+\alias{run_CellMixS}
+\title{Compute and plot integration assessment cell-specific methods for Seurat object}
 \usage{
 assess_integration(
   sobj,
   group.var,
-  method = c("LISI", "MixingMetric"),
+  method = c("LISI", "MixingMetric", "CellMixS"),
   reduction = c("umap", "pca", "tsne"),
+  k = 300,
   MM_flip = TRUE,
   title = NULL,
   savename = NULL,
@@ -33,6 +35,18 @@ run_MixingMetric(
   group.var,
   MM_flip = TRUE,
   reduction = c("umap", "pca", "tsne"),
+  max.k = 300,
+  title = NULL,
+  savename = NULL,
+  width = NULL,
+  height = NULL
+)
+
+run_CellMixS(
+  sobj,
+  group.var,
+  reduction = c("umap", "pca", "tsne"),
+  k = 300,
   title = NULL,
   savename = NULL,
   width = NULL,
@@ -42,11 +56,13 @@ run_MixingMetric(
 \arguments{
 \item{sobj}{Seurat object}
 
-\item{group.var}{character (vector); metadata colname to check level of integration}
+\item{group.var}{character (vector for \code{mm} or \code{lisi}); metadata colname to check level of integration}
 
-\item{method}{c("LISI", "MixingMetric"); integration assessment metric to apply}
+\item{method}{c("LISI", "MixingMetric", "CellMixS"); integration assessment metric to apply}
 
 \item{reduction}{c("umap", "pca", "tsne"); dimensional reduction method}
+
+\item{k}{integer; \code{max.k} for \code{Seurat::MixingMetric}, \code{k} for \code{CellMixS::cms}}
 
 \item{MM_flip}{logical; use \code{max.k - MixingMetric} instead of \code{MixingMetric} only}
 
@@ -65,7 +81,7 @@ Dataframe of integration assessment values
 Wrapper for application of single cell integration assessment metrics with default parameters. Takes in Seurat object, calculates integration assessment metric per cell for given grouping variables, and plots visualization of metrics. A single integration score per dataset can be reported as the median of the metric across all cells.
 }
 \details{
-\subsection{LISI: local inverse Simpson's index}{
+\subsection{Local inverse Simpson's index \code{lisi}: neighborhood batch diversity}{
 
 Wrapper for \href{https://github.com/immunogenomics/LISI}{immunogenomics/LISI} from Harmony paper. Quantifies diversity of batches within local neighborhoods, defined by kNN graphs, using the inverse Simpson's index.
 \itemize{
@@ -74,22 +90,39 @@ Wrapper for \href{https://github.com/immunogenomics/LISI}{immunogenomics/LISI} f
 }
 }
 
-\subsection{Seurat MixingMetric: local / group kNN ranking}{
+\subsection{Seurat MixingMetric \code{mm}: local / group kNN ranking}{
 
-Wrapper for \code{Seurat::MixingMetric} from Seurat v3 paper. Assesses local neighborhood composition for a cell and how well mixed that neighborhood is. If the neighborhood is well mixed, should contain at least some cells from each dataset. Can be more intuitive to have high MixingMetric mean good mixing, so range can be flipped with \code{max.k - MixingMetric}. Uses flipped scale (\code{MM_flip = TRUE}) by default.
+Wrapper for \code{Seurat::MixingMetric} from Seurat v3 paper (Stuart et al. 2019). Assesses local neighborhood composition for a cell and how well mixed that neighborhood is. If the neighborhood is well mixed, should contain at least some cells from each dataset. Can be more intuitive to have high MixingMetric mean good mixing, so range can be flipped with \code{max.k - MixingMetric}. Uses flipped scale (\code{MM_flip = TRUE}) by default.
 \itemize{
 \item MixingMetric = \code{max.k}, low \code{max.k - MixingMetric}: not mixed
 \item Low MixingMetric, high \code{max.k - MixingMetric}: well mixed
+\item Set-wide metric: median (or mean) of MixingMetric distribution
 }
+
+Implemented with \code{max.k = 300} by default.
+}
+
+\subsection{CellMixS \code{cms}: batch-specific distance distribution kNN test}{
+
+Wrapper for \code{CellMixS::cms} (Lütge et al. 2021). Tests for each cell the hypothesis that batch-specific distance distributions towards it's k-nearest neighboring (knn) cells are derived from the same unspecified underlying distribution using the Anderson-Darling test.
+\itemize{
+\item Low \code{cms}: poorly mixed per cell neighborhood
+\item High \code{cms}: well mixed per cell neighborhood
+\item Set-wide metric: \code{cms} histogram, flat for random batch mixing and skewed towards 0 for batch related bias
+}
+
+Implementation uses \code{k = 300} and \code{dim_red = reduction}. As per \href{https://www.bioconductor.org/packages/release/bioc/vignettes/CellMixS/inst/doc/CellMixS.html#parameter}{the CellMixS vignette}, \code{k} should not exceed the size of the smallest cell population. Takes a while to run, so asks for \code{BiocParallel} to use \code{BiocParallel::MulticoreParam()}. Computer may churn while it runs...
 }
 }
 \section{Functions}{
 \itemize{
-\item \code{run_LISI()}: Compute and plot local inverse Simpson's index (LISI)
+\item \code{run_LISI()}: Compute and plot local inverse Simpson's index \code{lisi}
 
-\item \code{run_MixingMetric()}: Compute and plot Seurat MixingMetric
+\item \code{run_MixingMetric()}: Compute and plot Seurat MixingMetric \code{mm}
+
+\item \code{run_CellMixS()}: Compute and plot CellMixS \code{cms}
 
 }}
 \seealso{
-\code{\link[Seurat:MixingMetric]{Seurat::MixingMetric()}}
+\code{\link[lisi:compute_lisi]{lisi::compute_lisi()}}, \code{\link[Seurat:MixingMetric]{Seurat::MixingMetric()}}, \code{\link[CellMixS:cms]{CellMixS::cms()}},
 }
