@@ -1,9 +1,12 @@
 
 #' Plot Seurat DimPlot grid set
 #'
+#' @import ggplot2
+#'
 #' @param sobj Seurat object
 #' @param reduction c("pca", "tsne", "umap); must be already present in sobj
 #' @param set dataframe or vector; col1 metadata name, col2 (opt) subplot description, col3 (opt) logical T/F for label
+#' @param cols_num char vector; two colors for low numeric legend range to high numeric legend range
 #' @param ncol number of columns in grid
 #' @param guides string; specify how guides should be treated in layout (?patchwork::wrap_plots)
 #' @param redtitle logical; `TRUE` to prepend reduction method in subplot title
@@ -11,12 +14,13 @@
 #' @param gridsubtitle string; subtitle for overall dimplot grid
 #' @param savename string; filepath to save figure under
 #' @param width integer; plot width, if unspecified will try to calculate
-#' @param height integer; plot height, if unspecified will try to calculates
+#' @param height integer; plot height, if unspecified will try to calculate
 #'
 #' @return Patchwork grid of Seurat DimPlots
 #' @export
 plot_dimplot_grid <- function(sobj, reduction = c("umap", "pca", "tsne"), set, ncol = 3,
                          guides = NULL, redtitle = FALSE, gridtitle = NULL, gridsubtitle = NULL,
+                         cols_num = c("blue", "red"),
                          savename = NULL, width = NULL, height = NULL){
   Rubrary::use_pkg("Seurat")
 
@@ -24,14 +28,15 @@ plot_dimplot_grid <- function(sobj, reduction = c("umap", "pca", "tsne"), set, n
 
   plot_dim <- function(group, name, lb){
     red <- ifelse(reduction == "tsne", "tSNE", toupper(reduction))
-    if(methods::is(sobj@meta.data[,group], "numeric")){
+    if(!(group %in% names(UCLA_srpca_nopdx@meta.data)) ||
+       (methods::is(sobj@meta.data[,group], "numeric"))){
       plt <- Seurat::FeaturePlot(
         sobj,
         reduction = reduction,
         features = group,
-        cols = c("blue", "red")
+        cols = cols_num
       ) +
-        ggplot2::labs(title = ifelse(redtitle, paste0(red, " - ", name), name))
+        labs(title = ifelse(redtitle, paste0(red, " - ", name), name))
     } else {
       plt <- Seurat::DimPlot(
         sobj,
@@ -41,7 +46,7 @@ plot_dimplot_grid <- function(sobj, reduction = c("umap", "pca", "tsne"), set, n
         label = lb,
         label.box = lb
       ) +
-        ggplot2::labs(title = ifelse(redtitle, paste0(red, " - ", name), name))
+        labs(title = ifelse(redtitle, paste0(red, " - ", name), name))
     }
     return(plt)
   }
@@ -59,7 +64,7 @@ plot_dimplot_grid <- function(sobj, reduction = c("umap", "pca", "tsne"), set, n
       subtitle = gridsubtitle)
 
   if(!is.null(savename)) {
-    ggplot2::ggsave(
+    ggsave(
       filename = savename,
       plot = dim_set,
       width = ifelse(is.null(width), ncol * 7 + 2, width),

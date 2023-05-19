@@ -13,6 +13,7 @@ plot_dimplot_grid(
   redtitle = FALSE,
   gridtitle = NULL,
   gridsubtitle = NULL,
+  cols_num = c("blue", "red"),
   savename = NULL,
   width = NULL,
   height = NULL
@@ -35,11 +36,13 @@ plot_dimplot_grid(
 
 \item{gridsubtitle}{string; subtitle for overall dimplot grid}
 
+\item{cols_num}{char vector; two colors for low numeric legend range to high numeric legend range}
+
 \item{savename}{string; filepath to save figure under}
 
 \item{width}{integer; plot width, if unspecified will try to calculate}
 
-\item{height}{integer; plot height, if unspecified will try to calculates}
+\item{height}{integer; plot height, if unspecified will try to calculate}
 }
 \value{
 Patchwork grid of Seurat DimPlots

@@ -1,3 +1,7 @@
+utils::globalVariables(c(
+  "cms", "cms_smooth"
+))
+
 #' Compute and plot integration assessment cell-specific methods for Seurat object
 #'
 #' Wrapper for application of single cell integration assessment metrics with default parameters. Takes in Seurat object, calculates integration assessment metric per cell for given grouping variables, and plots visualization of metrics. A single integration score per dataset can be reported as the median of the metric across all cells.
@@ -40,7 +44,7 @@
 #' @param MM_flip logical; use `max.k - MixingMetric` instead of `MixingMetric` only
 #'
 #' @return Dataframe of integration assessment values
-#' @seealso [lisi::compute_lisi()], [Seurat::MixingMetric()], [CellMixS::cms()],
+#' @seealso [lisi::compute_lisi()], [Seurat::MixingMetric()], [CellMixS::cms()]
 #' @export
 #'
 assess_integration <- function(sobj, group.var, method = c("LISI", "MixingMetric", "CellMixS"),

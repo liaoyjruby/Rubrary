@@ -219,7 +219,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
 
   if(!is.null(anno)){
     df <- df %>%
-      left_join(., anno, by = setNames(nm = type, annoname))
+      left_join(., anno, by = stats::setNames(nm = type, annoname))
   }
 
   if (all(is.null(anno))) { # No coloring / annotation
