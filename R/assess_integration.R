@@ -215,11 +215,11 @@ run_LISI <- function(sobj, group.var, reduction = c("umap", "pca", "tsne"),
 #' @describeIn assess_integration Compute and plot Seurat MixingMetric `mm`
 #' @export
 run_MixingMetric <- function(sobj, group.var, MM_flip = TRUE, reduction = c("umap", "pca", "tsne"),
-                             max.k = 300, title = NULL, savename = NULL, width = NULL, height = NULL){
+                             k = 300, title = NULL, savename = NULL, width = NULL, height = NULL){
   Rubrary::assess_integration(
     sobj = sobj, method = "MixingMetric",
     MM_flip = MM_flip,
-    k = max.k,
+    k = k,
     group.var = group.var,
     reduction = reduction,
     title = title,

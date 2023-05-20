@@ -35,7 +35,7 @@ run_MixingMetric(
   group.var,
   MM_flip = TRUE,
   reduction = c("umap", "pca", "tsne"),
-  max.k = 300,
+  k = 300,
   title = NULL,
   savename = NULL,
   width = NULL,
