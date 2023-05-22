@@ -544,6 +544,136 @@ along the direction of 2nd highest variance in the data</li>
 </div>
 </div>
 <div class="section level2">
+<h2 id="pca-output">PCA output<a class="anchor" aria-label="anchor" href="#pca-output"></a>
+</h2>
+<div class="section level3">
+<h3 id="scores">Scores<a class="anchor" aria-label="anchor" href="#scores"></a>
+</h3>
+<ul>
+<li>Coordinates of individuals (observations) on principal
+components</li>
+<li>Original data orthogonally rotated by eigenvector directions</li>
+<li>In <code><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">stats::prcomp</a></code>, this is the <code>x</code>
+output</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="loadings">Loadings<a class="anchor" aria-label="anchor" href="#loadings"></a>
+</h3>
+<ul>
+<li>Eigenvectors “inoculated” w/ info about variability or magnitude of
+the rotated data</li>
+<li>Association coefficients between components + variables</li>
+<li>Loadings: covariances/correlations btwn original variables +
+unit-scaled components</li>
+<li>Generally use loadings instead of eigenvectors when interpreting
+components</li>
+<li>In <code><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">stats::prcomp</a></code>, can use the <code>rotation</code>
+output scaled/multiplied by the <code>sdev</code> output which is the
+square roots of the eigenvalues of the covariance/correlation
+matrix</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">loadings</span> <span class="op">&lt;-</span> <span class="va">obj_prcomp</span><span class="op">$</span><span class="va">rotation</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">obj_prcomp</span><span class="op">$</span><span class="va">sdev</span><span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="links">Links<a class="anchor" aria-label="anchor" href="#links"></a>
+</h4>
+<ul>
+<li><a href="https://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another" class="external-link">Cross
+Validated: Loadings vs eigenvectors in PCA: when to use one or
+another?</a></li>
+<li><a href="https://stats.stackexchange.com/questions/119746/what-is-the-proper-association-measure-of-a-variable-with-a-pca-component-on-a/119758#119758" class="external-link">Cross
+Validated: What is the proper association measure of a variable with a
+PCA component?</a></li>
+<li><a href="https://stats.stackexchange.com/questions/92499/how-to-interpret-pca-loadings" class="external-link">Cross
+Validated: How to interpret PCA loadings?</a></li>
+</ul>
+</div>
+</div>
+<div class="section level3">
+<h3 id="biplots">Biplots<a class="anchor" aria-label="anchor" href="#biplots"></a>
+</h3>
+<p>PCA: singular value decomposition <span class="math display">\[X =
+USV^\intercal\]</span></p>
+<p>Examples based on <code>iris</code> dataset from this <a href="https://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot/141531#141531" class="external-link">thread</a>:
+<img src="https://i.stack.imgur.com/6ddZg.png"></p>
+<div class="section level4">
+<h4 id="biplot-scores">Biplot scores<a class="anchor" aria-label="anchor" href="#biplot-scores"></a>
+</h4>
+<p>Two first principal components are plotted as a scatter plot,
+i.e. first column of <span class="math inline">\(\bf{U}\)</span> is
+plotted against its second column.</p>
+<p>Possible normalizations:</p>
+<ol style="list-style-type: decimal">
+<li>Columns of <span class="math inline">\(\bf{U}\)</span>: principal
+components scaled to unit sum of squares</li>
+<li>Columns of <span class="math inline">\(\bf{U}\sqrt{n - 1}\)</span>:
+standardized principal components (unit variance)</li>
+<li>Columns of <span class="math inline">\(\bf{US}\)</span>: “raw”
+principal components (projections on principal directions)
+<ul>
+<li>
+<code>prcomp</code> object <code>x</code> output</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level4">
+<h4 id="biplot-loadings">Biplot loadings<a class="anchor" aria-label="anchor" href="#biplot-loadings"></a>
+</h4>
+<p>Original variables are plotted as arrows; i.e. <span class="math inline">\((x, y)\)</span> coordinates of an <span class="math inline">\(i\)</span>-th arrow endpoint are given by the
+<span class="math inline">\(i\)</span>-th value in the first and second
+column of <span class="math inline">\(\bf{V}\)</span>.</p>
+<p>Possible normalizations:</p>
+<ol style="list-style-type: decimal">
+<li>Columns of <span class="math inline">\(\bf{VS}\)</span>: no valid
+interpretation</li>
+<li>Loadings: Columns of <span class="math inline">\(\bf{VS}/\sqrt{n-1}\)</span>
+<ul>
+<li>
+<code>loadings &lt;- obj_prcomp$rotation %*% diag(obj_prcomp$sdev)</code>
+<ul>
+<li>Where <code>obj_prcomp$sdev</code> is square root of corresponding
+eigenvalues</li>
+</ul>
+</li>
+<li>Useful interpretation
+<ul>
+<li>Length of loading arrows <span class="math inline">\(\approx\)</span> std dev of original variables
+<ul>
+<li>Squared length <span class="math inline">\(\approx\)</span>
+variance</li>
+</ul>
+</li>
+<li>Scalar products between any two arrows <span class="math inline">\(\approx\)</span> covariance between them</li>
+<li>Cosines of angles between arrows <span class="math inline">\(\approx\)</span> correlations between original
+variables</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Eigenvectors: Columns of <span class="math inline">\(\bf{V}\)</span>: these are principal axes (aka
+principal directions)
+<ul>
+<li>
+<code>prcomp</code> object <code>rotation</code> output</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level4">
+<h4 id="links-1">Links<a class="anchor" aria-label="anchor" href="#links-1"></a>
+</h4>
+<ul>
+<li><a href="https://stats.stackexchange.com/a/141531/387770" class="external-link">Stack
+Exchange: Positioning the arrows on a PCA biplot</a></li>
+<li><a href="https://stats.stackexchange.com/questions/276645/arrows-of-underlying-variables-in-pca-biplot-in-r" class="external-link">Stack
+Exchange: Arrows of underlying variables in PCA biplot in R</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section level2">
 <h2 id="standardization">Standardization<a class="anchor" aria-label="anchor" href="#standardization"></a>
 </h2>
 <ul>
@@ -552,15 +682,6 @@ along the direction of 2nd highest variance in the data</li>
 </ul>
 <p>In general, should standardize data (Z-score normalize) before
 PCA!</p>
-<p>Links</p>
-<ul>
-<li><a href="https://stats.stackexchange.com/a/22331" class="external-link">Cross Validated:
-How does centering the data get rid of the intercept in regression and
-PCA?</a></li>
-<li><a href="https://stats.stackexchange.com/a/189902" class="external-link">Cross Validated:
-How does centering make a difference in PCA (for SVD and eigen
-decomposition)?</a></li>
-</ul>
 <div class="section level3">
 <h3 id="centering">Centering<a class="anchor" aria-label="anchor" href="#centering"></a>
 </h3>
@@ -587,7 +708,7 @@ effect</p>
 <li>Reflect across y-axis (positive -&gt; negative correlation)</li>
 <li>Uncenter</li>
 </ol>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Data2</span> <span class="op">&lt;-</span> <span class="va">Data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">.</span>, center <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -608,7 +729,7 @@ effect</p>
 <span><span class="co">#&gt; 10 2.7142161 0.7168462</span></span></code></pre></div>
 <p>Scatter plot shows result of transformation. Red guide line is fitted
 linear regression line.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_scatter.html">plot_scatter</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">Data2</span>,</span>
 <span>  xval <span class="op">=</span> <span class="st">"x"</span>, yval <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -624,7 +745,7 @@ linear regression line.</p>
 <div class="section level4">
 <h4 id="pca-without-centering">PCA without centering<a class="anchor" aria-label="anchor" href="#pca-without-centering"></a>
 </h4>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">PCA2_NoCenter</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/run_PCA.html">run_PCA</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">Data2</span><span class="op">)</span>, <span class="co"># 1 point per column</span></span>
 <span>  center <span class="op">=</span> <span class="cn">F</span>, scale <span class="op">=</span> <span class="cn">F</span>, tol <span class="op">=</span> <span class="fl">0</span>, screeplot <span class="op">=</span> <span class="cn">F</span></span>
@@ -634,7 +755,7 @@ linear regression line.</p>
 <p>Plotting the first eigenvector (dashed line) with uncentered data
 shows the 1st principal component piercing the cloud of points through
 the origin, and not along the main direction of the cloud.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_scatter.html">plot_scatter</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="va">Data2</span>, <span class="co"># Uncentered data</span></span>
 <span>  xval <span class="op">=</span> <span class="st">"x"</span>, yval <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -652,7 +773,7 @@ the origin, and not along the main direction of the cloud.</p>
 <div class="section level4">
 <h4 id="pca-with-centering">PCA with centering<a class="anchor" aria-label="anchor" href="#pca-with-centering"></a>
 </h4>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">PCA2_Center</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/run_PCA.html">run_PCA</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">Data2</span><span class="op">)</span>, <span class="co"># 1 point per column</span></span>
 <span>  center <span class="op">=</span> <span class="cn">T</span>, scale <span class="op">=</span> <span class="cn">F</span>, tol <span class="op">=</span> <span class="fl">0</span>, screeplot <span class="op">=</span> <span class="cn">F</span></span>
@@ -661,7 +782,7 @@ the origin, and not along the main direction of the cloud.</p>
 <span><span class="va">evs_Center</span> <span class="op">&lt;-</span> <span class="va">PCA2_Center</span><span class="op">$</span><span class="va">rotation</span></span></code></pre></div>
 <p>With centered data, the first eigenvector (PC1) crosses the origin
 along the direction of the cloud of points.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_scatter.html">plot_scatter</a></span><span class="op">(</span></span>
 <span>  df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">Data2</span>, center <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span>, <span class="co"># Centered data</span></span>
 <span>  xval <span class="op">=</span> <span class="st">"x"</span>, yval <span class="op">=</span> <span class="st">"y"</span>,</span>
@@ -676,6 +797,18 @@ along the direction of the cloud of points.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_Walkthrough_files/figure-html/centering_visual-1.png" width="700"></p>
 </div>
+<div class="section level4">
+<h4 id="links-2">Links<a class="anchor" aria-label="anchor" href="#links-2"></a>
+</h4>
+<ul>
+<li><a href="https://stats.stackexchange.com/a/22331" class="external-link">Cross Validated:
+How does centering the data get rid of the intercept in regression and
+PCA?</a></li>
+<li><a href="https://stats.stackexchange.com/a/189902" class="external-link">Cross Validated:
+How does centering make a difference in PCA (for SVD and eigen
+decomposition)?</a></li>
+</ul>
+</div>
 </div>
 <div class="section level3">
 <h3 id="scaling">Scaling<a class="anchor" aria-label="anchor" href="#scaling"></a>
@@ -688,20 +821,41 @@ variable scales are similar or variables have same unit of measure</p>
 if variable scales are different or variables have different unit of
 measure - PCA on correlation mtx is SAME as PCA with
 <em>standardization</em> of each variable</p>
-<p>Links</p>
+<div class="section level4">
+<h4 id="links-3">Links<a class="anchor" aria-label="anchor" href="#links-3"></a>
+</h4>
 <ul>
 <li><a href="https://stats.stackexchange.com/a/78" class="external-link">Cross Validated: PCA
 on correlation or covariance?</a></li>
 </ul>
 </div>
 </div>
+</div>
 <div class="section level2">
 <h2 id="varimax">Varimax<a class="anchor" aria-label="anchor" href="#varimax"></a>
 </h2>
+<p><a href="https://stats.stackexchange.com/a/193023/387770" class="external-link">From <span class="citation">[<strong>ttnphns?</strong>]</span> on Stack
+Exchange</a>!! <img src="https://i.stack.imgur.com/AeZy1.png"></p>
+<div class="section level4">
+<h4 id="links-4">Links<a class="anchor" aria-label="anchor" href="#links-4"></a>
+</h4>
+<ul>
+<li><a href="https://stats.stackexchange.com/questions/59213/how-to-compute-varimax-rotated-principal-components-in-r" class="external-link">Cross
+Validated: How to compute varimax-rotated principal components in
+R?</a></li>
+<li>
+<a href="https://stats.stackexchange.com/questions/612/is-pca-followed-by-a-rotation-such-as-varimax-still-pca" class="external-link">Cross
+Validated: Is PCA followed by a rotation (such as varimax) still
+PCA?</a>
+<ul>
+<li>REALLY GOOD ANSWERS explaining math + consequences of rotation on
+raw scores + eigenvectors vs. std scores + loadings</li>
+<li><a href="https://stats.stackexchange.com/a/136936/387770" class="external-link"><span class="citation">[<strong>amoeba?</strong>]</span> answer</a></li>
+<li><a href="https://stats.stackexchange.com/a/193023/387770" class="external-link"><span class="citation">[<strong>ttnphns?</strong>]</span> answer</a></li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section level2">
-<h2 id="projection">Projection<a class="anchor" aria-label="anchor" href="#projection"></a>
-</h2>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
