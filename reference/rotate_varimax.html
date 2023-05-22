@@ -85,7 +85,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>List with varimax rotated loadings matrix and varimax rotated scores matrices</p>
+<p>List with <code>loadings</code>: varimax rotated loadings (mtx) and varimax rotated stardardized scores (mtx)</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -99,20 +99,11 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Cumulative var. exp. &gt;= 80% at PC 2 (95.8%)</span>
 <span class="r-plt img"><img src="rotate_varimax-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">PCA_iris_varimax</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">rotate_varimax</span><span class="op">(</span><span class="va">PCA_iris</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in if (.) !is.null(savename) else {    write.table(std_scores_varimax, file = paste0(savename, "_prcomp_std_scores_varimax.txt"),         quote = F, sep = "\t", row.names = F)    write.table(tibble::rownames_to_column(loadings_varimax$loadings,         var = "Loadings"), file = paste0(savename, "_prcomp_loadings_varimax.txt"),         quote = F, sep = "\t", row.names = F)}:</span> the condition has length &gt; 1</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">PCA_iris_varimax</span><span class="op">$</span><span class="va">scores</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            [,1]       [,2]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -1.0834754 -0.9067262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -1.3775358  0.2648876</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -1.4198321 -0.1165198</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -1.4716069  0.1474634</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -1.0952963 -1.0949536</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -0.6336551 -1.8641036</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'PCA_iris_varimax' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">PCA_iris_varimax</span><span class="op">$</span><span class="va">loadings</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     PC1         PC2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length  0.9593030 -0.04833591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width  -0.1445841 -0.98489327</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length  0.9442042  0.30365829</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width   0.9324373  0.25659503</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'PCA_iris_varimax' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
