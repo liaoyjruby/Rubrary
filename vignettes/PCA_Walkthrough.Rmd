@@ -328,17 +328,77 @@ Rubrary::plot_PCA(
                      breaks = seq(-2, 2, length.out = 9))
 ```
 
+# PCA output
+
+## Scores
+
+- Coordinates of individuals (observations) on principal components
+- Original data orthogonally rotated by eigenvector directions
+- In `stats::prcomp`, this is the `x` output
+
+## Loadings
+
+- Eigenvectors "inoculated" w/  info about variability or magnitude of the rotated data
+- Association coefficients between components + variables
+- Loadings: covariances/correlations btwn original variables + unit-scaled components
+- Generally use loadings instead of eigenvectors when interpreting components
+- In `stats::prcomp`, can use the `rotation` output scaled/multiplied by the `sdev` output which is the square roots of the eigenvalues of the covariance/correlation matrix
+```{r eval=FALSE, echo=TRUE, error=FALSE}
+loadings <- obj_prcomp$rotation %*% diag(obj_prcomp$sdev)
+```
+
+### Links
+
+- [Cross Validated: Loadings vs eigenvectors in PCA: when to use one or another?](https://stats.stackexchange.com/questions/143905/loadings-vs-eigenvectors-in-pca-when-to-use-one-or-another)
+- [Cross Validated: What is the proper association measure of a variable with a PCA component?](https://stats.stackexchange.com/questions/119746/what-is-the-proper-association-measure-of-a-variable-with-a-pca-component-on-a/119758#119758)
+- [Cross Validated: How to interpret PCA loadings?](https://stats.stackexchange.com/questions/92499/how-to-interpret-pca-loadings)
+
+## Biplots
+
+PCA: singular value decomposition
+$$X = USV^\intercal$$
+
+Examples based on `iris` dataset from this [thread](https://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot/141531#141531):
+![](https://i.stack.imgur.com/6ddZg.png)
+
+### Biplot scores
+Two first principal components are plotted as a scatter plot, i.e. first column of $\bf{U}$ is plotted against its second column.
+
+Possible normalizations:
+
+1.  Columns of $\bf{U}$: principal components scaled to unit sum of squares
+2.  Columns of $\bf{U}\sqrt{n - 1}$: standardized principal components (unit variance)
+3.  Columns of $\bf{US}$: "raw" principal components (projections on principal directions)
+	- `prcomp` object `x` output
+
+### Biplot loadings
+Original variables are plotted as arrows; i.e. $(x, y)$ coordinates of an $i$-th arrow endpoint are given by the $i$-th value in the first and second column of $\bf{V}$.
+
+Possible normalizations:
+
+1. Columns of $\bf{VS}$: no valid interpretation
+2. Loadings: Columns of $\bf{VS}/\sqrt{n-1}$
+	- `loadings <- obj_prcomp$rotation %*% diag(obj_prcomp$sdev)`
+		- Where `obj_prcomp$sdev` is square root of corresponding eigenvalues
+	- Useful interpretation
+		- Length of loading arrows $\approx$ std dev of original variables
+			- Squared length $\approx$ variance
+		- Scalar products between any two arrows $\approx$ covariance between them
+		- Cosines of angles between arrows $\approx$ correlations between original variables
+3. Eigenvectors: Columns of $\bf{V}$: these are principal axes (aka principal directions)
+	- `prcomp` object `rotation` output
+
+### Links
+
+- [Stack Exchange: Positioning the arrows on a PCA biplot](https://stats.stackexchange.com/a/141531/387770)
+- [Stack Exchange: Arrows of underlying variables in PCA biplot in R](https://stats.stackexchange.com/questions/276645/arrows-of-underlying-variables-in-pca-biplot-in-r)
+
 # Standardization
 
 -   Center feature means at 0
 -   Scale variance per feature to unit variance
 
 In general, should standardize data (Z-score normalize) before PCA!
-
-Links
-
--   [Cross Validated: How does centering the data get rid of the intercept in regression and PCA?](https://stats.stackexchange.com/a/22331)
--   [Cross Validated: How does centering make a difference in PCA (for SVD and eigen decomposition)?](https://stats.stackexchange.com/a/189902)
 
 ## Centering
 
@@ -436,6 +496,11 @@ Rubrary::plot_scatter(
   scale_y_continuous(limits = c(-2, 2), expand = c(0, 0))
 ```
 
+### Links
+
+-   [Cross Validated: How does centering the data get rid of the intercept in regression and PCA?](https://stats.stackexchange.com/a/22331)
+-   [Cross Validated: How does centering make a difference in PCA (for SVD and eigen decomposition)?](https://stats.stackexchange.com/a/189902)
+
 ## Scaling
 
 Somewhat subjective depending on what you're interested in investigating.
@@ -448,12 +513,21 @@ Scaling: performing PCA on correlation matrix
 -   PCA on correlation mtx is SAME as PCA with *standardization* of each variable
 
 
-Links
+### Links
 
 -   [Cross Validated: PCA on correlation or covariance?](https://stats.stackexchange.com/a/78)
 
 # Varimax
 
-# Projection
+[From @ttnphns on Stack Exchange](https://stats.stackexchange.com/a/193023/387770)!!
+![](https://i.stack.imgur.com/AeZy1.png)
+
+### Links
+
+- [Cross Validated: How to compute varimax-rotated principal components in R?](https://stats.stackexchange.com/questions/59213/how-to-compute-varimax-rotated-principal-components-in-r)
+- [Cross Validated: Is PCA followed by a rotation (such as varimax) still PCA?](https://stats.stackexchange.com/questions/612/is-pca-followed-by-a-rotation-such-as-varimax-still-pca)
+  - REALLY GOOD ANSWERS explaining math + consequences of rotation on raw scores + eigenvectors vs. std scores + loadings
+  - [@amoeba answer](https://stats.stackexchange.com/a/136936/387770)
+  - [@ttnphns answer](https://stats.stackexchange.com/a/193023/387770)
 
 # References

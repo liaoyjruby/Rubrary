@@ -1,5 +1,5 @@
 Package: Rubrary
-Title: Fun Functions from Ruby
+Title: Ruby's functions & notes
 Version: 0.8.0
 Authors@R: 
     person("Yi Jou (Ruby)", "Liao", , "liaoyjruby@ucla.edu", role = c("aut", "cre"),

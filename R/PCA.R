@@ -312,7 +312,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
       # Scores scatter plot
       {if (type == "Scores") geom_point(size = 2, alpha = alpha)} +
       # Color
-      {if (!is.numeric(df[, annotype])) scale_fill_manual(values=cols)} + # Categorical anno
+      {if (!is.numeric(df[, annotype])) scale_color_manual(values=cols)} + # Categorical anno
       {if (is.numeric(df[, annotype])) scale_color_gradient( # Numeric anno
         low = cols[1], high = cols[2], guide = "colourbar")} +
       # Ellipse
@@ -552,7 +552,7 @@ plot_PCA_biplot <- function(obj_prcomp, PCx = "PC1", PCy = "PC2",
 #' @param normalize logical; T for Kaiser normalization: rows scaled to unit length before rotation, then scaled back afterwards
 #' @param savename string; filepath (no ext.) to save results under
 #'
-#' @return List with varimax rotated loadings matrix and varimax rotated scores matrices
+#' @return List with `loadings`: varimax rotated loadings (mtx) and varimax rotated stardardized scores (mtx)
 #' @seealso [stats::varimax()]
 #' @export
 #'
