@@ -16,7 +16,7 @@ rotate_varimax(obj_prcomp, ncomp = 2, normalize = TRUE, savename = NULL)
 \item{savename}{string; filepath (no ext.) to save results under}
 }
 \value{
-List with varimax rotated loadings matrix and varimax rotated scores matrices
+List with \code{loadings}: varimax rotated loadings (mtx) and varimax rotated stardardized scores (mtx)
 }
 \description{
 \href{https://stats.stackexchange.com/questions/59213/how-to-compute-varimax-rotated-principal-components-in-r}{StackExchange reference}

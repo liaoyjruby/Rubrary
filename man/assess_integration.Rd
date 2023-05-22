@@ -124,5 +124,5 @@ Implementation uses \code{k = 300} and \code{dim_red = reduction}. As per \href{
 
 }}
 \seealso{
-\code{\link[lisi:compute_lisi]{lisi::compute_lisi()}}, \code{\link[Seurat:MixingMetric]{Seurat::MixingMetric()}}, \code{\link[CellMixS:cms]{CellMixS::cms()}}
+lisi::compute_lisi(), \code{\link[Seurat:MixingMetric]{Seurat::MixingMetric()}}, CellMixS::cms()
 }

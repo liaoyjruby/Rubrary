@@ -203,6 +203,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
 
   } else { # PCA results directly as dataframe
     df <- df_pca
+    names(df)[1] <- type
   }
 
   if(exists("sdev")){
@@ -567,18 +568,28 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
   scores <- obj_prcomp$x[, 1:ncomp]
   loadings <- Rubrary::get_loadings(obj_prcomp)[, 1:ncomp]
   varimax_rotation <- stats::varimax(loadings, normalize = normalize)
-  scores_varimax <- scale(scores) %*% varimax_rotation$rotmat # Scores must be standardized / scaled
-  loadings_varimax <- as.matrix(unlist(varimax_rotation$loadings))
-  rownames(loadings_varimax) <- rownames(loadings)
+
+  l <- varimax_rotation$loadings
+  loadings_varimax <- data.frame(matrix(as.numeric(l), attributes(l)$dim, dimnames=attributes(l)$dimnames)) %>%
+    rename_with(., ~ gsub("PC", "V", .x, fixed = TRUE)) %>%
+    tibble::rownames_to_column(var = "Loadings")
+
+  std_scores_varimax <- scale(scores) %*% varimax_rotation$rotmat %>% # Scores must be standardized / scaled
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "Scores")
+
+  # Unstandardize scores by multiplying its values by the st. dev.
+  std_scores_varimax %>%
+
 
   if(!is.null(savename)){
     write.table(
-      tibble::rownames_to_column(scores, var = "Scores"),
-      file = paste0(savename, "_prcomp_scores_varimax.txt"),
+      std_scores_varimax,
+      file = paste0(savename, "_prcomp_std_scores_varimax.txt"),
       quote = F, sep = "\t", row.names = F
     )
     write.table(
-      tibble::rownames_to_column(varimax_rotation$loadings, var = "Loadings"),
+      tibble::rownames_to_column(loadings_varimax$loadings, var = "Loadings"),
       file = paste0(savename, "_prcomp_loadings_varimax.txt"),
       quote = F, sep = "\t", row.names = F
     )
@@ -586,7 +597,7 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
 
   results_rotated = list(
     loadings = loadings_varimax,
-    scores = scores_varimax
+    std_scores = std_scores_varimax
   )
 
   return(results_rotated)

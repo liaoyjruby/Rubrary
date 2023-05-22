@@ -44,7 +44,7 @@ utils::globalVariables(c(
 #' @param MM_flip logical; use `max.k - MixingMetric` instead of `MixingMetric` only
 #'
 #' @return Dataframe of integration assessment values
-#' @seealso [lisi::compute_lisi()], [Seurat::MixingMetric()], [CellMixS::cms()]
+#' @seealso lisi::compute_lisi(), [Seurat::MixingMetric()], CellMixS::cms()
 #' @export
 #'
 assess_integration <- function(sobj, group.var, method = c("LISI", "MixingMetric", "CellMixS"),

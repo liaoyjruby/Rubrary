@@ -506,9 +506,11 @@ Rubrary::plot_scatter(
 Somewhat subjective depending on what you're interested in investigating.
 
 Not scaling: performing PCA on covariance matrix
+
 -   Generally okay if variable scales are similar or variables have same unit of measure
 
 Scaling: performing PCA on correlation matrix
+
 -   Generally preferred if variable scales are different or variables have different unit of measure
 -   PCA on correlation mtx is SAME as PCA with *standardization* of each variable
 
@@ -519,8 +521,12 @@ Scaling: performing PCA on correlation matrix
 
 # Varimax
 
-[From @ttnphns on Stack Exchange](https://stats.stackexchange.com/a/193023/387770)!!
+[From \@ttnphns on Stack Exchange](https://stats.stackexchange.com/a/193023/387770)!!
 ![](https://i.stack.imgur.com/AeZy1.png)
+
+## "Unstandardizing" scores
+
+
 
 ### Links
 
