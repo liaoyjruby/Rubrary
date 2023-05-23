@@ -176,14 +176,41 @@ metadata.</p>
 same plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA_biplot.html">plot_PCA_biplot</a></span><span class="op">(</span></span>
-<span>  obj_prcomp <span class="op">=</span> <span class="va">pca</span>,</span>
+<span>  obj <span class="op">=</span> <span class="va">pca</span>,</span>
 <span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
 <span>  annoname <span class="op">=</span> <span class="st">"Sample_ID"</span>,</span>
 <span>  annotype <span class="op">=</span> <span class="st">"species"</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Scores - Species"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Biplot - Species"</span>,</span>
 <span>  label <span class="op">=</span> <span class="st">"Loadings"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_Quickstart_files/figure-html/Plot_PCA_biplot-1.png" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="varimax-rotation">Varimax rotation<a class="anchor" aria-label="anchor" href="#varimax-rotation"></a>
+</h2>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pca_vm</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/rotate_varimax.html">rotate_varimax</a></span><span class="op">(</span><span class="va">pca</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
+<span>  df_pca <span class="op">=</span> <span class="va">pca_vm</span><span class="op">$</span><span class="va">loadings</span>,</span>
+<span>  PCx <span class="op">=</span> <span class="st">"V1"</span>, PCy <span class="op">=</span> <span class="st">"V2"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Loadings (Varimax)"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"Loadings"</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
+<span>  df_pca <span class="op">=</span> <span class="va">pca_vm</span><span class="op">$</span><span class="va">scores</span>,</span>
+<span>  PCx <span class="op">=</span> <span class="st">"V1"</span>, PCy <span class="op">=</span> <span class="st">"V2"</span>,</span>
+<span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
+<span>  annoname <span class="op">=</span> <span class="st">"Sample_ID"</span>,</span>
+<span>  annotype <span class="op">=</span> <span class="st">"species"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Palmer Penguins PCA Scores (Varimax) - Species"</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  density <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"Scores"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="PCA_Quickstart_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
