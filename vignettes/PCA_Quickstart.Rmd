@@ -119,6 +119,7 @@ Rubrary::plot_PCA_biplot(
 ```{r}
 pca_vm <- Rubrary::rotate_varimax(pca)
 
+# Visualize loadings
 Rubrary::plot_PCA(
   df_pca = pca_vm$loadings,
   PCx = "V1", PCy = "V2",
@@ -126,7 +127,11 @@ Rubrary::plot_PCA(
   type = "Loadings",
   label = TRUE
 )
+```
 
+
+```{r}
+# Visualize scores
 Rubrary::plot_PCA(
   df_pca = pca_vm$scores,
   PCx = "V1", PCy = "V2",
