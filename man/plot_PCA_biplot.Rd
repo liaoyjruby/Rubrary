@@ -5,7 +5,7 @@
 \title{Plot "proper" PCA biplot}
 \usage{
 plot_PCA_biplot(
-  obj_prcomp,
+  obj,
   PCx = "PC1",
   PCy = "PC2",
   anno = NULL,
@@ -22,7 +22,7 @@ plot_PCA_biplot(
 )
 }
 \arguments{
-\item{obj_prcomp}{\code{prcomp} object}
+\item{obj}{\code{prcomp} object}
 
 \item{PCx}{string; Component on x-axis}
 
@@ -62,7 +62,7 @@ iris$Sample = rownames(iris)
 PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]),
   center = TRUE, scale = FALSE, screeplot = FALSE)
 Rubrary::plot_PCA_biplot(
-  obj_prcomp = PCA_iris,
+  obj = PCA_iris,
   anno = iris[,c("Sample", "Species")],
   annoname = "Sample", annotype = "Species",
   label = "Loadings", ellipse = TRUE, title = "Iris PCA Biplot")

@@ -229,7 +229,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
       geom_hline(yintercept = 0, linetype = "dotted", alpha = 0.25) +
       {if (type == "Scores" || type == "Biplot") geom_point(size = 2)} +
       {if (type == "Loadings") geom_segment(
-        data = df_lo, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),
+        data = df, mapping = aes(x = 0, y = 0, xend = .data[[PCx]], yend = .data[[PCy]]),
         arrow = arrow(length = unit(0.025, "npc")))} +
       labs(title = title,
            x = PCxlab,
@@ -433,7 +433,7 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 #'
 #' For PCA SVD \eqn{X = USV^T}, uses standardized principal components for data points (\eqn{\bf{U}\sqrt{n - 1}}) and loadings (\eqn{\bf{VS}/\sqrt{n-1}}) and plots onto the same scale - a "proper" PCA biplot according to [this Stack Exchange thread](https://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot/141531) citing the [Gabriel 1971 paper on PCA biplots](https://doi.org/10.2307/2334381).
 #'
-#' @param obj_prcomp `prcomp` object
+#' @param obj `prcomp` object
 #' @param PCx string; Component on x-axis
 #' @param PCy string; Component on y-axis
 #' @param anno df; Annotation info for observations
@@ -457,18 +457,21 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 #' PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]),
 #'   center = TRUE, scale = FALSE, screeplot = FALSE)
 #' Rubrary::plot_PCA_biplot(
-#'   obj_prcomp = PCA_iris,
+#'   obj = PCA_iris,
 #'   anno = iris[,c("Sample", "Species")],
 #'   annoname = "Sample", annotype = "Species",
 #'   label = "Loadings", ellipse = TRUE, title = "Iris PCA Biplot")
-plot_PCA_biplot <- function(obj_prcomp, PCx = "PC1", PCy = "PC2",
+plot_PCA_biplot <- function(obj, PCx = "PC1", PCy = "PC2",
                             anno = NULL, annoname = "Sample", annotype = "Batch",
                             label = c("Both", "Loadings", "Scores", "None"),
                             colors = NULL, col_load = "firebrick", title = NULL,
                             ellipse = FALSE, savename = NULL, height = 8, width = 8){
-  label = match.arg(label)
+  label <- match.arg(label)
 
-  df_sc <- obj_prcomp$x %>%
+  if(methods::is(obj, "prcomp")){
+
+  }
+  df_sc <- obj$x %>%
     as.data.frame() %>%
     mutate(across(everything(), ~./sd(.))) %>% # Standardized PC scores, div by std dev for unit variance
     tibble::rownames_to_column(var = "Scores")
@@ -478,11 +481,11 @@ plot_PCA_biplot <- function(obj_prcomp, PCx = "PC1", PCy = "PC2",
       left_join(., anno, by = stats::setNames(nm = "Scores", annoname))
   }
 
-  df_lo <- Rubrary::get_loadings(obj_prcomp) %>%
+  df_lo <- Rubrary::get_loadings(obj) %>%
     as.data.frame() %>%
     tibble::rownames_to_column(var = "Loadings")
 
-  sdev <- obj_prcomp$sdev %>%
+  sdev <- obj$sdev %>%
     as.data.frame() %>%
     mutate(var = .^2,
            pve = round(var / sum(var) * 100, digits = 2)) %>%
@@ -553,7 +556,7 @@ plot_PCA_biplot <- function(obj_prcomp, PCx = "PC1", PCy = "PC2",
 #' @param normalize logical; T for Kaiser normalization: rows scaled to unit length before rotation, then scaled back afterwards
 #' @param savename string; filepath (no ext.) to save results under
 #'
-#' @return List with `loadings`: varimax rotated loadings (mtx) and varimax rotated stardardized scores (mtx)
+#' @return `varimax` object with varimax rotated `loadings`, standardized scores `std_scores`, and scores `scores`
 #' @seealso [stats::varimax()]
 #' @export
 #'
@@ -574,31 +577,44 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
     rename_with(., ~ gsub("PC", "V", .x, fixed = TRUE)) %>%
     tibble::rownames_to_column(var = "Loadings")
 
-  std_scores_varimax <- scale(scores) %*% varimax_rotation$rotmat %>% # Scores must be standardized / scaled
+  # Standardized scores
+  std_scores_varimax <- scale(scores) %*% varimax_rotation$rotmat %>%
     as.data.frame() %>%
     tibble::rownames_to_column(var = "Scores")
 
-  # Unstandardize scores by multiplying its values by the st. dev.
-  std_scores_varimax %>%
-
+  # "Unstandardize" scores by multiplying its values by sqrt(sum of squared loadings)
+  ss_loadings <- colSums(loadings_varimax[, 2:(ncomp + 1)]^2)
+  scores_varimax <- std_scores_varimax %>%
+    tibble::column_to_rownames(var = "Scores") %>%
+    as.matrix() %*% diag(sqrt(ss_loadings)) %>%
+    as.data.frame() %>%
+    tibble::rownames_to_column(var = "Scores")
 
   if(!is.null(savename)){
+    write.table(
+      tibble::rownames_to_column(loadings_varimax$loadings, var = "Loadings"),
+      file = paste0(savename, "_prcomp_loadings_varimax.txt"),
+      quote = F, sep = "\t", row.names = F
+    )
     write.table(
       std_scores_varimax,
       file = paste0(savename, "_prcomp_std_scores_varimax.txt"),
       quote = F, sep = "\t", row.names = F
     )
     write.table(
-      tibble::rownames_to_column(loadings_varimax$loadings, var = "Loadings"),
-      file = paste0(savename, "_prcomp_loadings_varimax.txt"),
+      scores_varimax,
+      file = paste0(savename, "_prcomp_scores_varimax.txt"),
       quote = F, sep = "\t", row.names = F
     )
   }
 
-  results_rotated = list(
+  results_varimax <- list(
     loadings = loadings_varimax,
-    std_scores = std_scores_varimax
+    std_scores = std_scores_varimax,
+    scores = scores_varimax
   )
 
-  return(results_rotated)
+  class(results_varimax) <- "varimax"
+
+  return(results_varimax)
 }

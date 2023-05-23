@@ -106,12 +106,37 @@ Rubrary::plot_PCA(
 Plotting as biplot to view both (standardized) PCs and loadings on same plot.
 ```{r Plot_PCA_biplot}
 Rubrary::plot_PCA_biplot(
-  obj_prcomp = pca,
+  obj = pca,
   anno = penguins,
   annoname = "Sample_ID",
   annotype = "species",
-  title = "Palmer Penguins PCA Scores - Species",
+  title = "Palmer Penguins PCA Biplot - Species",
   label = "Loadings"
+)
+```
+
+# Varimax rotation
+```{r}
+pca_vm <- Rubrary::rotate_varimax(pca)
+
+Rubrary::plot_PCA(
+  df_pca = pca_vm$loadings,
+  PCx = "V1", PCy = "V2",
+  title = "Palmer Penguins PCA Loadings (Varimax)",
+  type = "Loadings",
+  label = TRUE
+)
+
+Rubrary::plot_PCA(
+  df_pca = pca_vm$scores,
+  PCx = "V1", PCy = "V2",
+  anno = penguins,
+  annoname = "Sample_ID",
+  annotype = "species",
+  title = "Palmer Penguins PCA Scores (Varimax) - Species",
+  label = FALSE,
+  density = TRUE,
+  type = "Scores"
 )
 ```
 

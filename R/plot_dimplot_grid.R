@@ -28,7 +28,7 @@ plot_dimplot_grid <- function(sobj, reduction = c("umap", "pca", "tsne"), set, n
 
   plot_dim <- function(group, name, lb){
     red <- ifelse(reduction == "tsne", "tSNE", toupper(reduction))
-    if(!(group %in% names(UCLA_srpca_nopdx@meta.data)) ||
+    if(!(group %in% names(sobj@meta.data)) ||
        (methods::is(sobj@meta.data[,group], "numeric"))){
       plt <- Seurat::FeaturePlot(
         sobj,

@@ -521,19 +521,16 @@ Scaling: performing PCA on correlation matrix
 
 # Varimax
 
-[From \@ttnphns on Stack Exchange](https://stats.stackexchange.com/a/193023/387770)!!
+[From ttnphns on Stack Exchange](https://stats.stackexchange.com/a/193023/387770)!!
 ![](https://i.stack.imgur.com/AeZy1.png)
-
-## "Unstandardizing" scores
-
-
 
 ### Links
 
 - [Cross Validated: How to compute varimax-rotated principal components in R?](https://stats.stackexchange.com/questions/59213/how-to-compute-varimax-rotated-principal-components-in-r)
 - [Cross Validated: Is PCA followed by a rotation (such as varimax) still PCA?](https://stats.stackexchange.com/questions/612/is-pca-followed-by-a-rotation-such-as-varimax-still-pca)
   - REALLY GOOD ANSWERS explaining math + consequences of rotation on raw scores + eigenvectors vs. std scores + loadings
-  - [@amoeba answer](https://stats.stackexchange.com/a/136936/387770)
-  - [@ttnphns answer](https://stats.stackexchange.com/a/193023/387770)
+  - [amoeba answer](https://stats.stackexchange.com/a/136936/387770)
+  - [ttnphns answer](https://stats.stackexchange.com/a/193023/387770)
+- [Cross Validated: How to obtain unstandardized scores in factor analysis (FA)?](https://stats.stackexchange.com/a/497480/387770)
 
 # References
