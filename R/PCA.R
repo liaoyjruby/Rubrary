@@ -1,8 +1,7 @@
 
 utils::globalVariables(c(
   "PC", "value", "variable",
-  "Highlight", ".", "var",
-  "kp_grob"
+  "Highlight", ".", "var"
 ))
 
 #' Extract loadings from `prcomp` object
@@ -131,7 +130,7 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' @param annotype string; Colname in `anno` with info to color by
 #' @param annotype2 string; Colname in `anno` with info to change shape by
 #' @param ellipse logical; Draw `ggplot2::stat_ellipse` data ellipse w/ default params - this is NOT a confidence ellipse
-#' @param ks_grob logical; Display ks-pvalue as grob instead of caption
+#' @param ks_pval c("none", "caption", "grob"); Display ks-pvalue as caption or grob
 #' @param title string; Plot title
 #' @param subtitle string; Subtitle for plot
 #' @param density logical; Show density plot along both axes
@@ -157,12 +156,15 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' Rubrary::plot_PCA(df_pca = PCA_iris,
 #'   type = "Loadings", title = "Iris PCA Loadings", label = TRUE)
 #'
-plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Scores", "Loadings"),
-                     label = FALSE, annoname = "Sample", annotype = "Batch", annotype2 = NULL,
-                     ellipse = FALSE, ks_grob = FALSE, highlight = NULL, colors = NULL,
+plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2",
+                     type = c("Scores", "Loadings"), label = FALSE,
+                     annoname = "Sample", annotype = "Batch", annotype2 = NULL,
+                     ellipse = FALSE, ks_pval = c("none", "caption", "grob"),
+                     highlight = NULL, colors = NULL,
                      title = NULL, subtitle = NULL, density = FALSE,
                      savename = NULL, width = 8, height = 8) {
   type <- match.arg(type)
+  ks_pval <- match.arg(ks_pval)
   lab_type <- type
 
   if (is.character(df_pca)) { # PCA results as path to txt
@@ -239,7 +241,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
   } else {
     # Two groups, calc KS p-value for both PCx and PCy
     ks_cap <- waiver()
-    if (length(unique(df[, annotype])) == 2) {
+    if ((length(unique(df[, annotype])) == 2) && (ks_pval != "none")) {
       kpX <- Rubrary::get_kspval(df, PCx, annotype, unique(df[, annotype])[1])
       kpY <- Rubrary::get_kspval(df, PCy, annotype, unique(df[, annotype])[1])
       kpX_text <- paste0(
@@ -250,7 +252,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
         sub("comp", "C", PCy), ": KS enrich. p = ",
         format.pval(kpY, digits = 3, eps = 0.001, nsmall = 3)
       )
-      if (ks_grob){
+      if (ks_pval == "grob"){
         grobX <- grid::grobTree(
           grid::textGrob(kpX_text,
             x = 0.95, y = 0.95, just = "right",
@@ -264,7 +266,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
           )
         )
       }
-      ks_cap <- ifelse(kp_grob, waiver(), paste0(kpX_text, "; ", kpY_text))
+      ks_cap <- ifelse(ks_pval == "caption", waiver(), paste0(kpX_text, "; ", kpY_text))
     }
 
     # Manage alpha if many points
@@ -343,7 +345,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Sc
   }
 
   if (density && !is.null(anno)) {
-    if (length(unique(df[, annotype])) == 2 && ks_grob) {
+    if ((length(unique(df[, annotype])) == 2) && (ks_pval == "grob")) {
       plt <- plt + annotation_custom(grobX) + annotation_custom(grobY)
     }
     mplt <- ggExtra::ggMarginal(plt,

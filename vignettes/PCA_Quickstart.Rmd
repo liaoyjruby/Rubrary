@@ -11,6 +11,7 @@ output:
       collapsed: false
       smooth_scroll: false
     number_sections: true
+bibliography: vignettes.bib
 vignette: >
   %\VignetteIndexEntry{Principal Components Analysis (PCA) Quickstart}
   %\VignetteEngine{knitr::rmarkdown}
@@ -35,13 +36,63 @@ r["CRAN"] = "http://cran.us.r-project.org"
 options(repos = r)
 ```
 
-# Data
+This vignette goes over how to run the PCA related functions in Rubrary for dimensional reduction and visualization. For a more math-y, in-depth step by step walkthrough with lengthier explanations see the [PCA Walkthrough vignette](https://www.liaoyjruby.com/Rubrary/articles/PCA_Walkthrough.html).
+
+# Beltran et al. 2016 PCA
+
+This replicates the PCA portions of the [graeberlab-ucla/glab.library PCA tutorial](https://github.com/graeberlab-ucla/glab.library/blob/master/vignettes/PCA_tutorial/PCA_tutorial.Rmd) using [Beltran et al. 2016](https://www.nature.com/articles/nm.4045)[@beltranDivergentClonalEvolution2016] CRPC/NEPC data that initiate many new computational Graeber Lab members into the lab.
+
+## Beltran gene expression
+
+Raw text files can be loaded through `read.delim` by passing in the URL.
+
+```{r Load Beltran data}
+# Upper quartile normalized log2 transformed gene counts
+Beltran_log2UQ_exp <- read.delim("https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt", row.names = 1)
+
+rmarkdown::paged_table(Rubrary::corner(Beltran_log2UQ_exp))
+```
+Generally, scaling is unnecessary for log transformed gene expression because all features (genes) have the same unit of measure and it is assumed that scales are relatively similar across all genes.
+
+Centering should always be performed for PCA to result in maximizing variance.
+
+See the [Standardization section in the PCA Walkthrough](https://www.liaoyjruby.com/Rubrary/articles/PCA_Walkthrough.html#standardization) for more info.
+```{r Beltran_Run_PCA}
+Beltran_PCA <- Rubrary::run_PCA(
+  df = Beltran_log2UQ_exp,
+  center = TRUE, scale = FALSE
+)
+```
+
+The annotations are in a huge file associating a large number of samples with its cancer type abbreviation. In this dataset, the samples correspond to "CRPC", castration resistant prostate cancer, and "NEPC", neuroendocrine prostate cancer.
+
+```{r Load Beltran annotations}
+# Annotation file
+Beltran_info <- read.delim("https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/human.info.rsem.expression.txt")
+
+head(Beltran_info)
+```
+
+The NEPC and CRPC samples separate pretty nicely along PC2.
+```{r Beltran_Plot_PCA, fig.width=7, fig.height=5}
+Rubrary::plot_PCA(
+  df_pca = Beltran_PCA,
+  anno = Beltran_info,
+  type = "Scores",
+  annoname = "sample",
+  annotype = "type",
+  density = T, ellipse = T
+)
+```
+
+# Palmer Penguins PCA
 
 Using `palmerpenguins` dataset [from Allison Horst](https://allisonhorst.github.io/palmerpenguins/).
 
 ## Load data
 
 Get `palmerpenguins` data and add a unique ID per entry.
+
 ```{r Get_ data, message=FALSE}
 if (!requireNamespace("palmerpenguins", quietly = TRUE)){
   install.packages("palmerpenguins")
@@ -57,9 +108,10 @@ rownames(penguins) <- penguins$Sample_ID
 rmarkdown::paged_table(penguins)
 ```
 
-# Run PCA
+## Run PCA
 
 Subset data to numeric only, then run PCA.
+
 ```{r Run_PCA}
 num <- penguins %>%
   dplyr::select(!c(species, island, sex, year, Sample_ID)) %>%
@@ -75,9 +127,10 @@ pca <- Rubrary::run_PCA(
 )
 ```
 
-# Plot PCA
+## Plot PCA
 
 Use resulting `prcomp` object to plot PCA scores while annotating by `species` metadata.
+
 ```{r Plot_PCA_species_anno}
 Rubrary::plot_PCA(
   df_pca = pca,
@@ -91,6 +144,7 @@ Rubrary::plot_PCA(
 ```
 
 Same PCA scores plot, but annotating by `sex` metadata.
+
 ```{r Plot_PCA_sex_anno}
 Rubrary::plot_PCA(
   df_pca = pca,
@@ -104,6 +158,7 @@ Rubrary::plot_PCA(
 ```
 
 Plotting as biplot to view both (standardized) PCs and loadings on same plot.
+
 ```{r Plot_PCA_biplot}
 Rubrary::plot_PCA_biplot(
   obj = pca,
@@ -115,8 +170,9 @@ Rubrary::plot_PCA_biplot(
 )
 ```
 
-# Varimax rotation
-```{r}
+## Varimax rotation
+
+```{r Varimax loadings}
 pca_vm <- Rubrary::rotate_varimax(pca)
 
 # Visualize loadings
@@ -129,8 +185,7 @@ Rubrary::plot_PCA(
 )
 ```
 
-
-```{r}
+```{r Varimax scores}
 # Visualize scores
 Rubrary::plot_PCA(
   df_pca = pca_vm$scores,
@@ -144,5 +199,3 @@ Rubrary::plot_PCA(
   type = "Scores"
 )
 ```
-
-

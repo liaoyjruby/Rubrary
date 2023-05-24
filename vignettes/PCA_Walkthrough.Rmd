@@ -225,10 +225,10 @@ FeatureVector
 
 Visualizing eigenvectors / PCs on adjusted data
 
-- Eigenvectors are perpendicular, lines that characterize data
-- Eigenvector with largest eigenvalue is PC1 (blue dashed line)
+- Eigenvectors (colored dashed lines) are perpendicular, lines that characterize data
+- Eigenvector with largest eigenvalue is PC1
   - Aligns with maximum variance in data, most significant relationship btwn data dimensions
-- 2nd largest eigenvalue is PC2 (red dashed line)
+- 2nd largest eigenvalue is PC2
 ```{r Fig3.2_eigenplot}
 Rubrary::plot_scatter(
   df = DataAdjust, # Mean adjusted data

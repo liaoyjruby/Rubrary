@@ -15,7 +15,7 @@ plot_PCA(
   annotype = "Batch",
   annotype2 = NULL,
   ellipse = FALSE,
-  ks_grob = FALSE,
+  ks_pval = c("none", "caption", "grob"),
   highlight = NULL,
   colors = NULL,
   title = NULL,
@@ -47,7 +47,7 @@ plot_PCA(
 
 \item{ellipse}{logical; Draw \code{ggplot2::stat_ellipse} data ellipse w/ default params - this is NOT a confidence ellipse}
 
-\item{ks_grob}{logical; Display ks-pvalue as grob instead of caption}
+\item{ks_pval}{c("none", "caption", "grob"); Display ks-pvalue as caption or grob}
 
 \item{highlight}{char vector; Specific points to shape differently & label}
 
