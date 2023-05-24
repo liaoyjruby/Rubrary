@@ -5,6 +5,8 @@ utils::globalVariables(c(
 
 #' Plot SCN Kaplan Meier Survival Analysis
 #'
+#' NOT GENERALIZED
+#'
 #' @import ggplot2
 #'
 #' @param df dataframe; cols "OS" (overall survival censor), "OS.time" (overall survival time)

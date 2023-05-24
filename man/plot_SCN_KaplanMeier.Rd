@@ -27,5 +27,5 @@ plot_SCN_KaplanMeier(
 Kaplan-Meier overall survival analysis plot comparing SCN-like status
 }
 \description{
-Plot SCN Kaplan Meier Survival Analysis
+NOT GENERALIZED
 }
