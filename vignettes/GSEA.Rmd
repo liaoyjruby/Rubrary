@@ -132,7 +132,6 @@ Rubrary::plot_GSEA_barplot(
 )
 ```
 
-
 ## Pathway enrichment plot
 
 Specific pathways of interest can be plotted in GSEA Java app-like enrichment plots that combine a waterfall and mountain plot.
