@@ -93,8 +93,78 @@ Liao</h4>
 <span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"repos"</span><span class="op">)</span></span>
 <span><span class="va">r</span><span class="op">[</span><span class="st">"CRAN"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"http://cran.us.r-project.org"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span></code></pre></div>
+<p>This vignette goes over how to run the PCA related functions in
+Rubrary for dimensional reduction and visualization. For a more math-y,
+in-depth step by step walkthrough with lengthier explanations see the <a href="https://www.liaoyjruby.com/Rubrary/articles/PCA_Walkthrough.html" class="external-link">PCA
+Walkthrough vignette</a>.</p>
 <div class="section level2">
-<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+<h2 id="beltran-et-al--2016-pca">Beltran et al. 2016 PCA<a class="anchor" aria-label="anchor" href="#beltran-et-al--2016-pca"></a>
+</h2>
+<p>This replicates the PCA portions of the <a href="https://github.com/graeberlab-ucla/glab.library/blob/master/vignettes/PCA_tutorial/PCA_tutorial.Rmd" class="external-link">graeberlab-ucla/glab.library
+PCA tutorial</a> using <a href="https://www.nature.com/articles/nm.4045" class="external-link">Beltran et
+al. 2016</a><span class="citation">(Beltran et al. 2016)</span>
+CRPC/NEPC data that initiate many new computational Graeber Lab members
+into the lab.</p>
+<div class="section level3">
+<h3 id="beltran-gene-expression">Beltran gene expression<a class="anchor" aria-label="anchor" href="#beltran-gene-expression"></a>
+</h3>
+<p>Raw text files can be loaded through <code>read.delim</code> by
+passing in the URL.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Upper quartile normalized log2 transformed gene counts</span></span>
+<span><span class="va">Beltran_log2UQ_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt"</span>, row.names <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">rmarkdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgs.rstudio.com/rmarkdown/reference/paged_table.html" class="external-link">paged_table</a></span><span class="op">(</span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/corner.html">corner</a></span><span class="op">(</span><span class="va">Beltran_log2UQ_exp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["WCMC90_2_C"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["WCMC0_5_N"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["WCMC210_1_N"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["WCMC90_4_C"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["WCMC172_1_C"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["WCMC159_5_C"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["WCMC252_1_N"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["WCMC163_1_N"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["WCMC9_1_C"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["WCMC4240_1_N"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"8.317177","2":"9.081553","3":"5.564872","4":"7.694012","5":"6.912446","6":"6.455755","7":"11.611206","8":"15.423191","9":"4.812493","10":"9.044443","_rn_":"A1BG"},{"1":"3.940270","2":"7.809804","3":"6.402112","4":"3.554920","5":"7.142071","6":"5.798175","7":"9.773016","8":"14.334096","9":"1.375234","10":"0.000000","_rn_":"A1CF"},{"1":"15.581526","2":"10.451833","3":"11.921014","4":"13.018555","5":"10.855632","6":"14.280177","7":"13.729263","8":"17.085507","9":"10.890649","10":"13.571749","_rn_":"A2M"},{"1":"14.174641","2":"3.518384","3":"3.900017","4":"14.368108","5":"2.955852","6":"3.576401","7":"0.000000","8":"4.333324","9":"12.427070","10":"0.000000","_rn_":"A2ML1"},{"1":"3.031307","2":"3.256588","3":"2.496437","4":"0.000000","5":"1.427445","6":"0.000000","7":"0.000000","8":"3.114933","9":"0.000000","10":"2.767570","_rn_":"A3GALT2"},{"1":"10.585492","2":"8.958021","3":"6.479218","4":"9.087491","5":"5.826820","6":"9.310340","7":"10.118052","8":"6.993748","9":"4.331232","10":"10.320948","_rn_":"A4GALT"},{"1":"3.031307","2":"2.745194","3":"0.000000","4":"2.672720","5":"1.427445","6":"4.120468","7":"1.950580","8":"3.114933","9":"0.000000","10":"5.164219","_rn_":"A4GNT"},{"1":"10.344042","2":"11.674587","3":"9.874776","4":"10.592467","5":"10.344731","6":"9.902803","7":"11.346598","8":"9.694618","9":"10.943783","10":"11.240972","_rn_":"AAAS"},{"1":"10.578739","2":"11.950291","3":"12.920846","4":"10.254356","5":"8.649123","6":"12.603868","7":"13.001685","8":"9.612259","9":"10.220859","10":"11.675209","_rn_":"AACS"},{"1":"0.000000","2":"7.534925","3":"0.000000","4":"0.000000","5":"1.427445","6":"0.000000","7":"11.072040","8":"13.762654","9":"0.000000","10":"2.580073","_rn_":"AADAC"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Generally, scaling is unnecessary for log transformed gene expression
+because all features (genes) have the same unit of measure and it is
+assumed that scales are relatively similar across all genes.</p>
+<p>Centering should always be performed for PCA to result in maximizing
+variance.</p>
+<p>See the <a href="https://www.liaoyjruby.com/Rubrary/articles/PCA_Walkthrough.html#standardization" class="external-link">Standardization
+section in the PCA Walkthrough</a> for more info.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">Beltran_PCA</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/run_PCA.html">run_PCA</a></span><span class="op">(</span></span>
+<span>  df <span class="op">=</span> <span class="va">Beltran_log2UQ_exp</span>,</span>
+<span>  center <span class="op">=</span> <span class="cn">TRUE</span>, scale <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; ** Cumulative var. exp. &gt;= 80% at PC 18 (80.5%)</span></span></code></pre></div>
+<p><img src="PCA_Quickstart_files/figure-html/Beltran_Run_PCA-1.png" width="700"></p>
+<p>The annotations are in a huge file associating a large number of
+samples with its cancer type abbreviation. In this dataset, the samples
+correspond to “CRPC”, castration resistant prostate cancer, and “NEPC”,
+neuroendocrine prostate cancer.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Annotation file</span></span>
+<span><span class="va">Beltran_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="st">"https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/human.info.rsem.expression.txt"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Beltran_info</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            sample type</span></span>
+<span><span class="co">#&gt; 1 TCGA.05.4244.01 LUAD</span></span>
+<span><span class="co">#&gt; 2 TCGA.05.4249.01 LUAD</span></span>
+<span><span class="co">#&gt; 3 TCGA.05.4250.01 LUAD</span></span>
+<span><span class="co">#&gt; 4 TCGA.05.4382.01 LUAD</span></span>
+<span><span class="co">#&gt; 5 TCGA.05.4384.01 LUAD</span></span>
+<span><span class="co">#&gt; 6 TCGA.05.4389.01 LUAD</span></span></code></pre></div>
+<p>The NEPC and CRPC samples separate pretty nicely along PC2.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
+<span>  df_pca <span class="op">=</span> <span class="va">Beltran_PCA</span>,</span>
+<span>  anno <span class="op">=</span> <span class="va">Beltran_info</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"Scores"</span>,</span>
+<span>  annoname <span class="op">=</span> <span class="st">"sample"</span>,</span>
+<span>  annotype <span class="op">=</span> <span class="st">"type"</span>,</span>
+<span>  density <span class="op">=</span> <span class="cn">T</span>, ellipse <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="PCA_Quickstart_files/figure-html/Beltran_Plot_PCA-1.png" width="672"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="palmer-penguins-pca">Palmer Penguins PCA<a class="anchor" aria-label="anchor" href="#palmer-penguins-pca"></a>
 </h2>
 <p>Using <code>palmerpenguins</code> dataset <a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">from Allison
 Horst</a>.</p>
@@ -103,7 +173,7 @@ Horst</a>.</p>
 </h3>
 <p>Get <code>palmerpenguins</code> data and add a unique ID per
 entry.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -122,12 +192,11 @@ entry.</p>
   </script>
 </div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="run-pca">Run PCA<a class="anchor" aria-label="anchor" href="#run-pca"></a>
-</h2>
+<div class="section level3">
+<h3 id="run-pca">Run PCA<a class="anchor" aria-label="anchor" href="#run-pca"></a>
+</h3>
 <p>Subset data to numeric only, then run PCA.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">num</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, <span class="va">Sample_ID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -143,12 +212,12 @@ entry.</p>
 <span><span class="co">#&gt; ** Cumulative var. exp. &gt;= 80% at PC 2 (88.2%)</span></span></code></pre></div>
 <p><img src="PCA_Quickstart_files/figure-html/Run_PCA-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="plot-pca">Plot PCA<a class="anchor" aria-label="anchor" href="#plot-pca"></a>
-</h2>
+<div class="section level3">
+<h3 id="plot-pca">Plot PCA<a class="anchor" aria-label="anchor" href="#plot-pca"></a>
+</h3>
 <p>Use resulting <code>prcomp</code> object to plot PCA scores while
 annotating by <code>species</code> metadata.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
 <span>  df_pca <span class="op">=</span> <span class="va">pca</span>,</span>
 <span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
@@ -161,7 +230,7 @@ annotating by <code>species</code> metadata.</p>
 <p><img src="PCA_Quickstart_files/figure-html/Plot_PCA_species_anno-1.png" width="700"></p>
 <p>Same PCA scores plot, but annotating by <code>sex</code>
 metadata.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
 <span>  df_pca <span class="op">=</span> <span class="va">pca</span>,</span>
 <span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
@@ -174,7 +243,7 @@ metadata.</p>
 <p><img src="PCA_Quickstart_files/figure-html/Plot_PCA_sex_anno-1.png" width="700"></p>
 <p>Plotting as biplot to view both (standardized) PCs and loadings on
 same plot.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA_biplot.html">plot_PCA_biplot</a></span><span class="op">(</span></span>
 <span>  obj <span class="op">=</span> <span class="va">pca</span>,</span>
 <span>  anno <span class="op">=</span> <span class="va">penguins</span>,</span>
@@ -185,10 +254,10 @@ same plot.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="PCA_Quickstart_files/figure-html/Plot_PCA_biplot-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="varimax-rotation">Varimax rotation<a class="anchor" aria-label="anchor" href="#varimax-rotation"></a>
-</h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="varimax-rotation">Varimax rotation<a class="anchor" aria-label="anchor" href="#varimax-rotation"></a>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pca_vm</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/rotate_varimax.html">rotate_varimax</a></span><span class="op">(</span><span class="va">pca</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Visualize loadings</span></span>
@@ -199,8 +268,8 @@ same plot.</p>
 <span>  type <span class="op">=</span> <span class="st">"Loadings"</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_Quickstart_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p><img src="PCA_Quickstart_files/figure-html/Varimax%20loadings-1.png" width="700"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Visualize scores</span></span>
 <span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_PCA.html">plot_PCA</a></span><span class="op">(</span></span>
 <span>  df_pca <span class="op">=</span> <span class="va">pca_vm</span><span class="op">$</span><span class="va">scores</span>,</span>
@@ -213,7 +282,16 @@ same plot.</p>
 <span>  density <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"Scores"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="PCA_Quickstart_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="PCA_Quickstart_files/figure-html/Varimax%20scores-1.png" width="700"></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-beltranDivergentClonalEvolution2016" class="csl-entry">
+Beltran, Himisha, Davide Prandi, Juan Miguel Mosquera, Matteo Benelli,
+Loredana Puca, Joanna Cyrta, Clarisse Marotz, et al. 2016.
+<span>“Divergent Clonal Evolution of Castration-Resistant Neuroendocrine
+Prostate Cancer.”</span> <em>Nature Medicine</em> 22 (3, 3): 298–305. <a href="https://doi.org/10.1038/nm.4045" class="external-link">https://doi.org/10.1038/nm.4045</a>.
+</div>
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
