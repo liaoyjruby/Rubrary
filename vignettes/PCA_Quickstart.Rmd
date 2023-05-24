@@ -42,7 +42,7 @@ This vignette goes over how to run the PCA related functions in Rubrary for dime
 
 This replicates the PCA portions of the [graeberlab-ucla/glab.library PCA tutorial](https://github.com/graeberlab-ucla/glab.library/blob/master/vignettes/PCA_tutorial/PCA_tutorial.Rmd) using [Beltran et al. 2016](https://www.nature.com/articles/nm.4045)[@beltranDivergentClonalEvolution2016] CRPC/NEPC data that initiate many new computational Graeber Lab members into the lab.
 
-## Beltran gene expression
+## Load data
 
 Raw text files can be loaded through `read.delim` by passing in the URL.
 
@@ -52,6 +52,9 @@ Beltran_log2UQ_exp <- read.delim("https://raw.githubusercontent.com/graeberlab-u
 
 rmarkdown::paged_table(Rubrary::corner(Beltran_log2UQ_exp))
 ```
+
+## Run PCA
+
 Generally, scaling is unnecessary for log transformed gene expression because all features (genes) have the same unit of measure and it is assumed that scales are relatively similar across all genes.
 
 Centering should always be performed for PCA to result in maximizing variance.
@@ -63,6 +66,8 @@ Beltran_PCA <- Rubrary::run_PCA(
   center = TRUE, scale = FALSE
 )
 ```
+
+## Plot PCA
 
 The annotations are in a huge file associating a large number of samples with its cancer type abbreviation. In this dataset, the samples correspond to "CRPC", castration resistant prostate cancer, and "NEPC", neuroendocrine prostate cancer.
 
@@ -77,11 +82,44 @@ The NEPC and CRPC samples separate pretty nicely along PC2.
 ```{r Beltran_Plot_PCA, fig.width=7, fig.height=5}
 Rubrary::plot_PCA(
   df_pca = Beltran_PCA,
-  anno = Beltran_info,
   type = "Scores",
+  anno = Beltran_info,
   annoname = "sample",
   annotype = "type",
   density = T, ellipse = T
+)
+```
+
+## Varimax rotation
+
+```{r Varimax loadings}
+Beltran_PCA_VM <- Rubrary::rotate_varimax(Beltran_PCA, normalize = FALSE)
+
+# Visualize scores
+Rubrary::plot_PCA(
+  df_pca = Beltran_PCA_VM$scores,
+  PCx = "V1", PCy = "V2",
+  title = "Beltran 2016 PCA Scores (Varimax)",
+  type = "Scores",
+  anno = Beltran_info,
+  annoname = "sample",
+  annotype = "type",
+  density = T, ellipse = T
+)
+```
+
+```{r Varimax scores}
+# Visualize scores
+Rubrary::plot_PCA(
+  df_pca = pca_vm$scores,
+  PCx = "V1", PCy = "V2",
+  anno = penguins,
+  annoname = "Sample_ID",
+  annotype = "species",
+  title = "Palmer Penguins PCA Scores (Varimax) - Species",
+  label = FALSE,
+  density = TRUE,
+  type = "Scores"
 )
 ```
 
