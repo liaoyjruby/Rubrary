@@ -92,7 +92,7 @@ Rubrary::plot_PCA(
 
 ## Varimax rotation
 
-```{r Varimax loadings}
+```{r Beltran varimax loadings}
 Beltran_PCA_VM <- Rubrary::rotate_varimax(Beltran_PCA, normalize = FALSE)
 
 # Visualize scores
@@ -108,7 +108,7 @@ Rubrary::plot_PCA(
 )
 ```
 
-```{r Varimax scores}
+```{r Beltran varimax scores}
 # Visualize scores
 Rubrary::plot_PCA(
   df_pca = pca_vm$scores,
