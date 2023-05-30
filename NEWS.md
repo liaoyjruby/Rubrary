@@ -1,10 +1,12 @@
-General
+# Rubrary 0.9.0
+
+## General
 
 - PCA improvements + associated vignettes
 - scRNA integration assessment metrics
-- GSEA barplot + associated helper functions
+- GSEA barplot, GSEAsq density plot comparison, and associated helper functions
 
-New
+## New
 - `plot_GSEAsq_density`: plot categorical percentile rank comparison between two GSEA squared signatures
 - `plot_PCA_biplot`: conventional biplot with loadings and standardized scores
 - `plot_GSEA_barplot`: function-ified version of horizontal barplot originally made for Jack
@@ -16,7 +18,7 @@ New
   - `run_MixingMetric`: wrapper for `assess_integration` specific to `MixingMetric`
   - `run_CellMixS`: wrapper for `assess_integration` specific to `cms`
 
-Improved
+## Improved
 
 - `run_PCA`: fix eigenvector / loadings distinction
 -   `plot_volcano`: rewritten terms + args to be more general and align better w/ `EnhancedVolcano` documentation
@@ -25,13 +27,11 @@ Improved
 -   `plot_waterfall`: a little smarter on where to place high/low value labels but still quite dumb
 - `plot_scatter`: color by group, more text options
 
-Vignettes
+## Vignettes
 
 - `PCA_Walkthrough`: based on Lindsey Smith's PCA tutorial, a more step by step toy dataset for PCA including some of the math behind it
-  - TODO: Varimax section... once I get visualization working for plotting varimax
-- `PCA_Quickstart`: very basic Palmer Penguin demonstration of plotting scripts
--   `DESeq_GSEA`: fgsea section + loads of properly cited citations
--   possibly split vignette into DE genes and GSEA separately? can do comparative DE methods if so and RRHO it out
+- `PCA_Quickstart`: very basic Palmer Penguin demonstration of plotting scripts + replication of Graeber Beltran PCA
+-   `DE_Genes` & `GSEA`: previous combined tutorial nows plit into two
 
 # Rubrary 0.8.0
 
