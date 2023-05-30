@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,68 @@
       <small>Source: <a href="https://github.com/liaoyjruby/Rubrary/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.9.0" id="rubrary-090">Rubrary 0.9.0<a class="anchor" aria-label="anchor" href="#rubrary-090"></a></h2>
+<div class="section level3">
+<h3 id="general-0-9-0">General<a class="anchor" aria-label="anchor" href="#general-0-9-0"></a></h3>
+<ul><li>PCA improvements + associated vignettes</li>
+<li>scRNA integration assessment metrics</li>
+<li>GSEA barplot, GSEAsq density plot comparison, and associated helper functions</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-0-9-0">New<a class="anchor" aria-label="anchor" href="#new-0-9-0"></a></h3>
+<ul><li>
+<code>plot_GSEAsq_density</code>: plot categorical percentile rank comparison between two GSEA squared signatures</li>
+<li>
+<code>plot_PCA_biplot</code>: conventional biplot with loadings and standardized scores</li>
+<li>
+<code>plot_GSEA_barplot</code>: function-ified version of horizontal barplot originally made for Jack
+<ul><li>
+<code>format_GSEA_name</code>: cleans up MSigDB underscore + all caps names a bit</li>
+<li>
+<code>split_line</code>: splits long text to multiple lines based on number of char or lines</li>
+</ul></li>
+<li>
+<code>rotate_varimax</code>: Varimax rotation for prcomp output</li>
+<li>
+<code>assess_integration</code>: <code>run_LISI</code> but more general, incorporating <code><a href="https://satijalab.org/seurat/reference/MixingMetric.html" class="external-link">Seurat::MixingMetric</a></code> + <code><a href="https://rdrr.io/pkg/CellMixS/man/cms.html" class="external-link">CellMixS::cms</a></code>
+<ul><li>
+<code>run_LISI</code>: wrapper for <code>assess_integration</code> specific to <code>LISI</code>
+</li>
+<li>
+<code>run_MixingMetric</code>: wrapper for <code>assess_integration</code> specific to <code>MixingMetric</code>
+</li>
+<li>
+<code>run_CellMixS</code>: wrapper for <code>assess_integration</code> specific to <code>cms</code>
+</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improved-0-9-0">Improved<a class="anchor" aria-label="anchor" href="#improved-0-9-0"></a></h3>
+<ul><li>
+<code>run_PCA</code>: fix eigenvector / loadings distinction</li>
+<li>
+<code>plot_volcano</code>: rewritten terms + args to be more general and align better w/ <code>EnhancedVolcano</code> documentation</li>
+<li>
+<code>genes</code> functions: added <code>Mart</code> arg to functions that try to query BioMart
+<ul><li>
+<code>plot_PC_genes</code> -&gt; <code>plot_genes</code>, still defaults to filtering by PC genes but technically any gene list can be passed in to filter dataframe by</li>
+</ul></li>
+<li>
+<code>plot_waterfall</code>: a little smarter on where to place high/low value labels but still quite dumb</li>
+<li>
+<code>plot_scatter</code>: color by group, more text options</li>
+</ul></div>
+<div class="section level3">
+<h3 id="vignettes-0-9-0">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes-0-9-0"></a></h3>
+<ul><li>
+<code>PCA_Walkthrough</code>: based on Lindsey Smith’s PCA tutorial, a more step by step toy dataset for PCA including some of the math behind it</li>
+<li>
+<code>PCA_Quickstart</code>: very basic Palmer Penguin demonstration of plotting scripts + replication of Graeber Beltran PCA</li>
+<li>
+<code>DE_Genes</code> &amp; <code>GSEA</code>: previous combined tutorial nows plit into two</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.0" id="rubrary-080">Rubrary 0.8.0<a class="anchor" aria-label="anchor" href="#rubrary-080"></a></h2>
 <div class="section level3">
