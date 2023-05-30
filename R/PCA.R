@@ -431,7 +431,7 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
   return(scrplt)
 }
 
-#' Plot "proper" PCA biplot
+#' Plot PCA biplot
 #'
 #' For PCA SVD \eqn{X = USV^T}, uses standardized principal components for data points (\eqn{\bf{U}\sqrt{n - 1}}) and loadings (\eqn{\bf{VS}/\sqrt{n-1}}) and plots onto the same scale - a "proper" PCA biplot according to [this Stack Exchange thread](https://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot/141531) citing the [Gabriel 1971 paper on PCA biplots](https://doi.org/10.2307/2334381).
 #'

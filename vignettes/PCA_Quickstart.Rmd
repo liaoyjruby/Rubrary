@@ -108,21 +108,6 @@ Rubrary::plot_PCA(
 )
 ```
 
-```{r Beltran varimax scores}
-# Visualize scores
-Rubrary::plot_PCA(
-  df_pca = pca_vm$scores,
-  PCx = "V1", PCy = "V2",
-  anno = penguins,
-  annoname = "Sample_ID",
-  annotype = "species",
-  title = "Palmer Penguins PCA Scores (Varimax) - Species",
-  label = FALSE,
-  density = TRUE,
-  type = "Scores"
-)
-```
-
 # Palmer Penguins PCA
 
 Using `palmerpenguins` dataset [from Allison Horst](https://allisonhorst.github.io/palmerpenguins/).
@@ -237,3 +222,5 @@ Rubrary::plot_PCA(
   type = "Scores"
 )
 ```
+
+# References
