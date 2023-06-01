@@ -13,6 +13,8 @@ plot_GSEA_pathway_batch(
   rankcol_name = rankcol,
   hllab = "Pathway genes",
   hightolow = FALSE,
+  format_name = TRUE,
+  ignore_name = NULL,
   lab_low = NULL,
   lab_high = NULL,
   legendpos = c(0.5, 0.2),
@@ -37,6 +39,10 @@ plot_GSEA_pathway_batch(
 \item{hllab}{string; descriptor of highlighted genes}
 
 \item{hightolow}{logical; T for high values on left, low on right}
+
+\item{format_name}{logical; T to run pathway name through \code{Rubrary::format_GSEA_name}}
+
+\item{ignore_name}{char vector; phrases to exclude title case for in \code{Rubrary::format_GSEA_name}}
 
 \item{lab_low}{string; label for low rankcol values}
 

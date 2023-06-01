@@ -1,14 +1,16 @@
 utils::globalVariables(c(
-  "NES", "name", "ord", "pathway", "pos", "ticks", "zero"
+  "NES", "name", "ord", "pathway", "pos", "ticks", "zero",
+  "pct_rnk", "rnk", "sig", "signedlogp", "type"
 ))
 
 #' Format GSEA pathway name
 #'
 #' Strips prepended database abbreviation, changes underscores to spaces, and converts to title case.
 #'
-#' @param pw string; MSigDB pathway name
+#' @param pw string or char vector; MSigDB pathway names
 #' @param ignore char vector; terms to leave as all uppercase (ex. DNA, RNA) instead of title case
-#' @param split logical; (roughly) split long names into multiple line?
+#' @param source logical; T to append source in parens at end of name
+#' @param split logical; T to (roughly) split long names into multiple lines
 #' @param split_nchar integer; if `split = TRUE`, max number of characters per line
 #'
 #' @return Nicer looking title-case'd pathway name
@@ -17,15 +19,20 @@ utils::globalVariables(c(
 #' @examples
 #' format_GSEA_name("DATABASE_DNA_REPAIR")
 #' format_GSEA_name("DATABASE_DNA_REPAIR_THIS_IS_A_REALLY_LONG_PATHWAY", split = TRUE)
-format_GSEA_name <- function(pw, ignore = c("DNA", "RNA", "NADH", " IV "),
-                             split = FALSE, split_nchar = 40){
+format_GSEA_name <- function(
+    pw, ignore = NULL, source = FALSE, split = FALSE, split_nchar = 40){
+
   Rubrary::use_pkg("stringr")
+  ignore <- c("DNA", "RNA", "NADH", " IV ", ignore) # Predefined
   rep <- stats::setNames(toupper(ignore), tolower(ignore))
+  src <- sub("_.*", "", pw)
   name <- sub("(.*?)[_(.*?)]", "", pw) %>% # Remove GSEA source prefix
     gsub("_", " ", .) %>%
     tolower() %>%
     stringr::str_replace_all(rep) %>% # Like a vectorized gsub
     tools::toTitleCase()
+
+  if(source){ name <- paste0(name, " (", src, ")")}
   if(split){ name <- lapply(name, Rubrary::split_line, chars = split_nchar) }
   return(name)
 }
@@ -243,7 +250,7 @@ plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_n
     highlight = path_genes,
     lab_high = lab_high,
     lab_low = lab_low,
-    hllab = hllab,
+    hllab = hllab, otherlab = "Other genes",
     rankcol = rankcol,
     rankcol_name = rankcol_name,
     title = title,
@@ -292,6 +299,8 @@ plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_n
 #' @param rankcol_name string; descriptor of rankcol
 #' @param hllab string; descriptor of highlighted genes
 #' @param hightolow logical; T for high values on left, low on right
+#' @param format_name logical; T to run pathway name through `Rubrary::format_GSEA_name`
+#' @param ignore_name char vector; phrases to exclude title case for in `Rubrary::format_GSEA_name`
 #' @param lab_low string; label for low rankcol values
 #' @param lab_high string; label for high rankcol values
 #' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)
@@ -301,16 +310,25 @@ plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_n
 #'
 #' @return Gene set enrichment plot as ggplot object
 #' @export
-plot_GSEA_pathway_batch <- function(path_name, pthwys, sig, genecol = "gene", rankcol, rankcol_name = rankcol,
-                            hllab = "Pathway genes", hightolow = FALSE,
-                            lab_low = NULL, lab_high = NULL, legendpos = c(0.5, 0.2),
-                            label = length(pthwys[[path_name]]) < 50,
-                            sig_name = "", savedir = NULL){
-  if(!is.null(savedir)){
+plot_GSEA_pathway_batch <- function(
+    path_name, pthwys, sig, genecol = "gene", rankcol, rankcol_name = rankcol,
+    hllab = "Pathway genes", hightolow = FALSE, format_name = TRUE, ignore_name = NULL,
+    lab_low = NULL, lab_high = NULL, legendpos = c(0.5, 0.2),
+    label = length(pthwys[[path_name]]) < 50,
+    sig_name = "", savedir = NULL){
+
+  if(!is.null(savedir)){ # Automate save path
     sig_name <- if(sig_name != "") paste0(sig_name,"_")
-    savename = paste0(savedir,"/",sig_name, path_name, ".png")
+    savename <- paste0(savedir,"/",sig_name, path_name, ".png")
   } else {
-    savename = NULL
+    savename <- NULL
+  }
+
+  if(format_name){
+    plot_name <- Rubrary::format_GSEA_name(
+      path_name, ignore_name, source = T, split = T, split_nchar = 100)
+  } else {
+    plot_name <- path_name
   }
 
   Rubrary::plot_GSEA_pathway(
@@ -320,7 +338,7 @@ plot_GSEA_pathway_batch <- function(path_name, pthwys, sig, genecol = "gene", ra
     rankcol_name = rankcol_name,
     geneset = pthwys[[path_name]],
     label = label,
-    title = path_name,
+    title = plot_name,
     lab_low = lab_low,
     lab_high = lab_high,
     hllab = hllab,

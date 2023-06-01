@@ -1,3 +1,14 @@
+
+General
+
+New
+
+Improved
+- GSEA functions: improved name formatting for enrichment plot
+
+Vignettes
+
+
 # Rubrary 0.9.0
 
 ## General

@@ -2,7 +2,7 @@
 % Please edit documentation in R/PCA.R
 \name{plot_PCA_biplot}
 \alias{plot_PCA_biplot}
-\title{Plot "proper" PCA biplot}
+\title{Plot PCA biplot}
 \usage{
 plot_PCA_biplot(
   obj,

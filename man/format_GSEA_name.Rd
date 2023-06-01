@@ -6,17 +6,20 @@
 \usage{
 format_GSEA_name(
   pw,
-  ignore = c("DNA", "RNA", "NADH", " IV "),
+  ignore = NULL,
+  source = FALSE,
   split = FALSE,
   split_nchar = 40
 )
 }
 \arguments{
-\item{pw}{string; MSigDB pathway name}
+\item{pw}{string or char vector; MSigDB pathway names}
 
 \item{ignore}{char vector; terms to leave as all uppercase (ex. DNA, RNA) instead of title case}
 
-\item{split}{logical; (roughly) split long names into multiple line?}
+\item{source}{logical; T to append source in parens at end of name}
+
+\item{split}{logical; T to (roughly) split long names into multiple lines}
 
 \item{split_nchar}{integer; if \code{split = TRUE}, max number of characters per line}
 }
