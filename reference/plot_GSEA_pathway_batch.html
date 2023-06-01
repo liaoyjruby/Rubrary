@@ -69,6 +69,8 @@
 <span>  rankcol_name <span class="op">=</span> <span class="va">rankcol</span>,</span>
 <span>  hllab <span class="op">=</span> <span class="st">"Pathway genes"</span>,</span>
 <span>  hightolow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  format_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ignore_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lab_low <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lab_high <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  legendpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.2</span><span class="op">)</span>,</span>
@@ -110,6 +112,14 @@
 
 <dt>hightolow</dt>
 <dd><p>logical; T for high values on left, low on right</p></dd>
+
+
+<dt>format_name</dt>
+<dd><p>logical; T to run pathway name through <code><a href="format_GSEA_name.html">Rubrary::format_GSEA_name</a></code></p></dd>
+
+
+<dt>ignore_name</dt>
+<dd><p>char vector; phrases to exclude title case for in <code><a href="format_GSEA_name.html">Rubrary::format_GSEA_name</a></code></p></dd>
 
 
 <dt>lab_low</dt>
