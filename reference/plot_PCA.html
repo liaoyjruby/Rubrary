@@ -66,8 +66,9 @@
 <span>  PCx <span class="op">=</span> <span class="st">"PC1"</span>,</span>
 <span>  PCy <span class="op">=</span> <span class="st">"PC2"</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Scores"</span>, <span class="st">"Loadings"</span><span class="op">)</span>,</span>
-<span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  annoname <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span>  annolabel <span class="op">=</span> <span class="va">annoname</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  annotype <span class="op">=</span> <span class="st">"Batch"</span>,</span>
 <span>  annotype2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ellipse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -105,12 +106,16 @@
 <dd><p>c("Score", "Loading")</p></dd>
 
 
-<dt>label</dt>
-<dd><p>logical; T to label points</p></dd>
-
-
 <dt>annoname</dt>
 <dd><p>string; Colname in <code>anno</code> matching point name</p></dd>
+
+
+<dt>annolabel</dt>
+<dd><p>string; Colname in <code>anno</code> to label points by, defaults to <code>annoname</code></p></dd>
+
+
+<dt>label</dt>
+<dd><p>logical; T to label points</p></dd>
 
 
 <dt>annotype</dt>
@@ -174,6 +179,7 @@
 <span class="r-in"><span><span class="va">iris</span><span class="op">$</span><span class="va">Sample</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">PCA_iris</span> <span class="op">&lt;-</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="run_PCA.html">run_PCA</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ** Cumulative var. exp. &gt;= 80% at PC 2 (95.8%)</span>
+<span class="r-plt img"><img src="plot_PCA-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># Scores</span></span></span>
 <span class="r-in"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">plot_PCA</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  df_pca <span class="op">=</span> <span class="va">PCA_iris</span>,</span></span>
@@ -181,10 +187,9 @@
 <span class="r-in"><span>  annoname <span class="op">=</span> <span class="st">"Sample"</span>, annotype <span class="op">=</span> <span class="st">"Species"</span>,</span></span>
 <span class="r-in"><span>  title <span class="op">=</span> <span class="st">"Iris PCA Scores by Species"</span>,</span></span>
 <span class="r-in"><span>  subtitle <span class="op">=</span> <span class="st">"Centered &amp; scaled"</span>,</span></span>
-<span class="r-in"><span>  ellipse <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  density <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  ellipse <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot_PCA-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot_PCA-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># Loadings</span></span></span>
 <span class="r-in"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">plot_PCA</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  df_pca <span class="op">=</span> <span class="va">PCA_iris</span>,</span></span>
@@ -193,7 +198,7 @@
 <span class="r-in"><span>  subtitle <span class="op">=</span> <span class="st">"Centered &amp; scaled"</span>,</span></span>
 <span class="r-in"><span>  label <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plot_PCA-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="plot_PCA-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
