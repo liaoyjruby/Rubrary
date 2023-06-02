@@ -57,7 +57,7 @@ plot_PCA(
 
 \item{subtitle}{string; Subtitle for plot}
 
-\item{density}{logical; Show density plot along both axes}
+\item{density}{logical; Show density plot along both axes; requires group annotations to be provided}
 
 \item{savename}{string; File path to save plot under}
 
@@ -76,13 +76,22 @@ data(iris)
 iris$Sample = rownames(iris)
 PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]))
 # Scores
-Rubrary::plot_PCA(df_pca = PCA_iris,
+Rubrary::plot_PCA(
+  df_pca = PCA_iris,
   anno = iris[,c("Sample", "Species")],
   annoname = "Sample", annotype = "Species",
   title = "Iris PCA Scores by Species",
-  ellipse = TRUE)
+  subtitle = "Centered & scaled",
+  ellipse = TRUE,
+  density = TRUE
+)
 # Loadings
-Rubrary::plot_PCA(df_pca = PCA_iris,
-  type = "Loadings", title = "Iris PCA Loadings", label = TRUE)
+Rubrary::plot_PCA(
+  df_pca = PCA_iris,
+  type = "Loadings",
+  title = "Iris PCA Loadings",
+  subtitle = "Centered & scaled",
+  label = TRUE
+)
 
 }

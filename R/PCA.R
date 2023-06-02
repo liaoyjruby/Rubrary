@@ -133,7 +133,7 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' @param ks_pval c("none", "caption", "grob"); Display ks-pvalue as caption or grob
 #' @param title string; Plot title
 #' @param subtitle string; Subtitle for plot
-#' @param density logical; Show density plot along both axes
+#' @param density logical; Show density plot along both axes; requires group annotations to be provided
 #' @param highlight char vector; Specific points to shape differently & label
 #' @param colors char vector; Length should be number of unique `annotype`s
 #' @param savename string; File path to save plot under
@@ -147,14 +147,23 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' iris$Sample = rownames(iris)
 #' PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]))
 #' # Scores
-#' Rubrary::plot_PCA(df_pca = PCA_iris,
+#' Rubrary::plot_PCA(
+#'   df_pca = PCA_iris,
 #'   anno = iris[,c("Sample", "Species")],
 #'   annoname = "Sample", annotype = "Species",
 #'   title = "Iris PCA Scores by Species",
-#'   ellipse = TRUE)
+#'   subtitle = "Centered & scaled",
+#'   ellipse = TRUE,
+#'   density = TRUE
+#' )
 #' # Loadings
-#' Rubrary::plot_PCA(df_pca = PCA_iris,
-#'   type = "Loadings", title = "Iris PCA Loadings", label = TRUE)
+#' Rubrary::plot_PCA(
+#'   df_pca = PCA_iris,
+#'   type = "Loadings",
+#'   title = "Iris PCA Loadings",
+#'   subtitle = "Centered & scaled",
+#'   label = TRUE
+#' )
 #'
 plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2",
                      type = c("Scores", "Loadings"), label = FALSE,
@@ -236,6 +245,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2",
       labs(title = title,
            x = PCxlab,
            y = PCylab) +
+      {if (!is.null(subtitle)) labs(subtitle = subtitle)} +
       {if (label) ggrepel::geom_text_repel(label = df[, lab_type])} +
     theme_classic()
   } else {

@@ -5,6 +5,7 @@ New
 
 Improved
 - GSEA functions: improved name formatting for enrichment plot
+- `plot_PCA`: fixed subtitle for non-annotated plots (thanks Duncan :) )
 
 Vignettes
 
