@@ -355,6 +355,8 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2",
   }
 
   if (density && !is.null(anno)) {
+    Rubrary::use_pkg("ggExtra")
+
     if ((length(unique(df[, annotype])) == 2) && (ks_pval == "grob")) {
       plt <- plt + annotation_custom(grobX) + annotation_custom(grobY)
     }
