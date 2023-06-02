@@ -10,8 +10,9 @@ plot_PCA(
   PCx = "PC1",
   PCy = "PC2",
   type = c("Scores", "Loadings"),
-  label = FALSE,
   annoname = "Sample",
+  annolabel = annoname,
+  label = FALSE,
   annotype = "Batch",
   annotype2 = NULL,
   ellipse = FALSE,
@@ -37,9 +38,11 @@ plot_PCA(
 
 \item{type}{c("Score", "Loading")}
 
-\item{label}{logical; T to label points}
-
 \item{annoname}{string; Colname in \code{anno} matching point name}
+
+\item{annolabel}{string; Colname in \code{anno} to label points by, defaults to \code{annoname}}
+
+\item{label}{logical; T to label points}
 
 \item{annotype}{string; Colname in \code{anno} with info to color by}
 
@@ -82,8 +85,7 @@ Rubrary::plot_PCA(
   annoname = "Sample", annotype = "Species",
   title = "Iris PCA Scores by Species",
   subtitle = "Centered & scaled",
-  ellipse = TRUE,
-  density = TRUE
+  ellipse = TRUE
 )
 # Loadings
 Rubrary::plot_PCA(

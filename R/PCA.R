@@ -127,6 +127,7 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' @param type c("Score", "Loading")
 #' @param label logical; T to label points
 #' @param annoname string; Colname in `anno` matching point name
+#' @param annolabel string; Colname in `anno` to label points by, defaults to `annoname`
 #' @param annotype string; Colname in `anno` with info to color by
 #' @param annotype2 string; Colname in `anno` with info to change shape by
 #' @param ellipse logical; Draw `ggplot2::stat_ellipse` data ellipse w/ default params - this is NOT a confidence ellipse
@@ -153,8 +154,7 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #'   annoname = "Sample", annotype = "Species",
 #'   title = "Iris PCA Scores by Species",
 #'   subtitle = "Centered & scaled",
-#'   ellipse = TRUE,
-#'   density = TRUE
+#'   ellipse = TRUE
 #' )
 #' # Loadings
 #' Rubrary::plot_PCA(
@@ -165,15 +165,16 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #'   label = TRUE
 #' )
 #'
-plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2",
-                     type = c("Scores", "Loadings"), label = FALSE,
-                     annoname = "Sample", annotype = "Batch", annotype2 = NULL,
-                     ellipse = FALSE, ks_pval = c("none", "caption", "grob"),
-                     highlight = NULL, colors = NULL,
-                     title = NULL, subtitle = NULL, density = FALSE,
-                     savename = NULL, width = 8, height = 8) {
+plot_PCA <- function(
+    df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Scores", "Loadings"),
+    annoname = "Sample", annolabel = annoname, label = FALSE,
+    annotype = "Batch", annotype2 = NULL, ellipse = FALSE,
+    ks_pval = c("none", "caption", "grob"), highlight = NULL, colors = NULL,
+    title = NULL, subtitle = NULL, density = FALSE,
+    savename = NULL, width = 8, height = 8) {
   type <- match.arg(type)
   ks_pval <- match.arg(ks_pval)
+  annolabel <- ifelse(annolabel == annoname, type, annolabel)
   lab_type <- type
 
   if (is.character(df_pca)) { # PCA results as path to txt
@@ -246,7 +247,7 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2",
            x = PCxlab,
            y = PCylab) +
       {if (!is.null(subtitle)) labs(subtitle = subtitle)} +
-      {if (label) ggrepel::geom_text_repel(label = df[, lab_type])} +
+      {if (label) ggrepel::geom_text_repel(label = df[, lab_type], max.overlaps = Inf)} +
     theme_classic()
   } else {
     # Two groups, calc KS p-value for both PCx and PCy
@@ -339,10 +340,11 @@ plot_PCA <- function(df_pca, anno = NULL, PCx = "PC1", PCy = "PC2",
       {if (!is.null(subtitle)) labs(subtitle = subtitle)} +
       guides(color = guidetitle) + # Set title of legend
       theme_classic() +
-      {if (label) ggrepel::geom_text_repel(label = df[, type], max.overlaps = 30, color = "black")} +
+      {if (label) ggrepel::geom_text_repel(
+        label = df[, annolabel], max.overlaps = Inf, color = "black")} +
       {if (!all(is.null(highlight))) ggrepel::geom_text_repel(
-        aes(label = ifelse(Highlight == "HL", df[, type], "")),
-        color = "black", max.overlaps = 30, size = 3)}
+        aes(label = ifelse(Highlight == "HL", df[, annolabel], "")),
+        color = "black", max.overlaps = Inf, size = 3)}
   }
 
   if (!is.null(savename)) {
@@ -452,6 +454,7 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 #' @param PCy string; Component on y-axis
 #' @param anno df; Annotation info for observations
 #' @param annoname string; Colname in `anno` matching data points
+#' @param annolabel string; Colname in `anno` to label points by, defaults to `annoname`
 #' @param annotype string; Colname in `anno` for desired coloring
 #' @param label c("Both", "Loadings", "Scores", "None"); what points to label
 #' @param colors char vector; Length should be number of unique `annotype`s
