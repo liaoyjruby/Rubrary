@@ -49,8 +49,6 @@ plot_PCA_biplot(
 \item{height}{numeric; Saved plot height}
 
 \item{width}{numeric; Saved plot width}
-
-\item{annolabel}{string; Colname in \code{anno} to label points by, defaults to \code{annoname}}
 }
 \value{
 Biplot as \code{ggplot} object

@@ -454,7 +454,6 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 #' @param PCy string; Component on y-axis
 #' @param anno df; Annotation info for observations
 #' @param annoname string; Colname in `anno` matching data points
-#' @param annolabel string; Colname in `anno` to label points by, defaults to `annoname`
 #' @param annotype string; Colname in `anno` for desired coloring
 #' @param label c("Both", "Loadings", "Scores", "None"); what points to label
 #' @param colors char vector; Length should be number of unique `annotype`s
