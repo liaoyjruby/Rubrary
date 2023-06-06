@@ -2,7 +2,7 @@
 % Please edit documentation in R/GSEA.R
 \name{plot_GSEA_barplot}
 \alias{plot_GSEA_barplot}
-\title{Plot GSEA barplot}
+\title{Plot GSEA NES barplot}
 \usage{
 plot_GSEA_barplot(
   gsea_res,
@@ -11,16 +11,18 @@ plot_GSEA_barplot(
   n_pws = 5,
   pw_format = FALSE,
   pw_split = FALSE,
+  pw_source = TRUE,
+  pw_ignore = NULL,
   pw_size = 5,
   gsea2_res = NULL,
   gsea2_name = NULL,
   order2 = FALSE,
   ptrn2 = "stripe",
-  NES_cutoff = 1,
+  NES_cutoff = NULL,
   cols = c("firebrick", "darkblue"),
   title = NULL,
   savename = NULL,
-  width = 8,
+  width = 10,
   height = NULL
 )
 }
@@ -35,7 +37,11 @@ plot_GSEA_barplot(
 
 \item{pw_format}{logical; clean up pathway names?}
 
-\item{pw_split}{logical; split pathway names into multiple lines?}
+\item{pw_split}{logical; T to split pathway names into multiple lines}
+
+\item{pw_source}{logical; T to append pathway source in parenthesis}
+
+\item{pw_ignore}{char vector; list of terms to ignore for name formatting}
 
 \item{pw_size}{numeric; pathway name text size}
 
@@ -63,5 +69,5 @@ plot_GSEA_barplot(
 GSEA NES barplot as \code{ggplot} object
 }
 \description{
-Can plot NES of pathways from one GSEA result, or compare NES for chosen pathways between two GSEA results.
+Can plot barplot of NES of pathways from one GSEA result, or compare NES for chosen pathways between two GSEA results.
 }

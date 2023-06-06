@@ -1,6 +1,7 @@
 utils::globalVariables(c(
   "NES", "name", "ord", "pathway", "pos", "ticks", "zero",
-  "pct_rnk", "rnk", "sig", "signedlogp", "type"
+  "pct_rnk", "rnk", "sig", "signedlogp", "type",
+  "NES.x", "NES.y", "pw_y"
 ))
 
 #' Format GSEA pathway name
@@ -37,18 +38,21 @@ format_GSEA_name <- function(
   return(name)
 }
 
-#' Plot GSEA barplot
+#' Plot GSEA NES barplot
 #'
-#' Can plot NES of pathways from one GSEA result, or compare NES for chosen pathways between two GSEA results.
+#' Can plot barplot of NES of pathways from one GSEA result, or compare NES for chosen pathways between two GSEA results.
 #'
 #' @import ggplot2
+#' @import dplyr
 #'
 #' @param gsea_res dataframe; GSEA results w/ `pathway` and `NES` columns
 #' @param gsea_name string; description of GSEA results
 #' @param gsea_pws char vector; pathways in GSEA results to plot
 #' @param n_pws integer; if no pathways provided, top/bottom n pathways to plot
 #' @param pw_format logical; clean up pathway names?
-#' @param pw_split logical; split pathway names into multiple lines?
+#' @param pw_split logical; T to split pathway names into multiple lines
+#' @param pw_source logical; T to append pathway source in parenthesis
+#' @param pw_ignore char vector; list of terms to ignore for name formatting
 #' @param pw_size numeric; pathway name text size
 #' @param gsea2_res dataframe; 2nd GSEA results w/ `pathway` and `NES` columns
 #' @param gsea2_name string; description of 2nd GSEA results
@@ -64,63 +68,89 @@ format_GSEA_name <- function(
 #' @return GSEA NES barplot as `ggplot` object
 #' @export
 #'
-plot_GSEA_barplot <- function(gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_pws = 5,
-                              pw_format = FALSE, pw_split = FALSE, pw_size = 5,
-                              gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "stripe",
-                              NES_cutoff = 1, cols = c("firebrick", "darkblue"), title = NULL,
-                              savename = NULL, width = 8, height = NULL){
+plot_GSEA_barplot <- function(
+    gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_pws = 5,
+    pw_format = FALSE, pw_split = FALSE, pw_source = TRUE, pw_ignore = NULL, pw_size = 5,
+    gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "stripe",
+    NES_cutoff = NULL, cols = c("firebrick", "darkblue"), title = NULL,
+    savename = NULL, width = 10, height = NULL){
   #### CLEAN
   if(is.null(gsea_pws)){
-    gsea_pws <- c(gsea_res[order(gsea_res$NES, decreasing = T),]$pathway[1:n_pws],
-                  gsea_res[order(gsea_res$NES, decreasing = F),]$pathway[1:n_pws])
+    if(is.null(gsea2_res)){
+      gsea_pws <- c(gsea_res[order(gsea_res$NES, decreasing = T),]$pathway[1:n_pws],
+                    gsea_res[order(gsea_res$NES, decreasing = F),]$pathway[1:n_pws])
+    } else {
+      gsea_merge <- inner_join(gsea_res, gsea2_res, by = "pathway") %>%
+        filter(!is.na(NES.x), !is.na(NES.y))
+      NES <- ifelse(order2, "NES.y", "NES.x")
+      gsea_pws <- c(gsea_merge[order(gsea_merge[,NES], decreasing = T),]$pathway[1:n_pws],
+                    gsea_merge[order(gsea_merge[,NES], decreasing = F),]$pathway[1:n_pws])
+    }
     n_pws <- 2*n_pws
   }
 
   GSEA <- gsea_res %>%
     filter(pathway %in% gsea_pws) %>%
     arrange(desc(NES)) %>%
-    mutate(name = gsea_name)
+    mutate(name = gsea_name,
+           pos = factor(ifelse(NES > 0, "Pos", "Neg"), levels = c("Pos", "Neg")))
 
   pw_order <- factor(GSEA$pathway, levels = GSEA$pathway)
-  n_pos <- nrow(GSEA[GSEA$NES > 0,])
-  n_pws <- length(GSEA$pathway)
-  n_res <- 1
+  n_pos <- nrow(GSEA[GSEA$NES > 0,]) # Number of positive pathways
+  n_pws <- length(GSEA$pathway) # Number of pathways
+  n_res <- 1 # Number of results
 
-  if(!is.null(gsea2_res)){ # 2nd GSEA results
+  if(!is.null(gsea2_res)){ # 2nd GSEA results, if applicable
     Rubrary::use_pkg("ggpattern")
     gsea2_res <- gsea2_res %>%
       filter(pathway %in% gsea_pws) %>%
       arrange(desc(NES)) %>%
-      mutate(name = gsea2_name)
+      mutate(name = gsea2_name) %>%
+      left_join(., GSEA[, c("pathway", "pos")], by = "pathway")
+    GSEA <- rbind(GSEA, gsea2_res)
     if(order2){ # Order by 2nd GSEA results NES instead
       pw_order <- factor(gsea2_res$pathway, levels = gsea2_res$pathway)
       n_pos <- nrow(gsea2_res[gsea2_res$NES > 0,])
+      pos_order <- factor(ifelse(gsea2_res$NES > 0, "Pos", "Neg"), levels = c("Pos", "Neg"))
+      GSEA$pos <- c(pos_order, pos_order) # Duplicate GSEA2 order for both GSEA1 and GSEA2 pws
     }
-    GSEA <- rbind(GSEA, gsea2_res)
     n_res = 2
   }
 
   GSEA <- GSEA %>%
-    mutate(pos = factor(ifelse(NES > 0, "Pos", "Neg"), levels = c("Pos", "Neg")),
-           name = factor(name, levels = c(gsea2_name, gsea_name)),
+    mutate(name = factor(name, levels = c(gsea2_name, gsea_name)),
            pathway = factor(pathway, levels = pw_order)) %>%
     arrange(pathway) %>%
+    # Pathway name position depending on 0/neg min if pos, 0/pos max if neg
+    group_by(pathway) %>%
+    mutate(pw_y = ifelse(all(pos == "Pos") && min(NES) < 0, min(NES), 0),
+           pw_y = ifelse(all(pos == "Neg") && max(NES) > 0, max(NES), 0)) %>%
+    ungroup(pathway) %>%
     # "Pseudo" discrete scale - axis separates pos/neg NES pws so leave a gap
     mutate(ord = c(rep(1:n_pos, each = n_res),
                    rep((n_pos + 2):(length(unique(pathway))+1), each = n_res)))
   if(pw_format){
-    GSEA$pw_name <- format_GSEA_name(GSEA$pathway, split = pw_split)
+    GSEA$pw_name <- Rubrary::format_GSEA_name(
+      pw = GSEA$pathway,
+      ignore = pw_ignore,
+      source = pw_source,
+      split = pw_split)
   } else {
     GSEA$pw_name <- GSEA$pathway
   }
   pw_labs <- c(GSEA$pw_name[1:n_pos], "", GSEA$pw_name[(n_pos+1):length(pw_order)])
 
   #### PLOT
-  pseud_0 = n_pos + 0.75 # Midpoint in pseudofactor
-  pseud_ord = c(1:n_pos, pseud_0, (n_pos+2):(length(pw_order)+1)) # Pseudo-order /w midpoint
-  # Tick frame - infer from plot?
+  pseud_0 <- n_pos + 0.75 # Midpoint in pseudofactor
+  pseud_ord <- c(1:n_pos, pseud_0, (n_pos+2):(length(pw_order)+1)) # Pseudo-order /w midpoint
+  # Tick frame - calc from max/min
   # https://stackoverflow.com/questions/17753101/center-x-and-y-axis-with-ggplot2
-  tick_frame <- data.frame(ticks = seq(-2, 2, length.out = 5), zero = pseud_0)
+  NES_max_int <- round(max(GSEA$NES))
+  NES_min_int <- round(min(GSEA$NES))
+  tick_frame <- data.frame(
+    ticks = seq(NES_min_int, NES_max_int,
+                length.out = abs(NES_min_int) + abs(NES_max_int) + 1),
+    zero = pseud_0)
 
   plt <- ggplot(GSEA, aes(x = ord, y = NES)) +
     xlab("NES") +
@@ -147,13 +177,13 @@ plot_GSEA_barplot <- function(gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_p
     # NES tick values
     geom_label(data = tick_frame, aes(x = zero, y = ticks, label = ticks),
                vjust = 1.75, size = 3.5, label.size = 0., label.padding = unit(0.1, "lines")) +
-    # Pathway names next to ticks - make conditional based on if paired pws have same sign?
+    # Pathway names next to ticks
     # NES positive
-    geom_text(data = GSEA[GSEA$pos == "Pos",], aes(x = ord, y = 0),
+    geom_text(data = GSEA[GSEA$pos == "Pos",], aes(x = ord, y = pw_y),
               label = GSEA[GSEA$pos == "Pos",]$pw_name, size = pw_size,
               hjust = 1, nudge_y = -0.075) +
     # NES negative
-    geom_text(data = GSEA[GSEA$pos == "Neg",], aes(x = ord, y = 0),
+    geom_text(data = GSEA[GSEA$pos == "Neg",], aes(x = ord, y = pw_y),
               label = GSEA[GSEA$pos == "Neg",]$pw_name, size = pw_size,
               hjust = 0, nudge_y = 0.075)
 
@@ -176,10 +206,10 @@ plot_GSEA_barplot <- function(gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_p
     scale_fill_manual(values = cols)
   #### NES = +-1 guidelines - make conditional segment/hline if paired not corresponding?
   plt <- plt +
-    geom_segment(aes(x = 0.5, xend = pseud_0 - 0.25,
-                     y = NES_cutoff, yend = NES_cutoff), linetype = "dashed") +
-    geom_segment(aes(x = pseud_0 + 0.75, xend = max(pseud_ord) + 0.5,
-                     y = -1 * NES_cutoff, yend = -1 * NES_cutoff), linetype = "dashed") +
+    {if (!is.null(NES_cutoff)) geom_segment(
+      aes(x = 0.5, xend = pseud_0 - 0.25, y = NES_cutoff, yend = NES_cutoff), linetype = "dashed")} +
+    {if (!is.null(NES_cutoff)) geom_segment(
+      aes(x = pseud_0 + 0.75, xend = max(pseud_ord) + 0.5, y = -1 * NES_cutoff, yend = -1 * NES_cutoff), linetype = "dashed")} +
     # geom_hline(yintercept = -1, linetype = "dashed") +
 
     #### MISC
@@ -187,7 +217,7 @@ plot_GSEA_barplot <- function(gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_p
     labs(
       title = title,
     ) +
-    theme_classic() + coord_flip() +
+    theme_classic() + coord_flip(clip = "off") +
     theme(legend.title = element_blank(),
           legend.text = element_text(size = 15),
           axis.title.x = element_blank(),

@@ -6,13 +6,16 @@ utils::globalVariables(c(
 #' Run RRHO analysis
 #'
 #' Inference on the amount of agreement in two sorted lists using the Rank-Rank Hypergeometric Overlap test.
-#' Outputs RRHO results, hypermatrix heatmap, rank rank scatter, metric scatter
+#' Outputs RRHO results, hypermatrix heatmap, rank rank scatter, metric scatter.
+#'
+#' Arrows in unicode are `\u2193` (down) and `\u2191` (up) if you want to be cool in your low/high descriptions B)
 #'
 #' @import ggplot2
 #' @import patchwork
+#' @encoding UTF-8
 #'
-#' @param sig1 string/dataframe; path or df for sig1, with cols "key" and "metric1"
-#' @param sig2 string/dataframe; path or df for sig2, with cols "key" and "metric2"
+#' @param sig1 string/dataframe; path or df for sig1, with cols `key` and `metric1`
+#' @param sig2 string/dataframe; path or df for sig2, with cols `key` and `metric2`
 #' @param sig1_name string; description of sig1
 #' @param sig2_name string; description of sig2
 #' @param sig1_low string; description of low sig1 values
@@ -44,10 +47,6 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
                      waterfall = TRUE, scatter = TRUE){
   Rubrary::use_pkg("RRHO")
 
-  if(is.null(steps)){
-    defaultStepSize <- utils::getFromNamespace("defaultStepSize", "RRHO")
-  }
-
   hm_method <- match.arg(hm_method)
 
   # Load & clean individual sigs
@@ -75,6 +74,11 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
   message(paste0("1) ", sig1_name, " genes: ", nrow(sig1)))
   message(paste0("2) ", sig2_name, " genes: ", nrow(sig2)))
   message(paste0("Intersect genes: ", nrow(merged)))
+
+  if(is.null(steps)){
+    defaultStepSize <- utils::getFromNamespace("defaultStepSize", "RRHO")
+    steps <- defaultStepSize(list1 = sig1, list2 = sig2)
+  }
 
   if(webtool){
     df_web <- data.frame(
