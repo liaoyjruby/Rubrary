@@ -1,15 +1,9 @@
+# Rubrary 0.9.1
 
-General
-
-New
-
-Improved
+## Improved
 - GSEA functions: improved name formatting for enrichment plot
 - `plot_PCA`: fixed subtitle for non-annotated plots (thanks Duncan :) )
 - `plot_GSEA_barplot`: formatting flexibility improvements
-
-Vignettes
-
 
 # Rubrary 0.9.0
 
