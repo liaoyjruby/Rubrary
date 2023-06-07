@@ -25,13 +25,19 @@ format_GSEA_name <- function(
 
   Rubrary::use_pkg("stringr")
   ignore <- c("DNA", "RNA", "NADH", " IV ", ignore) # Predefined
+
   rep <- stats::setNames(toupper(ignore), tolower(ignore))
   src <- sub("_.*", "", pw)
+  first_cap <- function(x) {
+    substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+    return(x)
+  }
   name <- sub("(.*?)[_(.*?)]", "", pw) %>% # Remove GSEA source prefix
     gsub("_", " ", .) %>%
     tolower() %>%
     stringr::str_replace_all(rep) %>% # Like a vectorized gsub
-    tools::toTitleCase()
+    tools::toTitleCase() %>%
+    first_cap() # Always capitalize first letter
 
   if(source){ name <- paste0(name, " (", src, ")")}
   if(split){ name <- lapply(name, Rubrary::split_line, chars = split_nchar) }
@@ -58,8 +64,9 @@ format_GSEA_name <- function(
 #' @param gsea2_name string; description of 2nd GSEA results
 #' @param order2 logical; order pathways by NES of 2nd GSEA results?
 #' @param ptrn2 string; `ggpattern` pattern arg: 'stripe', 'crosshatch', 'point', 'circle', 'none'
+#' @param colors_alt logical; if two GSEA results, diff colors for GSEA1 and GSEA2 instead of diff colors for positive or negative
 #' @param NES_cutoff numeric; value to draw NES cutoff line at
-#' @param cols vector; `cols[1]` for positive bar color, `cols[2]` for negative bar color
+#' @param colors vector; `colors[1]` for positive bar color, `colors[2]` for negative bar color
 #' @param title string; plot title
 #' @param savename string; file path to save plot under
 #' @param width numeric; plot width
@@ -72,7 +79,7 @@ plot_GSEA_barplot <- function(
     gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_pws = 5,
     pw_format = FALSE, pw_split = FALSE, pw_source = TRUE, pw_ignore = NULL, pw_size = 5,
     gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "stripe",
-    NES_cutoff = NULL, cols = c("firebrick", "darkblue"), title = NULL,
+    NES_cutoff = NULL, colors = c("firebrick", "darkblue"), colors_alt = FALSE, title = NULL,
     savename = NULL, width = 10, height = NULL){
   #### CLEAN
   if(is.null(gsea_pws)){
@@ -138,7 +145,7 @@ plot_GSEA_barplot <- function(
   } else {
     GSEA$pw_name <- GSEA$pathway
   }
-  pw_labs <- c(GSEA$pw_name[1:n_pos], "", GSEA$pw_name[(n_pos+1):length(pw_order)])
+  pw_labs <- c(GSEA$pw_name[1:n_pos], "NES", GSEA$pw_name[(n_pos+1):length(pw_order)])
 
   #### PLOT
   pseud_0 <- n_pos + 0.75 # Midpoint in pseudofactor
@@ -153,9 +160,9 @@ plot_GSEA_barplot <- function(
     zero = pseud_0)
 
   plt <- ggplot(GSEA, aes(x = ord, y = NES)) +
-    xlab("NES") +
     #### AXES
-    geom_vline(xintercept = pseud_0) + # NES / x-axis
+    geom_segment(aes(y = NES_min_int - 0.25, yend = NES_max_int + 0.25, # NES / x-axis
+                     x = pseud_0, xend = pseud_0)) +
     geom_segment(aes(x = 0.25, xend = pseud_0, # Pathway / y-axis, pos side
                      y = 0, yend = 0)) +
     geom_segment(aes(y = 0, yend = 0, # Pathway / y-axis, neg side
@@ -185,17 +192,22 @@ plot_GSEA_barplot <- function(
     # NES negative
     geom_text(data = GSEA[GSEA$pos == "Neg",], aes(x = ord, y = pw_y),
               label = GSEA[GSEA$pos == "Neg",]$pw_name, size = pw_size,
-              hjust = 0, nudge_y = 0.075)
+              hjust = 0, nudge_y = 0.075) +
+    # "NES" annotation
+    geom_text(aes(x = pseud_0, y = NES_min_int - 0.25), label = "NES", size = 5,
+              hjust = 1, nudge_y = -0.075)
 
   #### BARPLOT
   if(!is.null(gsea2_res)){ # 2nd GSEA
+    fill <- ifelse(colors_alt, "name", "pos")
     plt <- plt +
-      ggpattern::geom_bar_pattern(aes(x = ord, y = NES, group = name, pattern = name, fill = pos),
+      ggpattern::geom_bar_pattern(data = GSEA,
+                                  aes(x = ord, y = NES, group = name, pattern = name, fill = .data[[fill]]),
                                   stat = "identity", position = position_dodge(), color = "black",
                                   pattern_fill = "white", pattern_color = "white",
                                   pattern_spacing = 0.01) +
       ggpattern::scale_pattern_manual(values = c(ptrn2, "none")) +
-      ggpattern::scale_pattern_color_manual(values = cols[1])
+      ggpattern::scale_pattern_color_manual(values = colors[1])
   } else {
     plt <- plt +
       geom_bar(aes(fill = pos),
@@ -203,17 +215,18 @@ plot_GSEA_barplot <- function(
   }
 
   plt <- plt +
-    scale_fill_manual(values = cols)
+    scale_fill_manual(values = colors)
   #### NES = +-1 guidelines - make conditional segment/hline if paired not corresponding?
   plt <- plt +
     {if (!is.null(NES_cutoff)) geom_segment(
       aes(x = 0.5, xend = pseud_0 - 0.25, y = NES_cutoff, yend = NES_cutoff), linetype = "dashed")} +
     {if (!is.null(NES_cutoff)) geom_segment(
-      aes(x = pseud_0 + 0.75, xend = max(pseud_ord) + 0.5, y = -1 * NES_cutoff, yend = -1 * NES_cutoff), linetype = "dashed")} +
+      aes(x = pseud_0 + 0.75, xend = max(pseud_ord) + 0.5, y = -1 * NES_cutoff, yend = -1 * NES_cutoff),
+      linetype = "dashed")} +
     # geom_hline(yintercept = -1, linetype = "dashed") +
 
     #### MISC
-    guides(fill = "none") +
+    {if(!colors_alt) guides(fill = "none")} +
     labs(
       title = title,
     ) +
@@ -221,7 +234,8 @@ plot_GSEA_barplot <- function(
     theme(legend.title = element_blank(),
           legend.text = element_text(size = 15),
           axis.title.x = element_blank(),
-          axis.title.y = element_text(angle = 0, vjust = 0.525, size = 15), # "NES" annotation
+          axis.title.y = element_blank(),
+          # axis.title.y = element_text(angle = 0, vjust = 0.525, size = 15), # "NES" annotation
           axis.text = element_blank(),
           axis.ticks = element_blank(),
           axis.line = element_blank())
