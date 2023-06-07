@@ -20,7 +20,6 @@ plot_GSEA_barplot(
   ptrn2 = "stripe",
   NES_cutoff = NULL,
   colors = c("firebrick", "darkblue"),
-  colors_alt = FALSE,
   title = NULL,
   savename = NULL,
   width = 10,
@@ -57,8 +56,6 @@ plot_GSEA_barplot(
 \item{NES_cutoff}{numeric; value to draw NES cutoff line at}
 
 \item{colors}{vector; \code{colors[1]} for positive bar color, \code{colors[2]} for negative bar color}
-
-\item{colors_alt}{logical; if two GSEA results, diff colors for GSEA1 and GSEA2 instead of diff colors for positive or negative}
 
 \item{title}{string; plot title}
 

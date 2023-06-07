@@ -64,7 +64,6 @@ format_GSEA_name <- function(
 #' @param gsea2_name string; description of 2nd GSEA results
 #' @param order2 logical; order pathways by NES of 2nd GSEA results?
 #' @param ptrn2 string; `ggpattern` pattern arg: 'stripe', 'crosshatch', 'point', 'circle', 'none'
-#' @param colors_alt logical; if two GSEA results, diff colors for GSEA1 and GSEA2 instead of diff colors for positive or negative
 #' @param NES_cutoff numeric; value to draw NES cutoff line at
 #' @param colors vector; `colors[1]` for positive bar color, `colors[2]` for negative bar color
 #' @param title string; plot title
@@ -79,7 +78,7 @@ plot_GSEA_barplot <- function(
     gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_pws = 5,
     pw_format = FALSE, pw_split = FALSE, pw_source = TRUE, pw_ignore = NULL, pw_size = 5,
     gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "stripe",
-    NES_cutoff = NULL, colors = c("firebrick", "darkblue"), colors_alt = FALSE, title = NULL,
+    NES_cutoff = NULL, colors = c("firebrick", "darkblue"), title = NULL,
     savename = NULL, width = 10, height = NULL){
   #### CLEAN
   if(is.null(gsea_pws)){
@@ -160,15 +159,6 @@ plot_GSEA_barplot <- function(
     zero = pseud_0)
 
   plt <- ggplot(GSEA, aes(x = ord, y = NES)) +
-    #### AXES
-    geom_segment(aes(y = NES_min_int - 0.25, yend = NES_max_int + 0.25, # NES / x-axis
-                     x = pseud_0, xend = pseud_0)) +
-    geom_segment(aes(x = 0.25, xend = pseud_0, # Pathway / y-axis, pos side
-                     y = 0, yend = 0)) +
-    geom_segment(aes(y = 0, yend = 0, # Pathway / y-axis, neg side
-                     x = pseud_0 + 0.5, xend = max(pseud_ord) + 0.75)) +
-    scale_x_reverse(breaks = pseud_ord,
-                    labels = pw_labs) +
     #### TICKS
     ## NES
     geom_segment(data = tick_frame,
@@ -199,15 +189,20 @@ plot_GSEA_barplot <- function(
 
   #### BARPLOT
   if(!is.null(gsea2_res)){ # 2nd GSEA
-    fill <- ifelse(colors_alt, "name", "pos")
-    plt <- plt +
-      ggpattern::geom_bar_pattern(data = GSEA,
-                                  aes(x = ord, y = NES, group = name, pattern = name, fill = .data[[fill]]),
-                                  stat = "identity", position = position_dodge(), color = "black",
-                                  pattern_fill = "white", pattern_color = "white",
-                                  pattern_spacing = 0.01) +
-      ggpattern::scale_pattern_manual(values = c(ptrn2, "none")) +
-      ggpattern::scale_pattern_color_manual(values = colors[1])
+    if(ptrn2 == "none"){ # No pattern
+      plt <- plt +
+        geom_bar(aes(x = ord, y = NES, group = name, fill = name),
+                 stat = "identity", position = position_dodge())
+    } else {
+      plt <- plt +
+        ggpattern::geom_bar_pattern(data = GSEA,
+                                    aes(x = ord, y = NES, group = name, pattern = name, fill = pos),
+                                    stat = "identity", position = position_dodge(), color = "black",
+                                    pattern_fill = "white", pattern_color = "white",
+                                    pattern_spacing = 0.01) +
+        ggpattern::scale_pattern_manual(values = c(ptrn2, "none")) +
+        ggpattern::scale_pattern_color_manual(values = colors[1])
+    }
   } else {
     plt <- plt +
       geom_bar(aes(fill = pos),
@@ -224,9 +219,17 @@ plot_GSEA_barplot <- function(
       aes(x = pseud_0 + 0.75, xend = max(pseud_ord) + 0.5, y = -1 * NES_cutoff, yend = -1 * NES_cutoff),
       linetype = "dashed")} +
     # geom_hline(yintercept = -1, linetype = "dashed") +
-
+    #### AXES
+    geom_segment(aes(y = NES_min_int - 0.25, yend = NES_max_int + 0.25, # NES / x-axis
+                     x = pseud_0, xend = pseud_0)) +
+    geom_segment(aes(x = 0.25, xend = pseud_0, # Pathway / y-axis, pos side
+                     y = 0, yend = 0)) +
+    geom_segment(aes(y = 0, yend = 0, # Pathway / y-axis, neg side
+                     x = pseud_0 + 0.75, xend = max(pseud_ord) + 0.75)) +
+    scale_x_reverse(breaks = pseud_ord,
+                    labels = pw_labs) +
     #### MISC
-    {if(!colors_alt) guides(fill = "none")} +
+    {if(ptrn2 != "none") guides(fill = "none")} +
     labs(
       title = title,
     ) +
