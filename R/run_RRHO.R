@@ -68,7 +68,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
   merged$rank.1 <- 1:nrow(merged)
   merged <- merged[order(merged[,paste0(metric2,".2")], decreasing = TRUE),]
   merged$rank.2 <- 1:nrow(merged)
-  merged <- merged[c(key, "rank.1", "rank.2", paste0(metric1,".1"), paste0(metric1,".2"))]
+  merged <- merged[c(key, "rank.1", "rank.2", paste0(metric1,".1"), paste0(metric2,".2"))]
   merged <- merged[order(merged$rank.1),]
 
   message(paste0("1) ", sig1_name, " genes: ", nrow(sig1)))
