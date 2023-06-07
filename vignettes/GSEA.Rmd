@@ -127,7 +127,7 @@ Rubrary::plot_GSEA_barplot(
   gsea_res = gsea_results,
   n_pws = 5, NES_cutoff = 1.5,
   pw_format = TRUE,
-  cols = c("red", "blue"),
+  colors = c("red", "blue"),
   title = "Airway GSEA"
 )
 ```
