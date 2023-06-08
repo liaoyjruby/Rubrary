@@ -54,7 +54,7 @@ format_GSEA_name <- function(
 #' @param gsea_res dataframe; GSEA results w/ `pathway` and `NES` columns
 #' @param gsea_name string; description of GSEA results
 #' @param gsea_pws char vector; pathways in GSEA results to plot
-#' @param n_pws integer; if no pathways provided, top/bottom n pathways to plot
+#' @param n_pws integer; if no pathways provided, top/bottom n pathways (ordered by NES) to plot
 #' @param pw_format logical; clean up pathway names?
 #' @param pw_split logical; T to split pathway names into multiple lines
 #' @param pw_source logical; T to append pathway source in parenthesis
@@ -78,7 +78,7 @@ format_GSEA_name <- function(
 plot_GSEA_barplot <- function(
     gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_pws = 5,
     pw_format = FALSE, pw_split = FALSE, pw_source = TRUE, pw_ignore = NULL, pw_size = 5,
-    gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "stripe",
+    gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "none",
     NES_cutoff = NULL, sig_cutoff = NULL, colors = c("firebrick", "darkblue"), title = NULL,
     savename = NULL, width = 10, height = NULL){
   #### CLEAN
@@ -149,9 +149,9 @@ plot_GSEA_barplot <- function(
 
   # Manage significance alpha
   if(!is.null(sig_cutoff)){ # Sig cutoff provided
-    GSEA$sig_alpha <- ifelse((GSEA[,sig_cutoff[1]] > sig_cutoff[2]), 0.5, 1)
+    GSEA$sig_alpha <- ifelse((GSEA[,sig_cutoff[1]] > as.numeric(sig_cutoff[2])), 0.5, 1)
     # Use pattern as significance indicator instead of alpha
-    GSEA$ptrn <- ifelse((GSEA[,sig_cutoff[1]] > sig_cutoff[2]), ptrn2, "none")
+    GSEA$ptrn <- ifelse((GSEA[,sig_cutoff[1]] >  as.numeric(sig_cutoff[2])), ptrn2, "none")
     if(ptrn2 != "none"){
       GSEA$sig_alpha <- 1
     }

@@ -17,7 +17,7 @@ plot_GSEA_barplot(
   gsea2_res = NULL,
   gsea2_name = NULL,
   order2 = FALSE,
-  ptrn2 = "stripe",
+  ptrn2 = "none",
   NES_cutoff = NULL,
   sig_cutoff = NULL,
   colors = c("firebrick", "darkblue"),
@@ -34,7 +34,7 @@ plot_GSEA_barplot(
 
 \item{gsea_pws}{char vector; pathways in GSEA results to plot}
 
-\item{n_pws}{integer; if no pathways provided, top/bottom n pathways to plot}
+\item{n_pws}{integer; if no pathways provided, top/bottom n pathways (ordered by NES) to plot}
 
 \item{pw_format}{logical; clean up pathway names?}
 

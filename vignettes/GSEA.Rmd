@@ -123,11 +123,13 @@ fgsea::plotGseaTable(
 Using `Rubrary::plot_GSEA_barplot` function - simpler visualization of GSEA NES values but a bit nicer looking?
 
 ```{r plot_GSEA_barplot, fig.height=5, fig.width=14}
+debugonce(Rubrary::plot_GSEA_barplot)
 Rubrary::plot_GSEA_barplot(
   gsea_res = gsea_results,
-  n_pws = 5, NES_cutoff = 1.5,
+  gsea_pws = top_pws,
+  NES_cutoff = 1.5,
+  sig_cutoff = c("pval", 0.05),
   pw_format = TRUE,
-  colors = c("red", "blue"),
   title = "Airway GSEA"
 )
 ```
