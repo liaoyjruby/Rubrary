@@ -1,3 +1,7 @@
+
+Improved
+- `plot_GSEA_barplot`: `sig_cutoff` format by p value significance parameter
+
 # Rubrary 0.9.1
 
 ## Improved

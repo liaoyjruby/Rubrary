@@ -19,6 +19,7 @@ plot_GSEA_barplot(
   order2 = FALSE,
   ptrn2 = "stripe",
   NES_cutoff = NULL,
+  sig_cutoff = NULL,
   colors = c("firebrick", "darkblue"),
   title = NULL,
   savename = NULL,
@@ -54,6 +55,8 @@ plot_GSEA_barplot(
 \item{ptrn2}{string; \code{ggpattern} pattern arg: 'stripe', 'crosshatch', 'point', 'circle', 'none'}
 
 \item{NES_cutoff}{numeric; value to draw NES cutoff line at}
+
+\item{sig_cutoff}{vector; \code{sig_cutoff[1]} is colname of significance values ("pval" or "padj"), \code{sig_cutoff[2]} is numeric cutoff value: if higher than this value, alpha will be 0.5. Ex. \code{sig_cutoff = c("pval", 0.05)} or \code{sig_cutoff = c("padj", 0.1)}}
 
 \item{colors}{vector; \code{colors[1]} for positive bar color, \code{colors[2]} for negative bar color}
 

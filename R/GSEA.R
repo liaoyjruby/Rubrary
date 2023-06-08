@@ -65,6 +65,7 @@ format_GSEA_name <- function(
 #' @param order2 logical; order pathways by NES of 2nd GSEA results?
 #' @param ptrn2 string; `ggpattern` pattern arg: 'stripe', 'crosshatch', 'point', 'circle', 'none'
 #' @param NES_cutoff numeric; value to draw NES cutoff line at
+#' @param sig_cutoff vector; `sig_cutoff[1]` is colname of significance values ("pval" or "padj"), `sig_cutoff[2]` is numeric cutoff value: if higher than this value, alpha will be 0.5. Ex. `sig_cutoff = c("pval", 0.05)` or `sig_cutoff = c("padj", 0.1)`
 #' @param colors vector; `colors[1]` for positive bar color, `colors[2]` for negative bar color
 #' @param title string; plot title
 #' @param savename string; file path to save plot under
@@ -78,7 +79,7 @@ plot_GSEA_barplot <- function(
     gsea_res, gsea_name = "GSEA", gsea_pws = NULL, n_pws = 5,
     pw_format = FALSE, pw_split = FALSE, pw_source = TRUE, pw_ignore = NULL, pw_size = 5,
     gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "stripe",
-    NES_cutoff = NULL, colors = c("firebrick", "darkblue"), title = NULL,
+    NES_cutoff = NULL, sig_cutoff = NULL, colors = c("firebrick", "darkblue"), title = NULL,
     savename = NULL, width = 10, height = NULL){
   #### CLEAN
   if(is.null(gsea_pws)){
@@ -107,7 +108,6 @@ plot_GSEA_barplot <- function(
   n_res <- 1 # Number of results
 
   if(!is.null(gsea2_res)){ # 2nd GSEA results, if applicable
-    Rubrary::use_pkg("ggpattern")
     gsea2_res <- gsea2_res %>%
       filter(pathway %in% gsea_pws) %>%
       arrange(desc(NES)) %>%
@@ -144,9 +144,27 @@ plot_GSEA_barplot <- function(
   } else {
     GSEA$pw_name <- GSEA$pathway
   }
+  # Pathway label w/ NES axis label in the middle
   pw_labs <- c(GSEA$pw_name[1:n_pos], "NES", GSEA$pw_name[(n_pos+1):length(pw_order)])
 
-  #### PLOT
+  # Manage significance alpha
+  if(!is.null(sig_cutoff)){ # Sig cutoff provided
+    GSEA$sig_alpha <- ifelse((GSEA[,sig_cutoff[1]] > sig_cutoff[2]), 0.5, 1)
+    # Use pattern as significance indicator instead of alpha
+    GSEA$ptrn <- ifelse((GSEA[,sig_cutoff[1]] > sig_cutoff[2]), ptrn2, "none")
+    if(ptrn2 != "none"){
+      GSEA$sig_alpha <- 1
+    }
+  } else { # Sig cutoff not provided, ptrn alternates if GSEA2 exists
+    GSEA$sig_alpha <- 1
+    if(!is.null(gsea2_res)){
+      GSEA$ptrn <- ifelse(GSEA$name == gsea2_name, ptrn2, "none")
+    } else {
+      GSEA$ptrn <- "none"
+    }
+  }
+
+  # Plotting preparation
   pseud_0 <- n_pos + 0.75 # Midpoint in pseudofactor
   pseud_ord <- c(1:n_pos, pseud_0, (n_pos+2):(length(pw_order)+1)) # Pseudo-order /w midpoint
   # Tick frame - calc from max/min
@@ -158,6 +176,7 @@ plot_GSEA_barplot <- function(
                 length.out = abs(NES_min_int) + abs(NES_max_int) + 1),
     zero = pseud_0)
 
+  #### PLOT
   plt <- ggplot(GSEA, aes(x = ord, y = NES)) +
     #### TICKS
     ## NES
@@ -191,26 +210,41 @@ plot_GSEA_barplot <- function(
   if(!is.null(gsea2_res)){ # 2nd GSEA
     if(ptrn2 == "none"){ # No pattern
       plt <- plt +
-        geom_bar(aes(x = ord, y = NES, group = name, fill = name),
+        geom_bar(aes(x = ord, y = NES, group = name, fill = name, alpha = sig_alpha),
+                 stat = "identity", position = position_dodge())
+    } else { # Yes pattern
+      Rubrary::use_pkg("ggpattern")
+      plt <- plt +
+        ggpattern::geom_bar_pattern(
+          data = GSEA,
+          aes(x = ord, y = NES, group = name, pattern = ptrn, fill = name, color = name, alpha = sig_alpha),
+          stat = "identity", position = position_dodge(),
+          pattern_fill = "white", pattern_color = "white", pattern_spacing = 0.01) +
+        scale_color_manual(values = colors) +
+        ggpattern::scale_pattern_identity()
+    }
+  } else { # No GSEA2
+    if(ptrn2 == "none"){
+      plt <- plt +
+        geom_bar(aes(fill = pos, alpha = sig_alpha),
                  stat = "identity", position = position_dodge())
     } else {
+      Rubrary::use_pkg("ggpattern")
       plt <- plt +
-        ggpattern::geom_bar_pattern(data = GSEA,
-                                    aes(x = ord, y = NES, group = name, pattern = name, fill = pos),
-                                    stat = "identity", position = position_dodge(), color = "black",
-                                    pattern_fill = "white", pattern_color = "white",
-                                    pattern_spacing = 0.01) +
-        ggpattern::scale_pattern_manual(values = c(ptrn2, "none")) +
-        ggpattern::scale_pattern_color_manual(values = colors[1])
+        ggpattern::geom_bar_pattern(
+          data = GSEA,
+          aes(x = ord, y = NES, group = name, pattern = ptrn, fill = pos, alpha = sig_alpha),
+          stat = "identity", position = position_dodge(),
+          pattern_fill = "white", pattern_color = "white",
+          pattern_spacing = 0.01) +
+        scale_color_manual(values = colors) +
+        ggpattern::scale_pattern_identity()
     }
-  } else {
-    plt <- plt +
-      geom_bar(aes(fill = pos),
-               stat = "identity", position = position_dodge(), color = "black")
   }
 
   plt <- plt +
-    scale_fill_manual(values = colors)
+    scale_fill_manual(values = colors) +
+    scale_alpha_identity()
   #### NES = +-1 guidelines - make conditional segment/hline if paired not corresponding?
   plt <- plt +
     {if (!is.null(NES_cutoff)) geom_segment(
@@ -229,7 +263,7 @@ plot_GSEA_barplot <- function(
     scale_x_reverse(breaks = pseud_ord,
                     labels = pw_labs) +
     #### MISC
-    {if(ptrn2 != "none") guides(fill = "none")} +
+    {if(ptrn2 != "none" && !is.null(sig_cutoff)) guides(fill = guide_legend(override.aes = list(pattern = "none")))} +
     labs(
       title = title,
     ) +
