@@ -123,7 +123,6 @@ fgsea::plotGseaTable(
 Using `Rubrary::plot_GSEA_barplot` function - simpler visualization of GSEA NES values but a bit nicer looking?
 
 ```{r plot_GSEA_barplot, fig.height=5, fig.width=14}
-debugonce(Rubrary::plot_GSEA_barplot)
 Rubrary::plot_GSEA_barplot(
   gsea_res = gsea_results,
   gsea_pws = top_pws,
