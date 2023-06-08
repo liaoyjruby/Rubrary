@@ -1,10 +1,13 @@
+# Rubrary 0.9.2
 
-Improved
+## Improved
+
 - `plot_GSEA_barplot`: `sig_cutoff` format by p value significance parameter
 
 # Rubrary 0.9.1
 
 ## Improved
+
 - GSEA functions: improved name formatting for enrichment plot
 - `plot_PCA`: fixed subtitle for non-annotated plots (thanks Duncan :) )
 - `plot_GSEA_barplot`: formatting flexibility improvements
