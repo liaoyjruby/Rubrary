@@ -1,10 +1,11 @@
+# Rubrary 0.9.3
 
-New
+## New
 
 - `rread`: wrapper for `data.table::fread()` that can pull in rownames
 - `project_PCA`: long awaited *massive* PCA projection script incorporating varimax
 
-Improved
+## Improved
 
 - Switch to `Seurat::DiscretePalette` for `pals`'s `alphabet` color palette
 
