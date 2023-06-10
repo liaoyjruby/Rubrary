@@ -1,4 +1,26 @@
 
+#' Wrapper for `data.table::fread` implementing `row.names` functionality
+#'
+#' Default file reading function in Rubrary functions because data is often in large tables and `read.delim` isn't optimized for high dimensionality. Setting `row.names != 0` will result in output being a `data.frame`.
+#'
+#' @param input string; `fread` input
+#' @param row.names integer; column to use as row names, 0 for none
+#' @param to_df logical; T to convert output to data.frame
+#'
+#' @return Table read in from input
+#' @export
+#'
+#' @examples
+#' glab_Beltran_2016 <- "https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt"
+#' df <- Rubrary::rread(glab_Beltran_2016, row.names = 1, to_df = FALSE)
+#' Rubrary::corner(df, 5)
+rread <- function(input, row.names = 0, to_df = TRUE){
+  df <- data.table::fread(input)
+  if(row.names != 0){ df <- tibble::column_to_rownames(df, var = names(df)[row.names])}
+  if(to_df){df <- as.data.frame(df)}
+  return(df)
+}
+
 #' Prompt user to install package
 #'
 #' Helper function for "Rubrary::use_pkg"

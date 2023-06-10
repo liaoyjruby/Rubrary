@@ -9,6 +9,7 @@
 #' @param yval string/numeric vector; colname for y axis
 #' @param label string; colname for point labels
 #' @param group string; colname for group color
+#' @param colors char vector; list of colors, where length = # unique groups
 #' @param title string; plot title
 #' @param subtitle string; plot subtitle
 #' @param rank logical; change metric to rank
@@ -33,7 +34,7 @@
 #' df <- data.frame(A = 1:10, B = 11:20, C = LETTERS[1:10], D = rep(LETTERS[1:5], each = 2))
 #' plot_scatter(df, xval = "A", yval = "B", label = "C", group = "D", title = "Example Scatter")
 #'
-plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, rank = FALSE,
+plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, colors = NULL, rank = FALSE,
                          xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
                          ylabel = ifelse(methods::is(yval, "character"), yval, "Y"),
                          cormethod = c("pearson", "spearman", "none"), guides = TRUE,
@@ -79,6 +80,10 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, rank
     ), 2)
   }
 
+  # Manage colors
+  if(!is.null(group) && is.null(colors)){
+    colors = scales::hue_pal()(length(unique(df[,group])))
+  }
 
   plt <- ggplot(df, aes(x = .data[[xval]], y = .data[[yval]])) +
     {if(guides) geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")} +
@@ -88,6 +93,7 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, rank
       breaks = scales::pretty_breaks(5)) } +
     geom_point(alpha = pt_alpha, size = pt_size) +
     {if(!is.null(group)) geom_point(aes(color = .data[[group]]), alpha = pt_alpha, size = pt_size)} +
+    {if(!is.null(group)) scale_color_manual(values = colors)} +
     xlab(xlabel) +
     ylab(ylabel) +
     labs(

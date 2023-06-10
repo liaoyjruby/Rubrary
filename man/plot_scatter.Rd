@@ -10,6 +10,7 @@ plot_scatter(
   yval,
   label = NULL,
   group = NULL,
+  colors = NULL,
   rank = FALSE,
   xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
   ylabel = ifelse(methods::is(yval, "character"), yval, "Y"),
@@ -38,6 +39,8 @@ plot_scatter(
 \item{label}{string; colname for point labels}
 
 \item{group}{string; colname for group color}
+
+\item{colors}{char vector; list of colors, where length = # unique groups}
 
 \item{rank}{logical; change metric to rank}
 

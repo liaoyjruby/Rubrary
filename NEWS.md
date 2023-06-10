@@ -1,3 +1,13 @@
+
+New
+
+- `rread`: wrapper for `data.table::fread()` that can pull in rownames
+- `project_PCA`: long awaited *massive* PCA projection script incorporating varimax
+
+Improved
+
+- Switch to `Seurat::DiscretePalette` for `pals`'s `alphabet` color palette
+
 # Rubrary 0.9.2
 
 ## Improved
@@ -21,6 +31,7 @@
 - GSEA barplot, GSEAsq density plot comparison, and associated helper functions
 
 ## New
+
 - `plot_GSEAsq_density`: plot categorical percentile rank comparison between two GSEA squared signatures
 - `plot_PCA_biplot`: conventional biplot with loadings and standardized scores
 - `plot_GSEA_barplot`: function-ified version of horizontal barplot originally made for Jack

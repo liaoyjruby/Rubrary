@@ -13,7 +13,7 @@ plot_PCA(
   annoname = "Sample",
   annolabel = annoname,
   label = FALSE,
-  annotype = "Batch",
+  annotype = "Type",
   annotype2 = NULL,
   ellipse = FALSE,
   ks_pval = c("none", "caption", "grob"),

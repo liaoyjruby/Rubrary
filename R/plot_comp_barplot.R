@@ -27,8 +27,8 @@ plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE, counts = TRUE,
     Rubrary::use_pkg("scales")
     cols = scales::hue_pal()(length(unique(df[,group])))
   } else if (colors == "alpha"){
-    Rubrary::use_pkg("pals")
-    cols = unname(pals::alphabet2(n = length(unique(df[,group]))))
+    Rubrary::use_pkg("Seurat")
+    cols = Seurat::DiscretePalette(n = length(unique(df[,group])), palette = "alphabet2")
   } else {
     cols = colors
   }
@@ -80,7 +80,6 @@ plot_comp_barplot <- function(sobj, breaks, group, stack = TRUE, counts = TRUE,
     } else {
       plt <- plt_scl
     }
-
   }
 
   if(!is.null(savename)){

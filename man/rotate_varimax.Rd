@@ -16,17 +16,26 @@ rotate_varimax(obj_prcomp, ncomp = 2, normalize = TRUE, savename = NULL)
 \item{savename}{string; filepath (no ext.) to save results under}
 }
 \value{
-\code{varimax} object with varimax rotated \code{loadings}, standardized scores \code{std_scores}, and scores \code{scores}
+\code{varimax} object with varimax rotation mtx \code{rotation}, varimax rotated \code{loadings}, standardized scores \code{std_scores}, and scores \code{scores}
 }
 \description{
 \href{https://stats.stackexchange.com/questions/59213/how-to-compute-varimax-rotated-principal-components-in-r}{StackExchange reference}
 }
 \examples{
 data(iris)
+iris$Sample = rownames(iris)
 PCA_iris <- Rubrary::run_PCA(t(iris[,c(1:4)]))
 PCA_iris_varimax <- Rubrary::rotate_varimax(PCA_iris)
 head(PCA_iris_varimax$scores)
 head(PCA_iris_varimax$loadings)
+Rubrary::plot_PCA(
+  df_pca = PCA_iris_varimax$scores,
+  PCx = "V1", PCy = "V2",
+  type = "Scores",
+  anno = iris[,c("Sample", "Species")],
+  annoname = "Sample", annotype = "Species",
+  title = "Iris PCA Varimax"
+)
 
 }
 \seealso{
