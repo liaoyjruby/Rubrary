@@ -651,7 +651,7 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
   return(results_varimax)
 }
 
-#' Project query/test samples onto PCA of reference/train samples
+#' PCA prediction by projecting query/test samples onto PCA of reference/train samples
 #'
 #' Plot titles are automatically constructed based on parameters. Adding a `savedir` argument will result in intermediate plots and final projected scores to be output.
 #'
@@ -696,7 +696,7 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
 #' iris_test <- iris[-samp,] %>%
 #'   mutate(Batch = "Test",
 #'          Species = paste0(Species, "_Test"))
-#' Rubrary::project_PCA(
+#' Rubrary::predict_PCA(
 #'   train = t(iris_train[,1:4]),
 #'   test = t(iris_test[,1:4]),
 #'   train_name = "Iris Train", train_anno = iris_train[,c("Sample", "Species")],
@@ -708,7 +708,7 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
 #'   ellipse = c(FALSE, TRUE), label = FALSE
 #' )
 #'
-project_PCA <- function(
+predict_PCA <- function(
     train, test, scale = FALSE, varimax = FALSE,
     train_name = "Train", train_anno = NULL, train_annoname = NULL, train_annotype = NULL, train_colors = NULL,
     test_name = "Test", test_anno = NULL, test_annoname = NULL, test_annotype = NULL, test_colors = NULL,
