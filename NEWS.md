@@ -1,3 +1,9 @@
+# Rubrary 0.9.4
+
+## Improved
+
+- rename `project_PCA` to the more descriptive `predict_PCA`
+
 # Rubrary 0.9.3
 
 ## New
