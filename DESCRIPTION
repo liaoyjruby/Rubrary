@@ -15,7 +15,6 @@ Imports:
     ggplot2,
     ggpubr,
     ggrepel,
-    gridExtra,
     cowplot,
     magrittr,
     methods,

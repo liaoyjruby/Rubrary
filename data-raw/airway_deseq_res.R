@@ -1,5 +1,6 @@
 ## code to prepare `airway_deseq_res` dataset goes here
 library(airway)
+library(dplyr)
 library(DESeq2)
 library(biomaRt)
 
