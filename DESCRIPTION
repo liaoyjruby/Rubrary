@@ -1,6 +1,6 @@
 Package: Rubrary
 Title: Ruby's functions & notes
-Version: 0.9.4
+Version: 0.9.5
 Authors@R: 
     person("Yi Jou (Ruby)", "Liao", , "liaoyjruby@ucla.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2853-5475"))

@@ -1,3 +1,10 @@
+# Rubrary 0.9.5
+
+## New
+
+- complete `plot_DESeq_boxplot` rewrite + rename to `plot_DEgene_boxplot`
+  - finally !! able to remove `gridExtra` dependency
+
 # Rubrary 0.9.4
 
 ## Improved
