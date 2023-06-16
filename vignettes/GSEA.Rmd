@@ -46,7 +46,7 @@ rmarkdown::paged_table(airway_deseq_res)
 
 ## Get pathways from `msigdbr`
 
-Gene set enrichment analysis relies on inputting gene sets / pathways related to biological function. The Molecular Signatures Database (MSigDB) [@liberzonMolecularSignaturesDatabase2011] was published as a database of annotated pathways to facilitate GSEA and is accessible through the R package `msigdbr` [@dolgalevMsigdbrMSigDBGene2022].
+Gene set enrichment analysis relies on inputting gene sets / pathways related to biological function. The Molecular Signatures Database (MSigDB) [@liberzonMolecularSignaturesDatabase2011] is a database of annotated pathways to facilitate GSEA and is accessible through the R package `msigdbr` [@dolgalevMsigdbrMSigDBGene2022].
 
 [Human MSigDB Collections](https://www.gsea-msigdb.org/gsea/msigdb/human/collection_details.jsp)
 
@@ -61,6 +61,8 @@ Gene set enrichment analysis relies on inputting gene sets / pathways related to
     -   MF: GO Molecular Function ontology
 
 -   H: hallmark gene sets [@liberzonMolecularSignaturesDatabase2015]
+
+This same list of gene sets from MSigDB is provided in Rubrary as data object `GSEA_pathways`.
 
 ```{r Get pathways from `msigdbr`}
 if (!requireNamespace("msigdbr", quietly = TRUE)){

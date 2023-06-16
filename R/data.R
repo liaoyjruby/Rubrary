@@ -15,3 +15,20 @@
 #' }
 #' @source <https://bioconductor.org/packages/release/data/experiment/html/airway.html>
 "airway_deseq_res"
+
+#' Pathways from `msigdbr` to use with `fgsea`
+#'
+#' Broad set of pathways extracted from `msigdbr` database and formatted as a list, with names being gene set names and values being vectors of genes in a given gene set.
+#'
+#' Includes [Human MSigDB Collections](https://www.gsea-msigdb.org/gsea/msigdb/human/collection_details.jsp):
+#' -   C2CP: curated gene sets, canonical pathways
+#' -   C5GO: ontology gene sets, Gene Ontology gene sets
+#'  -   BP: GO Biological Process ontology
+#'  -   CC: GO Cellular Component ontology
+#'  -   MF: GO Molecular Function ontology
+#' -   H: hallmark gene sets [@liberzonMolecularSignaturesDatabase2015]
+#'
+#' @format ## `GSEA_pathways`
+#' A list with 10,481 gene sets
+#' @source <https://www.gsea-msigdb.org/gsea/msigdb/human/collection_details.jsp>
+"GSEA_pathways"
