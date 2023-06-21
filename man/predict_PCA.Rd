@@ -21,11 +21,13 @@ predict_PCA(
   test_colors = NULL,
   ellipse = FALSE,
   label = FALSE,
+  flip = FALSE,
   savedir = NULL,
   height = 8,
   width = 8,
   fmt = "png",
-  test_only_plt = FALSE
+  test_only_plt = FALSE,
+  rank = 3
 )
 }
 \arguments{
@@ -45,7 +47,7 @@ predict_PCA(
 
 \item{train_annotype}{string; colname in \code{train_anno} with info to color by}
 
-\item{train_colors}{char vector; list of colors, length = # of unique \code{train_annotype}}
+\item{train_colors}{char vector; list of colors, length = # of unique \code{train_annotype}, set \code{NULL} for gray}
 
 \item{test_name}{string; descriptor for test samples}
 
@@ -57,9 +59,11 @@ predict_PCA(
 
 \item{test_colors}{char vector; list of colors, length = # of unique \code{test_annotype}}
 
-\item{ellipse}{logical (vector); can do length 2, \code{ellipse[1]} for train data ellipse, \code{ellipse[2]} for test data ellipse}
+\item{ellipse}{logical (vector); if length 2, \code{ellipse[1]} for train data ellipse, \code{ellipse[2]} for test data ellipse}
 
-\item{label}{logical (vector); can do length 2, \code{label[1]} for train data label, \code{label[2]} for test data label}
+\item{label}{logical (vector); if length 2, \code{label[1]} for train data label, \code{label[2]} for test data label}
+
+\item{flip}{NOT IMPLEMENTED - logical (vector); if length 2, \code{flip[1]} to flip x-axis values, \code{flip[2]} to flip y-axis values}
 
 \item{savedir}{string; directory (+ prefix) to save output under; if directory, end string with "/"}
 
@@ -70,6 +74,8 @@ predict_PCA(
 \item{fmt}{string; plot output format (ex. "png", "pdf")}
 
 \item{test_only_plt}{logical; save scatter of projected test samples only}
+
+\item{rank}{integer; maximal # of PCs to be used in \code{prcomp}; for compatibility w/ glab version}
 }
 \value{
 ggplot object

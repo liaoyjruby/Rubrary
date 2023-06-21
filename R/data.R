@@ -26,7 +26,7 @@
 #'  -   BP: GO Biological Process ontology
 #'  -   CC: GO Cellular Component ontology
 #'  -   MF: GO Molecular Function ontology
-#' -   H: hallmark gene sets [@liberzonMolecularSignaturesDatabase2015]
+#' -   H: hallmark gene sets
 #'
 #' @format ## `GSEA_pathways`
 #' A list with 10,481 gene sets

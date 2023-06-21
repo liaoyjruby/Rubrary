@@ -21,5 +21,5 @@ run_DESeq(mtx_rawcts, mtx_annotation, savename = NULL, merged = F, shrink = F)
 DESeq results in dataframe
 }
 \description{
-Not sure if generalizable to non OV project related datasets yet...
+Not generalizable to non OV project related datasets yet...
 }

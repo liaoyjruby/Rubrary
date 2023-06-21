@@ -9,8 +9,9 @@ run_PCA(
   savename = NULL,
   summary = FALSE,
   center = TRUE,
-  scale = TRUE,
+  scale = FALSE,
   tol = 0.05,
+  rank = NULL,
   screeplot = TRUE
 )
 }
@@ -25,7 +26,9 @@ run_PCA(
 
 \item{scale}{logical; indicate whether the variables should be scaled to have unit variance}
 
-\item{tol}{numerical; indicate the magnitude below which components should be omitted}
+\item{tol}{numeric; indicate the magnitude below which components should be omitted}
+
+\item{rank}{integer; a number specifying the maximal rank, i.e., maximal number of principal components to be used}
 
 \item{screeplot}{logical; output + save screeplot?}
 }
@@ -36,11 +39,13 @@ prcomp obj
 Adapted from \code{glab.library::PCA_from_file}.
 }
 \details{
-In general, Z-score standardization (\code{center = T}; \code{scale = T}) before PCA is advised.
+In general, Z-score standardization (\code{center = T}; \code{scale = T}) before PCA is advised. For (transformed) gene expression data, genearlly, center but don't scale.
 
 \code{center = T}: PCA maximizes the sum-of-squared deviations \emph{from the origin} in the first PC. Variance is only maximized if the data is pre-centered.
 
 \code{scale = T}: If one feature varies more than others, the feature will dominate resulting principal components. Scaling will also result in components in the same order of magnitude.
+
+Use either \code{tol} or \code{rank}, but not both.
 }
 \examples{
 data(iris)

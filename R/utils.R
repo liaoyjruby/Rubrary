@@ -1,4 +1,24 @@
 
+#' Wrapper for `data.table::fwrite` with tab separated values (TSV) default parameters
+#'
+#' @param x dataframe; `fwrite` input
+#' @param file string; filepath to save output under, with extension
+#' @param sep string; separator between columns
+#' @param quote string; T to wrap fields in quotes
+#' @param row.names logical; T to write rownames to file
+#'
+#' @return Dataframe written out to `savename` file
+#' @export
+rwrite <- function(x, file, sep = "\t", quote = FALSE, row.names = FALSE){
+  data.table::fwrite(
+    x = x,
+    file = file,
+    sep = sep,
+    quote = quote,
+    row.names = row.names
+  )
+}
+
 #' Wrapper for `data.table::fread` implementing `row.names` functionality
 #'
 #' Default file reading function in Rubrary functions because data is often in large tables and `read.delim` isn't optimized for high dimensionality. Setting `row.names != 0` will result in output being a `data.frame`.

@@ -35,20 +35,22 @@ get_loadings <- function(obj_prcomp){
 #'
 #' Adapted from `glab.library::PCA_from_file`.
 #'
-#' In general, Z-score standardization (`center = T`; `scale = T`) before PCA is advised.
+#' In general, Z-score standardization (`center = T`; `scale = T`) before PCA is advised. For (transformed) gene expression data, genearlly, center but don't scale.
 #'
 #' `center = T`: PCA maximizes the sum-of-squared deviations *from the origin* in the first PC. Variance is only maximized if the data is pre-centered.
 #'
 #' `scale = T`: If one feature varies more than others, the feature will dominate resulting principal components. Scaling will also result in components in the same order of magnitude.
 #'
+#' Use either `tol` or `rank`, but not both.
+#'
 #' @import dplyr
-#' @importFrom utils write.table
 #'
 #' @param df (path to) numeric dataframe; samples as columns, genes/features as rows
 #' @param summary logical; output summary info
 #' @param center logical; indicate whether the variables should be shifted to be zero centered
 #' @param scale logical; indicate whether the variables should be scaled to have unit variance
-#' @param tol numerical; indicate the magnitude below which components should be omitted
+#' @param tol numeric; indicate the magnitude below which components should be omitted
+#' @param rank integer; a number specifying the maximal rank, i.e., maximal number of principal components to be used
 #' @param screeplot logical; output + save screeplot?
 #' @param savename string; filepath (no ext.) to save PCA scores, loadings, sdev under
 #'
@@ -61,16 +63,11 @@ get_loadings <- function(obj_prcomp){
 #' Rubrary::run_PCA(t(iris[,c(1:4)]))
 #'
 run_PCA <- function(df, savename = NULL, summary = FALSE,
-                    center = TRUE, scale = TRUE, tol = 0.05, screeplot = TRUE){
+                    center = TRUE, scale = FALSE, tol = 0.05, rank = NULL, screeplot = TRUE){
 
-  if (is.character(df)){
-    dfpath <- df
-    df <- read.delim(dfpath, row.names = 1)
-  }
-
+  if (is.character(df)){ df <- Rubrary::rread(df, row.names = 1) }
   t.df=t(df) # Transpose
-
-  pca <- stats::prcomp(t.df, center=center, scale = scale, tol = tol)
+  pca <- stats::prcomp(t.df, center=center, scale = scale, tol = tol, rank. = rank)
   if(summary){summary(pca)}
 
   pca_scores <- pca$x %>%
@@ -86,21 +83,18 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
     tibble::rownames_to_column(var = "Loadings")
 
   # `sdev` output from prcomp is sqrt(eigenvalues) of cor/cov mtx
-  pca_sdev <- pca$sdev
+  pca_sdev <- pca$sdev %>%
+    as.data.frame()
 
   if(!is.null(savename)){
-    write.table(pca_scores,
-                paste0(savename,"_prcomp_scores.txt"),
-                sep='\t',row.names=FALSE,quote=FALSE)
-    # write.table(pca_eigenvectors,
-    #             paste0(savename,"_prcomp_eigenvectors.txt"),
-    #             sep='\t',row.names=FALSE,quote=FALSE)
-    write.table(pca_loadings,
-                paste0(savename,"_prcomp_loadings.txt"),
-                sep='\t',row.names=FALSE,quote=FALSE)
-    write.table(pca_sdev,
-                paste0(savename,"_prcomp_sdev.txt"),
-                sep='\t',row.names=FALSE,quote=FALSE)
+    Rubrary::rwrite(pca_scores,
+                paste0(savename,"_prcomp_scores.txt"))
+    # Rubrary::rwrite(pca_eigenvectors,
+    #             paste0(savename,"_prcomp_eigenvectors.txt")
+    Rubrary::rwrite(pca_loadings,
+                paste0(savename,"_prcomp_loadings.txt"))
+    Rubrary::rwrite(pca_sdev,
+                paste0(savename,"_prcomp_sdev.txt"))
   }
 
   if (screeplot) {
@@ -118,7 +112,6 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #'
 #' @import ggplot2
 #' @import dplyr
-#' @importFrom utils read.delim
 #'
 #' @param df_pca string or `prcomp` obj; (path to) PCA output
 #' @param anno string or df; Annotation info for DF
@@ -179,10 +172,9 @@ plot_PCA <- function(
 
   if (is.character(df_pca)) { # PCA results as path to txt
     dfpath <- df_pca
-    df_pca <- read.delim(dfpath)
+    df_pca <- Rubrary::rread(dfpath)
     sdevpath <- gsub("_[^_]+$", "_sdev.txt", dfpath)
-    sdev <- read.delim(sdevpath) %>%
-      as.data.frame() %>%
+    sdev <- Rubrary::rread(sdevpath) %>%
       mutate(var = .^2, #
              pve = round(var / sum(var) * 100, digits = 2)) %>%
       `rownames<-`(paste0("PC", rownames(.)))
@@ -227,7 +219,7 @@ plot_PCA <- function(
   }
 
   if (is.character(anno)) {
-    anno <- read.delim(anno)
+    anno <- Rubrary::rread(anno)
   }
 
   if(!is.null(anno)){
@@ -622,21 +614,15 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
     tibble::rownames_to_column(var = "Scores")
 
   if(!is.null(savename)){
-    write.table(
+    Rubrary::rwrite(
       tibble::rownames_to_column(loadings_varimax$loadings, var = "Loadings"),
-      file = paste0(savename, "_prcomp_loadings_varimax.txt"),
-      quote = F, sep = "\t", row.names = F
-    )
-    write.table(
+      file = paste0(savename, "_prcomp_loadings_varimax.txt"))
+    Rubrary::rwrite(
       std_scores_varimax,
-      file = paste0(savename, "_prcomp_std_scores_varimax.txt"),
-      quote = F, sep = "\t", row.names = F
-    )
-    write.table(
+      file = paste0(savename, "_prcomp_std_scores_varimax.txt"))
+    Rubrary::rwrite(
       scores_varimax,
-      file = paste0(savename, "_prcomp_scores_varimax.txt"),
-      quote = F, sep = "\t", row.names = F
-    )
+      file = paste0(savename, "_prcomp_scores_varimax.txt"))
   }
 
   results_varimax <- list(
@@ -667,19 +653,21 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
 #' @param train_anno df; annotation info for train samples
 #' @param train_annoname string; colname in `train_anno` matching point name
 #' @param train_annotype string; colname in `train_anno` with info to color by
-#' @param train_colors char vector; list of colors, length = # of unique `train_annotype`
+#' @param train_colors char vector; list of colors, length = # of unique `train_annotype`, set `NULL` for gray
 #' @param test_name string; descriptor for test samples
 #' @param test_anno df; annotation info for test samples
 #' @param test_annoname string; colname in `test_anno` matching point name
 #' @param test_annotype string; colname in `test_anno` with info to color by
 #' @param test_colors char vector; list of colors, length = # of unique `test_annotype`
-#' @param ellipse logical (vector); can do length 2, `ellipse[1]` for train data ellipse, `ellipse[2]` for test data ellipse
-#' @param label logical (vector); can do length 2, `label[1]` for train data label, `label[2]` for test data label
+#' @param ellipse logical (vector); if length 2, `ellipse[1]` for train data ellipse, `ellipse[2]` for test data ellipse
+#' @param label logical (vector); if length 2, `label[1]` for train data label, `label[2]` for test data label
+#' @param flip NOT IMPLEMENTED - logical (vector); if length 2, `flip[1]` to flip x-axis values, `flip[2]` to flip y-axis values
 #' @param savedir string; directory (+ prefix) to save output under; if directory, end string with "/"
 #' @param height numeric; plot height
 #' @param width numeric; plot width
 #' @param fmt string; plot output format (ex. "png", "pdf")
 #' @param test_only_plt logical; save scatter of projected test samples only
+#' @param rank integer; maximal # of PCs to be used in `prcomp`; for compatibility w/ glab version
 #'
 #' @return ggplot object
 #' @export
@@ -712,17 +700,20 @@ predict_PCA <- function(
     train, test, scale = FALSE, varimax = FALSE,
     train_name = "Train", train_anno = NULL, train_annoname = NULL, train_annotype = NULL, train_colors = NULL,
     test_name = "Test", test_anno = NULL, test_annoname = NULL, test_annotype = NULL, test_colors = NULL,
-    ellipse = FALSE, label = FALSE, savedir = NULL, height = 8, width = 8, fmt = "png", test_only_plt = FALSE){
-  # Manage plot params
+    ellipse = FALSE, label = FALSE, flip = FALSE, savedir = NULL, height = 8, width = 8, fmt = "png",
+    test_only_plt = FALSE, rank = 3){
+  # Parameters ----
   PCx = "PC1"; PCy = "PC2" # Set as function arg?
   # Expand args to L2 if applicable
   if(length(ellipse) == 1){ ellipse = c(ellipse, ellipse)}
   ellipse_train <- ellipse[1]
   if(length(label) == 1){ label = c(label, label)}
+  if(length(flip) == 1){ flip = c(flip, flip)}
   # Manage dataframes
   if(is(train, "data.frame") || is(train, "matrix")){ train_df <- train } else { train_df <- Rubrary::rread(train, row.names = 1)}
   if(is(test, "data.frame") || is(test, "matrix")){ test_df <- test } else { test_df <- Rubrary::rread(test, row.names = 1)}
 
+  # Merge ----
   # Subset and order both train + test to common/intersect genes/features
   common_feats <- dplyr::intersect(rownames(train_df), rownames(test_df)) %>% sort()
   message(paste0("Common features: ", length(common_feats)))
@@ -742,8 +733,15 @@ predict_PCA <- function(
   }
   train_df <- train_df[common_feats,]
   test_df <- test_df[common_feats,]
+
+  # Train PCA ----
   # Run train PCA
-  train_pca <- Rubrary::run_PCA(df = train_df, center = T, scale = scale, screeplot = F)
+  train_pca <- Rubrary::run_PCA(
+    df = train_df,
+    center = TRUE, scale = scale,
+    tol = NULL, rank = rank, screeplot = F)
+  if(!varimax && flip[1]) { train_pca$x[,PCx] <- train_pca$x[,PCx] * -1}
+  if(!varimax && flip[2]) { train_pca$x[,PCy] <- train_pca$x[,PCy] * -1}
 
   # Train annotation provided
   if(!is.null(train_anno)){
@@ -787,8 +785,7 @@ predict_PCA <- function(
     {if(!is.null(train_anno) && !ellipse[1] && ellipse_train) stat_ellipse(
       data = train_pc_anno,
       mapping = aes(x = .data[[PCx]], y = .data[[PCy]], group = ellipse),
-      color = train_colors
-    )}
+      color = train_colors)}
 
   if(!is.null(savedir)){
     ggsave(
@@ -800,11 +797,13 @@ predict_PCA <- function(
   # Rotate test data with train rotation mtx
   test_proj <- stats::predict(train_pca, newdata = t(test_df)) %>% as.data.frame()
 
-  # Varimax section
+  # Varimax ----
   if(varimax){
     ncomp <- 2 # Set as function arg?
     PCx = sub("PC", "V", PCx); PCy = sub("PC", "V", PCy)
     train_pca_vm <- Rubrary::rotate_varimax(train_pca, ncomp = ncomp, normalize = F)
+    if(flip[1]) {train_pca_vm$scores[,PCx] <- train_pca_vm$scores[,PCx] * -1}
+    if(flip[2]) {train_pca_vm$scores[,PCy] <- train_pca_vm$scores[,PCy] * -1}
 
     # Train annotation provided
     if(!is.null(train_anno)){
@@ -851,6 +850,8 @@ predict_PCA <- function(
     test_proj_vm <- as.matrix(test_proj[,1:ncomp]) %*% train_pca_vm$rotation %>%
       as.data.frame() %>%
       tibble::rownames_to_column(var = "Scores")
+    if(flip[1]) {test_proj_vm[,PCx] <- test_proj_vm[,PCx] * -1}
+    if(flip[2]) {test_proj_vm[,PCy] <- test_proj_vm[,PCy] * -1}
     test_proj <- test_proj_vm
     train_pca <- train_pca_vm$scores
   } else {
@@ -858,6 +859,7 @@ predict_PCA <- function(
       tibble::rownames_to_column(var = "Scores")
   }
 
+  # Test PCA ----
   if(!is.null(test_anno)){ # Test sample annotation present
     if(is.character(test_anno)){ test_anno <- Rubrary::rread(test_anno) } # Read if path
     # Filter to samples present
@@ -901,16 +903,15 @@ predict_PCA <- function(
       labs(title = paste0("PCA", vm_title, " - ", test_name, " Projected on ", train_name))
   )
 
+  # Save ----
   if(!is.null(savedir)){
     vm_name <- ifelse(varimax, "_varimax", "")
     # Save scores
-    write.table(
+    Rubrary::rwrite(
       x = test_proj,
       file = paste0(savedir, "PCA_proj_",
                     gsub(" |\\/", "", test_name), "_on_",
-                    gsub(" |\\/", "", train_name), vm_name, ".txt"),
-      quote = FALSE, row.names = FALSE, sep = "\t"
-    )
+                    gsub(" |\\/", "", train_name), vm_name, ".txt"))
     # Save plot
     test_savename <- paste0(savedir, "PCA_proj_",
                             gsub(" |\\/", "", test_name), "_on_",
@@ -922,6 +923,7 @@ predict_PCA <- function(
     )
   }
 
+  # Test only PCA ----
   if(test_only_plt){
     if(label[2]){
       label_test <- "Scores"

@@ -90,10 +90,9 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     df_web[, paste0(metric1,".", gsub(" ", "_", sig1_name))] <- merged[,paste0(metric1,".1")]
     df_web[, paste0(metric2,".", gsub(" ", "_", sig2_name))] <- merged[,paste0(metric2,".2")]
 
-    write.table(
+    Rubrary::rwrite(
       x = df_web,
-      file = ifelse(is.null(savename), "RRHO_web.txt", paste0(savename, "_web.txt")),
-      sep = "\t", quote = F, row.names = F
+      file = ifelse(is.null(savename), "RRHO_web.txt", paste0(savename, "_web.txt"))
     )
 
     # Output webtool inputs

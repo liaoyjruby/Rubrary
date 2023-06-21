@@ -27,7 +27,7 @@ Includes \href{https://www.gsea-msigdb.org/gsea/msigdb/human/collection_details.
 \item BP: GO Biological Process ontology
 \item CC: GO Cellular Component ontology
 \item MF: GO Molecular Function ontology
-\item H: hallmark gene sets \link{@liberzonMolecularSignaturesDatabase2015}
+\item H: hallmark gene sets
 }
 }
 \keyword{datasets}

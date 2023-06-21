@@ -36,7 +36,7 @@ plot_DEgene_boxplot <- function(data, anno, anno_sig, anno_type = NULL, sig_DE, 
     # Get genes first (if null)
     if(is.null(genes)){
       de_df <- de_df %>%
-        {rbind(head(., genes_n), tail(., genes_n))}
+        {rbind(utils::head(., genes_n), utils::tail(., genes_n))}
       genes <- de_df$gene
     } else {
       na_genes <- data.frame(

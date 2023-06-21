@@ -37,7 +37,7 @@ df_to_mtx <- function(df, filter = T) {
 
 #' Run DESeq
 #'
-#' Not sure if generalizable to non OV project related datasets yet...
+#' Not generalizable to non OV project related datasets yet...
 #'
 #' @param mtx_rawcts matrix; numeric matrix of raw counts
 #' @param mtx_annotation matrix; samples as rownames, cols "Subject" & "Condition" (& "Batch" if merged)
@@ -92,9 +92,9 @@ run_DESeq <- function(mtx_rawcts, mtx_annotation, savename = NULL,
   resOrdered <- resOrdered[stats::complete.cases(resOrdered), ] # excludes rows with NA
   resOrdered <- tibble::rownames_to_column(resOrdered, "gene")
   if(!is.null(savename)){
-    utils::write.table(x = resOrdered, file = paste0(savename, ".txt"), sep = "\t", row.names = F, quote = F)
+    Rubrary::rwrite(x = resOrdered, file = paste0(savename, ".txt"))
     rank_file <- resOrdered[c("gene", "sign_log_p")]
-    utils::write.table(rank_file, paste0(savename, ".rnk"), sep = "\t", quote = F, col.names = F, row.names = F)
+    Rubrary::rwrite(rank_file, paste0(savename, ".rnk"))
   }
   return(resOrdered)
 }
@@ -117,14 +117,12 @@ make_pconly <- function(sig_path) {
   if (!rnkonly) {
     sig <- utils::read.delim(sig_path, header = T)
     sig_pconly <- sig[sig$gene %in% pc_genes, ] # Match with log2UQ coding genes
-    utils::write.table(sig_pconly, paste0(tools::file_path_sans_ext(sig_path), "_pconly.txt"),
-                       sep = "\t", quote = F, col.names = T, row.names = F)
+    Rubrary::rwrite(sig_pconly, paste0(tools::file_path_sans_ext(sig_path), "_pconly.txt"))
   }
   # Make rank
   sig_rnk <- utils::read.delim(paste0(tools::file_path_sans_ext(sig_path), ".rnk"), header = F, col.names = c("gene", "score"))
   sig_pconly_rnk <- sig_rnk[sig_rnk$gene %in% pc_genes, ] # Match with log2UQ coding genes
-  utils::write.table(sig_pconly_rnk, paste0(tools::file_path_sans_ext(sig_path), "_pconly.rnk"),
-                     sep = "\t", quote = F, col.names = F, row.names = F)
+  Rubrary::rwrite(sig_pconly_rnk, paste0(tools::file_path_sans_ext(sig_path), "_pconly.rnk"))
 
   return(sig_pconly)
 }
