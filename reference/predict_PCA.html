@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,11 +77,13 @@
 <span>  test_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ellipse <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  savedir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  height <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  width <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  fmt <span class="op">=</span> <span class="st">"png"</span>,</span>
-<span>  test_only_plt <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  test_only_plt <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rank <span class="op">=</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -120,7 +122,7 @@
 
 
 <dt>train_colors</dt>
-<dd><p>char vector; list of colors, length = # of unique <code>train_annotype</code></p></dd>
+<dd><p>char vector; list of colors, length = # of unique <code>train_annotype</code>, set <code>NULL</code> for gray</p></dd>
 
 
 <dt>test_name</dt>
@@ -144,11 +146,15 @@
 
 
 <dt>ellipse</dt>
-<dd><p>logical (vector); can do length 2, <code>ellipse[1]</code> for train data ellipse, <code>ellipse[2]</code> for test data ellipse</p></dd>
+<dd><p>logical (vector); if length 2, <code>ellipse[1]</code> for train data ellipse, <code>ellipse[2]</code> for test data ellipse</p></dd>
 
 
 <dt>label</dt>
-<dd><p>logical (vector); can do length 2, <code>label[1]</code> for train data label, <code>label[2]</code> for test data label</p></dd>
+<dd><p>logical (vector); if length 2, <code>label[1]</code> for train data label, <code>label[2]</code> for test data label</p></dd>
+
+
+<dt>flip</dt>
+<dd><p>NOT IMPLEMENTED - logical (vector); if length 2, <code>flip[1]</code> to flip x-axis values, <code>flip[2]</code> to flip y-axis values</p></dd>
 
 
 <dt>savedir</dt>
@@ -169,6 +175,10 @@
 
 <dt>test_only_plt</dt>
 <dd><p>logical; save scatter of projected test samples only</p></dd>
+
+
+<dt>rank</dt>
+<dd><p>integer; maximal # of PCs to be used in <code>prcomp</code>; for compatibility w/ glab version</p></dd>
 
 </dl></div>
     <div class="section level2">

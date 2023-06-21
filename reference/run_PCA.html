@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,8 +65,9 @@
 <span>  savename <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  summary <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  center <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  scale <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  scale <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  tol <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  rank <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  screeplot <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -94,7 +95,11 @@
 
 
 <dt>tol</dt>
-<dd><p>numerical; indicate the magnitude below which components should be omitted</p></dd>
+<dd><p>numeric; indicate the magnitude below which components should be omitted</p></dd>
+
+
+<dt>rank</dt>
+<dd><p>integer; a number specifying the maximal rank, i.e., maximal number of principal components to be used</p></dd>
 
 
 <dt>screeplot</dt>
@@ -109,9 +114,10 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>In general, Z-score standardization (<code>center = T</code>; <code>scale = T</code>) before PCA is advised.</p>
+    <p>In general, Z-score standardization (<code>center = T</code>; <code>scale = T</code>) before PCA is advised. For (transformed) gene expression data, genearlly, center but don't scale.</p>
 <p><code>center = T</code>: PCA maximizes the sum-of-squared deviations <em>from the origin</em> in the first PC. Variance is only maximized if the data is pre-centered.</p>
 <p><code>scale = T</code>: If one feature varies more than others, the feature will dominate resulting principal components. Scaling will also result in components in the same order of magnitude.</p>
+<p>Use either <code>tol</code> or <code>rank</code>, but not both.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -122,17 +128,17 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">run_PCA</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Cumulative var. exp. &gt;= 80% at PC 2 (95.8%)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ** Cumulative var. exp. &gt;= 80% at PC 1 (92.5%)</span>
 <span class="r-plt img"><img src="run_PCA-1.png" alt="" width="700" height="433"></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Standard deviations (1, .., p=4):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.7083611 0.9560494 0.3830886 0.1439265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.0562689 0.4926162 0.2796596 0.1543862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Rotation (n x k) = (4 x 4):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     PC1         PC2        PC3        PC4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length  0.5210659 -0.37741762  0.7195664  0.2612863</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width  -0.2693474 -0.92329566 -0.2443818 -0.1235096</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length  0.5804131 -0.02449161 -0.1421264 -0.8014492</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width   0.5648565 -0.06694199 -0.6342727  0.5235971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      PC1         PC2         PC3        PC4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length  0.36138659 -0.65658877  0.58202985  0.3154872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width  -0.08452251 -0.73016143 -0.59791083 -0.3197231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length  0.85667061  0.17337266 -0.07623608 -0.4798390</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width   0.35828920  0.07548102 -0.54583143  0.7536574</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
