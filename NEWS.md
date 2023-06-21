@@ -1,3 +1,11 @@
+# Rubrary 0.9.6
+
+## New
+- `rwrite` & `rread`
+
+## Improved
+- `get_log_coding_geneexp` improvements - can specify log base now
+
 # Rubrary 0.9.5
 
 ## New
