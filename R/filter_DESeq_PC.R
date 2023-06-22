@@ -12,14 +12,12 @@ filter_DESeq_PC <- function(sig_txt, coding_file = "/Users/liaoyj/Dropbox/Ovaria
   pc_genes <- read.delim(coding_file, header = T)
   sig_full <- read.delim(sig_txt, header = T)
   sig_full_pc <- sig_full[sig_full$gene %in% pc_genes$symbol, ]
-  write.table(x = sig_full_pc,
-              file = paste0(file_path_sans_ext(sig_txt), "_PC.txt"),
-              sep = "\t", quote = F, col.names = T, row.names = F)
+  Rubrary::rwrite(x = sig_full_pc,
+              file = paste0(file_path_sans_ext(sig_txt), "_PC.txt"))
   # Make rank
   sig_rnk_pc <- sig_full_pc[,c("gene", "sign_log_p")]
-  write.table(sig_rnk_pc,
-              file = paste0(file_path_sans_ext(sig_txt), "_PC.rnk"),
-              sep = "\t", quote = F, col.names = F, row.names = F)
+  Rubrary::rwrite(sig_rnk_pc,
+              file = paste0(file_path_sans_ext(sig_txt), "_PC.rnk"))
 
   return(sig_full_pc)
 }

@@ -53,7 +53,8 @@ Suggests:
     stringr,
     SingleCellExperiment,
     CellMixS,
-    BiocParallel
+    BiocParallel,
+    openxlsx
 Remotes:
   immunogenomics/lisi
 VignetteBuilder: knitr

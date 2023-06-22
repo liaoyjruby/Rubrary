@@ -129,7 +129,8 @@ run_PCA <- function(df, savename = NULL, summary = FALSE,
 #' @param subtitle string; Subtitle for plot
 #' @param density logical; Show density plot along both axes; requires group annotations to be provided
 #' @param highlight char vector; Specific points to shape differently & label
-#' @param colors char vector; Length should be number of unique `annotype`s
+#' @param colors char vector; For discrete `annotype`, length should be number of unique `annotype`s. For continuous `annotype`, can either be length 2 where `colors[1]` is low and `colors[2]` is high or length 3 diverging colorscale where `colors[1]` = low, `colors[2]` = mid, `colors[3]` = high.
+#' @param col_midpt numeric; For continuous `length(colors) == 3` `scale_color_gradientn` usage only
 #' @param savename string; File path to save plot under
 #' @param height numeric; Saved plot height
 #' @param width numeric; Saved plot width
@@ -162,7 +163,7 @@ plot_PCA <- function(
     df_pca, anno = NULL, PCx = "PC1", PCy = "PC2", type = c("Scores", "Loadings"),
     annoname = "Sample", annolabel = annoname, label = FALSE,
     annotype = "Type", annotype2 = NULL, ellipse = FALSE,
-    ks_pval = c("none", "caption", "grob"), highlight = NULL, colors = NULL,
+    ks_pval = c("none", "caption", "grob"), highlight = NULL, colors = NULL, col_midpt = 0,
     title = NULL, subtitle = NULL, density = FALSE,
     savename = NULL, width = 8, height = 8) {
   type <- match.arg(type)
@@ -295,7 +296,16 @@ plot_PCA <- function(
     # Manage legend title + colors if numeric
     if (is.numeric(df[, annotype])) {
       guidetitle <- guide_colorbar(title = annotype)
-      if(is.null(colors)){cols <- c("blue", "red")}
+      if(is.null(colors)){ cols <- c("blue", "red") } else { cols <- colors }
+      if(length(cols) == 1){ cols <- c("gray80", cols) }
+      if(length(cols) == 2){
+        cols_numeric <- scale_color_gradient( # Numeric anno
+          low = cols[1], high = cols[2], guide = "colourbar")
+      } else if(length(cols) >= 3){
+        cols_numeric <- scale_color_gradient2( # Numeric anno
+          low = cols[1], mid = cols[2], high = cols[3],
+          midpoint = col_midpt, guide = "colourbar")
+      }
       density = F
       ellipse = F # NO ELLIPSE ALLOWED
     } else {
@@ -325,8 +335,7 @@ plot_PCA <- function(
       {if (type == "Scores") geom_point(aes(color = .data[[annotype]]), size = 2, alpha = alpha)} +
       # Color
       {if (!is.numeric(df[, annotype])) scale_color_manual(values=cols)} + # Categorical anno
-      {if (is.numeric(df[, annotype])) scale_color_gradient( # Numeric anno
-        low = cols[1], high = cols[2], guide = "colourbar")} +
+      {if (is.numeric(df[, annotype])) cols_numeric } +
       # Ellipse
       {if (ellipse) stat_ellipse(
         data = df, aes(color = .data[[annotype]]))} +
@@ -615,7 +624,7 @@ rotate_varimax <- function(obj_prcomp, ncomp = 2, normalize = TRUE, savename = N
 
   if(!is.null(savename)){
     Rubrary::rwrite(
-      tibble::rownames_to_column(loadings_varimax$loadings, var = "Loadings"),
+      loadings_varimax,
       file = paste0(savename, "_prcomp_loadings_varimax.txt"))
     Rubrary::rwrite(
       std_scores_varimax,

@@ -21,7 +21,7 @@ rwrite <- function(x, file, sep = "\t", quote = FALSE, row.names = FALSE){
 
 #' Wrapper for `data.table::fread` implementing `row.names` functionality
 #'
-#' Default file reading function in Rubrary functions because data is often in large tables and `read.delim` isn't optimized for high dimensionality. Setting `row.names != 0` will result in output being a `data.frame`.
+#' Default file reading function in Rubrary functions because data is often in large tables and `read.delim` isn't optimized for high dimensionality. If file extension is `xlsx`, will attempt to use `openxlsx::read.xlsx` instead. Setting `row.names != 0` will result in output being a `data.frame`.
 #'
 #' @param input string; `fread` input
 #' @param row.names integer; column to use as row names, 0 for none
@@ -35,7 +35,12 @@ rwrite <- function(x, file, sep = "\t", quote = FALSE, row.names = FALSE){
 #' df <- Rubrary::rread(glab_Beltran_2016, row.names = 1, to_df = FALSE)
 #' Rubrary::corner(df, 5)
 rread <- function(input, row.names = 0, to_df = TRUE){
-  df <- data.table::fread(input)
+  if(tools::file_ext(input) == "xlsx"){
+    Rubrary::use_pkg("openxlsx")
+    df <- openxlsx::read.xlsx(input)
+  } else {
+    df <- data.table::fread(input)
+  }
   if(row.names != 0){ df <- tibble::column_to_rownames(df, var = names(df)[row.names])}
   if(to_df){df <- as.data.frame(df)}
   return(df)

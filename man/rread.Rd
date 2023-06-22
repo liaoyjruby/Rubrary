@@ -17,7 +17,7 @@ rread(input, row.names = 0, to_df = TRUE)
 Table read in from input
 }
 \description{
-Default file reading function in Rubrary functions because data is often in large tables and \code{read.delim} isn't optimized for high dimensionality. Setting \code{row.names != 0} will result in output being a \code{data.frame}.
+Default file reading function in Rubrary functions because data is often in large tables and \code{read.delim} isn't optimized for high dimensionality. If file extension is \code{xlsx}, will attempt to use \code{openxlsx::read.xlsx} instead. Setting \code{row.names != 0} will result in output being a \code{data.frame}.
 }
 \examples{
 glab_Beltran_2016 <- "https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt"

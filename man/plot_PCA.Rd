@@ -19,6 +19,7 @@ plot_PCA(
   ks_pval = c("none", "caption", "grob"),
   highlight = NULL,
   colors = NULL,
+  col_midpt = 0,
   title = NULL,
   subtitle = NULL,
   density = FALSE,
@@ -54,7 +55,9 @@ plot_PCA(
 
 \item{highlight}{char vector; Specific points to shape differently & label}
 
-\item{colors}{char vector; Length should be number of unique \code{annotype}s}
+\item{colors}{char vector; For discrete \code{annotype}, length should be number of unique \code{annotype}s. For continuous \code{annotype}, can either be length 2 where \code{colors[1]} is low and \code{colors[2]} is high or length 3 diverging colorscale where \code{colors[1]} = low, \code{colors[2]} = mid, \code{colors[3]} = high.}
+
+\item{col_midpt}{numeric; For continuous \code{length(colors) == 3} \code{scale_color_gradientn} usage only}
 
 \item{title}{string; Plot title}
 
