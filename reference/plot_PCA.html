@@ -75,6 +75,7 @@
 <span>  ks_pval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"caption"</span>, <span class="st">"grob"</span><span class="op">)</span>,</span>
 <span>  highlight <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  col_midpt <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subtitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  density <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -139,7 +140,11 @@
 
 
 <dt>colors</dt>
-<dd><p>char vector; Length should be number of unique <code>annotype</code>s</p></dd>
+<dd><p>char vector; For discrete <code>annotype</code>, length should be number of unique <code>annotype</code>s. For continuous <code>annotype</code>, can either be length 2 where <code>colors[1]</code> is low and <code>colors[2]</code> is high or length 3 diverging colorscale where <code>colors[1]</code> = low, <code>colors[2]</code> = mid, <code>colors[3]</code> = high.</p></dd>
+
+
+<dt>col_midpt</dt>
+<dd><p>numeric; For continuous <code>length(colors) == 3</code> <code>scale_color_gradientn</code> usage only</p></dd>
 
 
 <dt>title</dt>
