@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.9.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,12 +54,26 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.10.0" id="rubrary-0100">Rubrary 0.10.0<a class="anchor" aria-label="anchor" href="#rubrary-0100"></a></h2>
+<ul><li>
+<code>GSEAsq</code>uared functions
+<ul><li>
+<code>run_GSEA_squared</code>: main function, replicating <a href="https://github.com/graeberlab-ucla/glab.library/blob/master/R/gsea_squared.R" class="external-link">glab.library::gsea_squared</a> with <code>keyword_plot_method == 1</code> setting</li>
+<li>
+<code>get_GSEAsq_terms</code>: terms/keywords</li>
+<li>and <code>plot_GSEAsq_density</code> moved to be with this set of functions</li>
+</ul></li>
+<li>
+<code>get_kspval</code> signed enrichment score implementation and visualization based on <a href="https://github.com/franapoli/signed-ks-test/blob/master/signed-ks-test.R" class="external-link">franapoli/signed-ks-test</a>
+</li>
+<li>Various bug fixes</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.9.6" id="rubrary-096">Rubrary 0.9.6<a class="anchor" aria-label="anchor" href="#rubrary-096"></a></h2>
 <div class="section level3">
 <h3 id="new-0-9-6">New<a class="anchor" aria-label="anchor" href="#new-0-9-6"></a></h3>
 <ul><li>
-<code>rwrite</code> &amp; <code>rread</code>
-</li>
+<code>rwrite</code> &amp; <code>rread</code>: fast <code>data.table</code> based read-in and write-out functions</li>
 </ul></div>
 <div class="section level3">
 <h3 id="improved-0-9-6">Improved<a class="anchor" aria-label="anchor" href="#improved-0-9-6"></a></h3>

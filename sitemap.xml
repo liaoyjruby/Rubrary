@@ -76,6 +76,9 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/genecoexp_scatter_hyper.html</loc>
   </url>
   <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/get_GSEAsq_terms.html</loc>
+  </url>
+  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/get_PC_genes.html</loc>
   </url>
   <url>
@@ -194,6 +197,9 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/run_DESeq.html</loc>
+  </url>
+  <url>
+    <loc>https://liaoyjruby.github.io/Rubrary/reference/run_GSEA_squared.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/run_PCA.html</loc>
