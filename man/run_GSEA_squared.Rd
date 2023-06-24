@@ -56,6 +56,8 @@ run_GSEA_squared(
 \item{width}{numeric; output plot width}
 
 \item{seed}{integer; randomization seed}
+
+\item{verbose}{logical; \code{TRUE} to output intermediate messages}
 }
 \value{
 \code{GSEAsq} object with \code{ggplot} object \code{plot}, df of original GSEA input with categories \code{pathways}, df of categories KS statistics \code{categories}, and df of terms KS statistics \code{terms} if applicable
@@ -85,7 +87,7 @@ GSEAsq_terms <- c("METABOLIC","DNA")
 # Run GSEA squared
 GSEAsq <- Rubrary::run_GSEA_squared(
   df_GSEA = gsea_results,
-  get_terms = TRUE, verbose = FALSE,
+  get_terms = FALSE, verbose = FALSE,
   categories = GSEAsq_terms,
   cat_terms = GSEAsq_terms,
   plot_pval = TRUE,
