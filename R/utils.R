@@ -56,10 +56,17 @@ rread <- function(input, row.names = 0, to_df = TRUE){
 #' @return None
 inst_pkg <- function(pkg, strict = FALSE){
   if (utils::menu(c("Yes", "No"), title = paste0("\nInstall package ", pkg, "?")) == "1") {
-    BiocManager::install(pkg)
+    if (!requireNamespace("BiocManager", quietly = TRUE)){
+      BiocManager::install(pkg)
+    } else {
+      utils::install.packages(pkg)
+    }
   } else {
-    ifelse(strict, stop(paste0(pkg, " not installed")),
-           message(paste0("** ", pkg, " not installed; function may break!")))
+    if(strict){
+      stop(paste0("** ", pkg, " not installed; stopping"))
+    } else {
+      message(paste0("** ", pkg, " not installed; function may not work as intended"))
+    }
   }
 }
 

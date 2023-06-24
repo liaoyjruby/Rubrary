@@ -1,9 +1,20 @@
+
+- `GSEAsq`uared functions
+  - `run_GSEA_squared`: main function, replicating [glab.library::gsea_squared](https://github.com/graeberlab-ucla/glab.library/blob/master/R/gsea_squared.R) with `keyword_plot_method == 1` setting
+  - `get_GSEAsq_terms`: terms/keywords
+  - and `plot_GSEAsq_density` moved to be with this set of functions
+- `get_kspval` signed enrichment score implementation and visualization based on [franapoli/signed-ks-test](https://github.com/franapoli/signed-ks-test/blob/master/signed-ks-test.R)
+- Various bug fixes
+  
+
 # Rubrary 0.9.6
 
 ## New
-- `rwrite` & `rread`
+
+- `rwrite` & `rread`: fast `data.table` based read-in and write-out functions
 
 ## Improved
+
 - `get_log_coding_geneexp` improvements - can specify log base now
 
 # Rubrary 0.9.5

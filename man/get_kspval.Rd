@@ -2,29 +2,47 @@
 % Please edit documentation in R/get_kspval.R
 \name{get_kspval}
 \alias{get_kspval}
-\title{Calculate Kolgomorov-Smirnov enrichment p-value}
+\title{Calculate (signed) Kolgomorov-Smirnov enrichment p-value in dataframe}
 \usage{
-get_kspval(df, value, group, group2 = NULL)
+get_kspval(
+  df,
+  value,
+  group,
+  goi = NULL,
+  rep0 = .Machine$double.xmin,
+  signed = FALSE,
+  viz = FALSE
+)
 }
 \arguments{
-\item{df}{dataframe}
+\item{df}{df; has columns \code{value} and \code{group}, \code{NA} values are filtered out}
 
 \item{value}{string; colname of values to rank by}
 
 \item{group}{string; colname of categorizations}
 
-\item{group2}{string; group of interest}
+\item{goi}{group of interest value within \code{df[,group]}}
+
+\item{rep0}{numeric; value to replace \code{0} results with}
+
+\item{signed}{logical; \code{TRUE} to return GSEA-style enrichment score as second element of list: \code{ks_pval[1] = pval}, \code{ks_pval[1] = ES}}
+
+\item{viz}{logical; \code{TRUE} to output density plot of values}
 }
 \value{
-Kolgomorov-Smirnov enrichment p-value
+Kolgomorov-Smirnov enrichment p-value & enrichment score
 }
 \description{
 If no group of interest specified, pulls first condition against others.
+}
+\details{
+Signed ES score adapted from \href{https://github.com/franapoli/signed-ks-test/blob/master/signed-ks-test.R}{franapoli/signed-ks-test} which is based on \href{https://docs.gsea-msigdb.org/#GSEA/GSEA_User_Guide/#enrichment-score-es}{GSEA enrichment score calculation}.
+Positive \code{ES} indicates that by rank, the \code{goi} are "left" of / smaller than the rest of the values, while negative \code{ES} indicates the \code{goi} is "right" of / greater than the rest of values. Use \code{viz = TRUE} to visualize the values and resulting KS p-value.
 }
 \examples{
 set.seed(13)
 df = data.frame(
   group = c(rep("A", 50), rep("B",50)),
   values = c(rnorm(50, mean = 0), rnorm(50, mean = 2)))
-get_kspval(df, value = "values", group = "group", group2 = "A")
+Rubrary::get_kspval(df, value = "values", group = "group", goi = "A", signed = TRUE)
 }

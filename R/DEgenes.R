@@ -150,9 +150,8 @@ output_DESeq <- function(DE_results, savename = NULL, rank = FALSE) {
     tibble::rownames_to_column(var = "gene")
 
   if(!is.null(savename)){
-    write.table(x = res_df,
-                file = paste0(savename, ".txt"),
-                sep = "\t", row.names = F, quote = F)
+    Rubrary::rwrite(x = res_df,
+                file = paste0(savename, ".txt"))
   }
 
   if(rank){
@@ -160,9 +159,8 @@ output_DESeq <- function(DE_results, savename = NULL, rank = FALSE) {
       select(c(gene, sign_log_p)) %>%
       mutate(sign_log_p_rank = 1:nrow(res_df))
     if(!is.null(savename)){
-      write.table(res_rank[,c("gene", "sign_log_p_rank")],
-                  file = paste0(savename, ".rnk"),
-                  sep = '\t', quote = F, row.names = F)
+      Rubrary::rwrite(res_rank[,c("gene", "sign_log_p_rank")],
+                  file = paste0(savename, ".rnk"))
     } else {
       res_df <- res_rank
     }

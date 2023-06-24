@@ -16,7 +16,6 @@ character vector of protein coding genes
 Retrieve protein coding genes from Ensembl BioMart
 }
 \examples{
-\donttest{
-  head(Rubrary::get_PC_genes())
-}
+# head(Rubrary::get_PC_genes())
+
 }

@@ -42,9 +42,8 @@ convert_genes <- function(genes, from_to = c("ensembl_gene_id", "hgnc_symbol"),
 #' @export
 #'
 #' @examples
-#' \donttest{
-#'   head(Rubrary::get_PC_genes())
-#' }
+#' # head(Rubrary::get_PC_genes())
+#'
 get_PC_genes <- function(mart = NULL){
   Rubrary::use_pkg("biomaRt", strict = T)
   if(is.null(mart)){
