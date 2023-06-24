@@ -1,3 +1,4 @@
+# Rubrary 0.10.0
 
 - `GSEAsq`uared functions
   - `run_GSEA_squared`: main function, replicating [glab.library::gsea_squared](https://github.com/graeberlab-ucla/glab.library/blob/master/R/gsea_squared.R) with `keyword_plot_method == 1` setting
