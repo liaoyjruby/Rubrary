@@ -226,11 +226,18 @@ run_GSEA_squared <- function(
     set.seed(seed)
     freq <- nrow(GSEAsq_df[GSEAsq_df$Category == cat,])
     if(verbose){ message(paste0("** ",cat, " (", freq, ")"))}
-    # Filter to relevant category - original function doesn't do this? leaves duplicates in background
-    cat_other_df <- GSEAsq_df %>% filter(Category == cat | Category == "Other")
+    # Filter to relevant category
+    cat_df <- GSEAsq_df %>%
+      filter(Category == cat)
+    # Ranks not in relevant category
+    noncat_df <- GSEAsq_df %>%
+      filter(rank %in% setdiff(seq(1, max(GSEAsq_df$rank)), cat_df$rank)) %>%
+      distinct(rank, .keep_all = TRUE) %>% # Original function doesn't do this? leaves duplicate ranks in background
+      mutate(Category = "Non-category")
+    cat_noncat_df <- bind_rows(cat_df, noncat_df)
     # Use `rep0 = 2.2e-16` (rounded `.Machine$double.eps`) to be same as original function
     ksp <- Rubrary::get_kspval(
-      df = cat_other_df, value = "rank", group = "Category", goi = cat, rep0 = rep0, signed = TRUE, viz = F)
+      df = cat_noncat_df, value = "rank", group = "Category", goi = cat, rep0 = rep0, signed = TRUE, viz = F)
     # ES: see orig. GSEA squared function that uses https://github.com/franapoli/signed-ks-test/blob/master/signed-ks-test.R
     return(data.frame(Category = cat, Freq = freq, pval = ksp$pval, ES = ksp$ES))
   }
