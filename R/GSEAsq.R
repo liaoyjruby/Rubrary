@@ -476,7 +476,7 @@ plot_GSEAsq_density <- function(
   # Save ----
   if(!is.null(savename)){
     Rubrary::rwrite(
-      x = cats_ksp_df,
+      x = cat_ksp_df,
       paste0(savename, "_GSEAsq_compare_category_kspvals.txt")
     )
     if(plot_fmt == "pdf"){ dev = grDevices::cairo_pdf } else { dev = NULL }
