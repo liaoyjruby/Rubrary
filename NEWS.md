@@ -1,3 +1,7 @@
+# Rubrary 0.10.1
+
+- `GSEAsq`uared functions bug fixes
+
 # Rubrary 0.10.0
 
 - `GSEAsq`uared functions
