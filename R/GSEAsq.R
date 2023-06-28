@@ -373,12 +373,16 @@ plot_GSEAsq_density <- function(
   if("rnk" %in% names(GSEAsq_df1)){
     GSEAsq_df1$rank <- GSEAsq_df1$rnk
   } else {
-    GSEAsq_df1$rank <- 1:nrow(GSEAsq_df1)
+    GSEAsq_df1 <- GSEAsq_df1 %>%
+      arrange(NES) %>%
+      mutate(rank = 1:nrow(.))
   }
   if("rnk" %in% names(GSEAsq_df2)){
     GSEAsq_df2$rank <- GSEAsq_df2$rnk
   } else {
-    GSEAsq_df2$rank <- 1:nrow(GSEAsq_df2)
+    GSEAsq_df2 <- GSEAsq_df2 %>%
+      arrange(NES) %>%
+      mutate(rank = 1:nrow(.))
   }
   if(!("Category" %in% names(GSEAsq_df1))){
     if("type" %in% names(GSEAsq_df1)){
@@ -396,14 +400,15 @@ plot_GSEAsq_density <- function(
   }
   ## Calculate percentile rank ----
   GSEAsq_df1 <- GSEAsq_df1 %>%
+    select(pathway, NES, rank, Category) %>%
     mutate(pct_rank = rank / max(rank),
            sig = name1)
   GSEAsq_df2 <- GSEAsq_df2 %>%
+    select(pathway, NES, rank, Category) %>%
     mutate(pct_rank = rank / max(rank),
            sig = name2)
   # Merge GSEAsq signatures ----
-  GSEAsq_df <- rbind(GSEAsq_df1, GSEAsq_df2) %>%
-    select(pathway, NES, signedlogp, rank, Category, pct_rank, sig) %>%
+  GSEAsq_df <- bind_rows(GSEAsq_df1, GSEAsq_df2) %>%
     filter(!grepl("other", Category, ignore.case = TRUE)) %>%
     mutate(sig = factor(sig, levels = c(name1, name2)))
 

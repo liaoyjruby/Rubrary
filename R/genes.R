@@ -110,7 +110,7 @@ filter_genes <- function(df, genes_filt = Rubrary::get_PC_genes(),
   }
 
   # Seurat symbol update if desired
-  if (length(nomatch) > 0){
+  if (search && (length(nomatch) > 0)){
     if (utils::menu(c("Yes", "No"), title = "\nSearch gene symbols?") == "1") {
       search = TRUE
     } else {
