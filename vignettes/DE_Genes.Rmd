@@ -171,7 +171,7 @@ rmarkdown::paged_table(
   tail(deseq_res_hgnc_PC[order(deseq_res_hgnc_PC$sign_log_p, decreasing = T),]))
 
 Rubrary::plot_volcano(
-  df_deg = deseq_res_hgnc_PC,
+  df = deseq_res_hgnc_PC,
   names = "hgnc_symbol",
   x = "log2FoldChange", y = "pvalue",
   FCcutoff = 1, pCutoff = 5e-04,
