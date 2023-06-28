@@ -65,29 +65,56 @@ get_PC_genes <- function(mart = NULL){
 
 #' Filter dataframe by list of (protein coding) genes
 #'
-#' Filter df (genes in rownames) to list of genes given.
-#'
-#' @param df dataframe; rownames must be gene symbols
+#' @param df dataframe; gene names in `gene_col` or in rownames of dataframe
 #' @param gene_col string; colnames of genes, assumed `rownames(df)` if NULL
-#' @param genes_filt char vector; (protein coding) genes to filter by
-#' @param search logical; T to use `Seurat::UpdateSymbolList` to match gene symbols better
+#' @param genes_filt char vector; (protein coding) genes to include / filter by
+#' @param search logical; `TRUE` to use `Seurat::UpdateSymbolList` to match gene symbols better
 #'
 #' @return dataframe with gene rownames filtered to protein coding only
 #' @export
+#'
+#' @examples
+#' df = data.frame(
+#'   gene = c("geneA", "geneB", "geneC", "geneD"),
+#'   sampA = c(1, 2, 3, 4),
+#'   sampB = c(2, 3, 4, 5),
+#'   sampC = c(3, 4, 5, 6)
+#' )
+#' df_filt <- Rubrary::filter_genes(df, genes_filt = c("geneB", "geneC"), gene_col = "gene")
+#'
 filter_genes <- function(df, genes_filt = Rubrary::get_PC_genes(),
                          gene_col = NULL, search = FALSE){
-  genes_orig <- ifelse(is.null(gene_col), rownames(df), df[,gene_col])
-  nomatch <- genes_orig[!(genes_orig %in% genes_filt)]
+  if(is.character(df)){
+    savename <- tools::file_path_sans_ext(df)
+    df <- Rubrary::rread(df, row.names = 1)
+  } else {
+    savename <- NULL
+  }
+  if(is.null(gene_col)){
+    genes_orig <- rownames(df)
+  } else {
+    genes_orig <- df[,gene_col]
+  }
+  nomatch <- genes_filt[!(genes_filt %in% genes_orig)]
   if (length(nomatch) > 0) {
-    warning(paste0("Genes not found in gene list: \n",
-                   paste(nomatch, collapse = ", ")),
-            call. = FALSE, immediate. = TRUE)
+    if(length(nomatch) > 100){
+      msg <- paste0(length(nomatch), " genes not found in dataframe gene list: \n",
+                    paste(nomatch[1:10], collapse = ", "), ", ...\n",
+                    "** Search may take a long time to run!")
+    } else {
+      msg <- paste0("Genes not found in dataframe gene list: \n",
+             paste(nomatch, collapse = ", "), "\n** Total: ",
+             length(nomatch))
+    }
+    warning(msg, call. = FALSE, immediate. = TRUE)
   }
 
   # Seurat symbol update if desired
   if ((search == FALSE) && (length(nomatch) > 0)){
     if (utils::menu(c("Yes", "No"), title = "\nSearch gene symbols?") == "1") {
       search = TRUE
+    } else {
+      message("** Search gene name match not performed!")
     }
   }
   if(search){
@@ -103,6 +130,12 @@ filter_genes <- function(df, genes_filt = Rubrary::get_PC_genes(),
     df_filt <- df[rownames(df) %in% genes_filt,,drop = F]
   } else {
     df_filt <- df[df[,gene_col] %in% genes_filt,,drop = F]
+  }
+
+  if(!is.null(savename)){
+    Rubrary::rwrite(
+      x = df_filt, file = paste0(savename, "_filt.txt")
+    )
   }
 
   return(df_filt)

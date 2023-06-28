@@ -12,12 +12,13 @@ plot_DEgene_boxplot(
   sig_DE,
   genes = NULL,
   metric = "sign_log_p",
+  pval = FALSE,
   genes_n = 6,
   colors = NULL,
   title = NULL,
   savename = NULL,
   height = 8,
-  width = 4
+  width = 8
 )
 }
 \arguments{
@@ -33,7 +34,9 @@ plot_DEgene_boxplot(
 
 \item{genes}{char vector; list of genes to plot, must be present in \code{data}}
 
-\item{metric}{string; colname in \code{sig_DE} to rank genes by for auto gene selection, only used if \code{genes} not provided}
+\item{metric}{string; colname in \code{sig_DE} to rank genes by for auto gene selection if \code{genes} not provided and for appending to gene name in parens}
+
+\item{pval}{logical; use \code{t.test} pvalue annotation via \code{ggpubr::stat_compare_means}}
 
 \item{genes_n}{integer; if \code{genes} not provided, get top/bottom \code{genes_n}}
 

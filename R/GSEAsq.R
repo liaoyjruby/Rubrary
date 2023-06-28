@@ -199,7 +199,8 @@ run_GSEA_squared <- function(
       filt_freq = terms_filt_freq, signlogp_base = signlogp_base,
       plot_fmt = plot_fmt, verbose = verbose)
   }
-  cat_df <- data.frame(Category = categories, Term = cat_terms)
+  cat_df <- data.frame(Category = categories, Term = cat_terms) %>%
+    mutate(Category = factor(Category, levels = categories))
 
   # Get category pathways ----
   cats_df <- lapply(
@@ -219,7 +220,8 @@ run_GSEA_squared <- function(
   # Merge cat + non-cat pathways ----
   GSEAsq_df <- bind_rows(cats_df, others_df) %>%
     arrange(rank) %>%
-    mutate(Category = factor(Category, levels = c(cat_df$Category, "Other")))
+    mutate(Category = factor(Category,
+                             levels = c(as.character(cat_df$Category), "Other")))
 
   # Category ks-pvalues ----
   cat_ksp <- function(cat){ # per term KS test & ES
@@ -243,7 +245,7 @@ run_GSEA_squared <- function(
   }
 
   if(verbose){ message("Calculated category KS p-values...")}
-  cat_ksp_df <- lapply(categories, cat_ksp) %>% # List w/ each element being a term
+  cat_ksp_df <- lapply(as.character(cat_df$Category), cat_ksp) %>% # List w/ each element being a term
     bind_rows() %>% # Turn list of rows into df
     mutate(signedlogp = sign(ES) * abs(log(pval, signlogp_base)),
            sign = case_when( # ifelse(sign(ES) != 1, "\u002b", "\u2212"))
@@ -291,7 +293,9 @@ run_GSEA_squared <- function(
     )
   }
   ## ggplot call ----
-  GSEAsq_plt <- ggplot(GSEAsq_df[GSEAsq_df$Category != "Other",], aes(x = rank, color = Category)) +
+  GSEAsq_df_plt <- GSEAsq_df[GSEAsq_df$Category != "Other",] %>%
+    mutate(Category <- droplevels(Category))
+  GSEAsq_plt <- ggplot(GSEAsq_df_plt, aes(x = rank, color = Category)) +
     {if(plot_type == "jitter") geom_point(aes(y = Category), size = 0.75,
                                           position = position_jitter(seed = seed))} +
     {if(plot_type == "density") geom_density(aes(fill = Category), alpha = 0.5)} +
@@ -346,6 +350,7 @@ run_GSEA_squared <- function(
 #' @param name1 string; descriptor for GSEAsq result 1
 #' @param name2 string; descriptor for GSEAsq result 2
 #' @param plot_pval logical; `TRUE` to include KS p-value per category in plot
+#' @param cat_order vector; desired order of GSEAsq categories
 #' @param title string; overall plot title
 #' @param colors vector; first color to signify result 1, second for result 2
 #' @param rug logical; TRUE for rugplot below density plot
@@ -357,39 +362,36 @@ run_GSEA_squared <- function(
 #' @return facet wrapped ggplot object
 #' @export
 plot_GSEAsq_density <- function(
-    GSEAsq_df1, GSEAsq_df2, name1, name2, plot_pval = TRUE,
+    GSEAsq_df1, GSEAsq_df2, name1, name2, plot_pval = TRUE, cat_order = NULL,
     title = "GSEA Squared", colors = c("firebrick", "lightslateblue"), rug = TRUE,
     savename = NULL, plot_fmt = "png", height = 8, width = 8){
   # Load & prep data ----
   if(is.character(GSEAsq_df1)){ GSEAsq_df1 <- Rubrary::rread(GSEAsq_df1) }
   if(is.character(GSEAsq_df2)){ GSEAsq_df2 <- Rubrary::rread(GSEAsq_df2) }
   ## Add ranks & category if missing ----
-  if(!("rank" %in% names(GSEAsq_df1))){
-    if("rnk" %in% names(GSEAsq_df1)){
-      GSEAsq_df1$rank <- GSEAsq_df1$rnk
-    } else {
-      GSEAsq_df1$rank <- 1:nrow(GSEAsq_df1)
-    }
+  # For compatibility w/ glab.library version which uses `rnk` as main ranking NOT `rank`
+  if("rnk" %in% names(GSEAsq_df1)){
+    GSEAsq_df1$rank <- GSEAsq_df1$rnk
+  } else {
+    GSEAsq_df1$rank <- 1:nrow(GSEAsq_df1)
   }
-  if(!("rank" %in% names(GSEAsq_df2))){
-    if("rnk" %in% names(GSEAsq_df2)){
-      GSEAsq_df2$rank <- GSEAsq_df2$rnk
-    } else {
-      GSEAsq_df2$rank <- 1:nrow(GSEAsq_df2)
-    }
+  if("rnk" %in% names(GSEAsq_df2)){
+    GSEAsq_df2$rank <- GSEAsq_df2$rnk
+  } else {
+    GSEAsq_df2$rank <- 1:nrow(GSEAsq_df2)
   }
   if(!("Category" %in% names(GSEAsq_df1))){
     if("type" %in% names(GSEAsq_df1)){
       GSEAsq_df1$Category <- GSEAsq_df1$type
     } else {
-      stop("GSEAsq_df1: no `category` or `type` column")
+      stop("GSEAsq_df1: no `Category` or `type` column")
     }
   }
   if(!("Category" %in% names(GSEAsq_df2))){
     if("type" %in% names(GSEAsq_df2)){
       GSEAsq_df2$Category <- GSEAsq_df2$type
     } else {
-      stop("GSEAsq_df2: no `category` or `type` column")
+      stop("GSEAsq_df2: no `Category` or `type` column")
     }
   }
   ## Calculate percentile rank ----
@@ -403,11 +405,15 @@ plot_GSEAsq_density <- function(
   GSEAsq_df <- rbind(GSEAsq_df1, GSEAsq_df2) %>%
     select(pathway, NES, signedlogp, rank, Category, pct_rank, sig) %>%
     filter(!grepl("other", Category, ignore.case = TRUE)) %>%
-    mutate(sig = factor(sig, levels = c(name1, name2)),
-           Category = droplevels(Category))
+    mutate(sig = factor(sig, levels = c(name1, name2)))
 
   # Calculate category kspvalue ----
-  cats <- levels(GSEAsq_df$Category)
+  if(is.factor(GSEAsq_df$Category)){
+    cats <- levels(droplevels(GSEAsq_df$Category))
+  } else {
+    cats <- unique(GSEAsq_df$Category)
+  }
+
   cat_ksp_df <- lapply(
     cats,
     function(cat){
@@ -431,7 +437,6 @@ plot_GSEAsq_density <- function(
            )
     )
 
-
   # Plot ----
   cat_text_obj <- element_text(size = 10, angle = 0, hjust = 1, color = "black")
   ## Plot pval calculations ----
@@ -442,16 +447,21 @@ plot_GSEAsq_density <- function(
         size = 12, angle = 0, hjust = 1, color = "black", lineheight = 1.2)
       cat_text <- paste0(
         "**", cat_ksp_df$Category, "**<br>",
-        "<span style = 'font-size:10pt;color:gray40;'>*p = ", signif(cat_ksp_df$pval, digits = 2), "* (", cat_ksp_df$sign, ")</span>")
+        "<span style = 'font-size:10pt;color:gray40;'>*p = ", signif(cat_ksp_df$pval, digits = 2), "*</span>") # (", cat_ksp_df$sign, ")
     } else { # No ggtext
       cat_text <- paste0(
         cat_ksp_df$Category, "\n",
-        "p = ", signif(cat_ksp_df$pval, digits = 2), " (", cat_ksp_df$sign, ")")
+        "p = ", signif(cat_ksp_df$pval, digits = 2)) # , " (", cat_ksp_df$sign, ")"
     }
   } else {
     cat_text <- cat_ksp_df$Category
   }
   cat_lab <- stats::setNames(nm = cat_ksp_df$Category, cat_text)
+
+  # Set category factor order
+  if(!is.null(cat_order)){
+    GSEAsq_df$Category <- factor(GSEAsq_df$Category, levels = cat_order)
+  }
 
   ## ggplot call ----
   plt <- ggplot(GSEAsq_df, aes(x = pct_rank)) +

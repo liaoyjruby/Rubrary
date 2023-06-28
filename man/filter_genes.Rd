@@ -12,17 +12,27 @@ filter_genes(
 )
 }
 \arguments{
-\item{df}{dataframe; rownames must be gene symbols}
+\item{df}{dataframe; gene names in \code{gene_col} or in rownames of dataframe}
 
-\item{genes_filt}{char vector; (protein coding) genes to filter by}
+\item{genes_filt}{char vector; (protein coding) genes to include / filter by}
 
 \item{gene_col}{string; colnames of genes, assumed \code{rownames(df)} if NULL}
 
-\item{search}{logical; T to use \code{Seurat::UpdateSymbolList} to match gene symbols better}
+\item{search}{logical; \code{TRUE} to use \code{Seurat::UpdateSymbolList} to match gene symbols better}
 }
 \value{
 dataframe with gene rownames filtered to protein coding only
 }
 \description{
-Filter df (genes in rownames) to list of genes given.
+Filter dataframe by list of (protein coding) genes
+}
+\examples{
+df = data.frame(
+  gene = c("geneA", "geneB", "geneC", "geneD"),
+  sampA = c(1, 2, 3, 4),
+  sampB = c(2, 3, 4, 5),
+  sampC = c(3, 4, 5, 6)
+)
+df_filt <- Rubrary::filter_genes(df, genes_filt = c("geneB", "geneC"), gene_col = "gene")
+
 }

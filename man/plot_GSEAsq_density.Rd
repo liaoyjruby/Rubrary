@@ -10,6 +10,7 @@ plot_GSEAsq_density(
   name1,
   name2,
   plot_pval = TRUE,
+  cat_order = NULL,
   title = "GSEA Squared",
   colors = c("firebrick", "lightslateblue"),
   rug = TRUE,
@@ -29,6 +30,8 @@ plot_GSEAsq_density(
 \item{name2}{string; descriptor for GSEAsq result 2}
 
 \item{plot_pval}{logical; \code{TRUE} to include KS p-value per category in plot}
+
+\item{cat_order}{vector; desired order of GSEAsq categories}
 
 \item{title}{string; overall plot title}
 

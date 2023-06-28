@@ -62,12 +62,12 @@ run_RRHO(
 
 \item{palette}{string; RColorBrewer continuous palette name}
 
-\item{waterfall}{logical; T to include waterfall subplots (plot_method = "ggplot" only)}
+\item{waterfall}{logical; \code{TRUE} to include waterfall subplots (\code{hm_method = "ggplot"} only)}
 
-\item{scatter}{logical; T to output metric & rank scatterplot}
+\item{scatter}{logical; \code{TRUE} to output metric & rank scatterplot}
 }
 \value{
-RRHO results
+RRHO results, as list of plots if \code{scatter == TRUE} or as ggplot RRHO heatmap object
 }
 \description{
 Inference on the amount of agreement in two sorted lists using the Rank-Rank Hypergeometric Overlap test.

@@ -23,6 +23,7 @@ rwrite <- function(x, file, sep = "\t", quote = FALSE, row.names = FALSE){
 #'
 #' Default file reading function in Rubrary functions because data is often in large tables and `read.delim` isn't optimized for high dimensionality. If file extension is `xlsx`, will attempt to use `openxlsx::read.xlsx` instead. Setting `row.names != 0` will result in output being a `data.frame`.
 #'
+#' @import dplyr
 #' @param input string; `fread` input
 #' @param row.names integer; column to use as row names, 0 for none
 #' @param to_df logical; T to convert output to data.frame
@@ -34,13 +35,14 @@ rwrite <- function(x, file, sep = "\t", quote = FALSE, row.names = FALSE){
 #' glab_Beltran_2016 <- "https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt"
 #' df <- Rubrary::rread(glab_Beltran_2016, row.names = 1, to_df = FALSE)
 #' Rubrary::corner(df, 5)
-rread <- function(input, row.names = 0, to_df = TRUE){
+rread <- function(input, row.names = 0, make.names = TRUE, to_df = TRUE){
   if(tools::file_ext(input) == "xlsx"){
     Rubrary::use_pkg("openxlsx")
     df <- openxlsx::read.xlsx(input)
   } else {
     df <- data.table::fread(input)
   }
+  if(make.names){ colnames(df) <- make.names(colnames(df), unique = TRUE, allow_ = TRUE)}
   if(row.names != 0){ df <- tibble::column_to_rownames(df, var = names(df)[row.names])}
   if(to_df){df <- as.data.frame(df)}
   return(df)

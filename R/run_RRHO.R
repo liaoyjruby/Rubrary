@@ -31,10 +31,10 @@ utils::globalVariables(c(
 #' @param BY logical; T for Benjamini-Yekutieli FDR corrected pvalues
 #' @param hm_method string; make heatmap with ggplot geom_raster or lattice levelplot
 #' @param palette string; RColorBrewer continuous palette name
-#' @param waterfall logical; T to include waterfall subplots (plot_method = "ggplot" only)
-#' @param scatter logical; T to output metric & rank scatterplot
+#' @param waterfall logical; `TRUE` to include waterfall subplots (`hm_method = "ggplot"` only)
+#' @param scatter logical; `TRUE` to output metric & rank scatterplot
 #'
-#' @return RRHO results
+#' @return RRHO results, as list of plots if `scatter == TRUE` or as ggplot RRHO heatmap object
 #' @export
 
 run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
@@ -119,6 +119,12 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     BY = BY,
     alternative = "enrichment"
   )
+
+  # # Plot annotation with labels #n - ugly!!
+  # sig1_low <- paste0(sig1_low, " (n = ", sum(sig1[,paste0(metric1,".1")] < 0),")")
+  # sig1_high <- paste0(sig1_high, " (n = ", sum(sig1[,paste0(metric1,".1")] > 0),")")
+  # sig2_low <- paste0(sig2_low, " (n = ", sum(sig2[,paste0(metric2,".2")] < 0),")")
+  # sig2_high <- paste0(sig2_high, " (n = ", sum(sig2[,paste0(metric2,".2")] > 0),")")
 
   if(hm_method == "lattice"){ # lattice style heatmap
     requireNamespace("lattice", quietly = TRUE)
@@ -219,8 +225,6 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
         width = wd, height = ht
       )
     }
-
-    print(plt)
   }
 
   if(scatter){
@@ -234,13 +238,12 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       scale_x_continuous(breaks = scales::pretty_breaks(6)) +
       scale_y_continuous(breaks = scales::pretty_breaks(6))
 
-    print(metricsct)
-
     ranksct <- Rubrary::plot_scatter(
       df = merged, rank = T, reverse = F,
       xval = paste0(metric1, ".1"), xlabel = sig1_name,
       yval = paste0(metric2, ".2"), ylabel = sig2_name,
-      title = paste0("Rank Scatter Plot")
+      title = paste0("Rank Scatter Plot"),
+      pt_alpha = 0.5, pt_size = 0.5
     ) +
       theme(line = element_blank(),
             axis.text = element_blank(),
@@ -266,13 +269,11 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       ranksct <- rnk_wf
     }
 
-    print(ranksct)
-
     if(!is.null(savename)){
       ggsave(
         filename = paste0(savename,"_metricsct.png"),
         plot = metricsct,
-        width = 4, height = 4
+        width = wd, height = wd # Square
       )
 
       ggsave(
@@ -283,5 +284,16 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     }
   }
 
-  return(plt)
+  if(scatter){
+    RRHO <- list(
+      heatmap = plt,
+      metricsct = metricsct,
+      ranksct = ranksct
+    )
+    class(RRHO) <- "RRHO"
+  } else {
+    RRHO <- plt
+  }
+
+  return(RRHO)
 }

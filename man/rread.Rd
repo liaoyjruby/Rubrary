@@ -4,7 +4,7 @@
 \alias{rread}
 \title{Wrapper for \code{data.table::fread} implementing \code{row.names} functionality}
 \usage{
-rread(input, row.names = 0, to_df = TRUE)
+rread(input, row.names = 0, make.names = TRUE, to_df = TRUE)
 }
 \arguments{
 \item{input}{string; \code{fread} input}

@@ -99,34 +99,6 @@ run_DESeq <- function(mtx_rawcts, mtx_annotation, savename = NULL,
   return(resOrdered)
 }
 
-#' Filter signature to PC coding only by matching with genes in log2UQcounts
-#'
-#' @param sig_path string; path to DESeq signature
-#'
-#' @return DESeq signature subsetted to PC only genes
-#' @export
-#'
-make_pconly <- function(sig_path) {
-  if (grepl(".rnk", sig_path)) {
-    rnkonly <- T
-  } else {
-    rnkonly <- F
-  }
-
-  pc_genes <- read.delim("/Users/liaoyj/Library/CloudStorage/Dropbox/Ovarian Project/log2_coding_expression_datasets/protein-coding_gene.txt")$symbol
-  if (!rnkonly) {
-    sig <- utils::read.delim(sig_path, header = T)
-    sig_pconly <- sig[sig$gene %in% pc_genes, ] # Match with log2UQ coding genes
-    Rubrary::rwrite(sig_pconly, paste0(tools::file_path_sans_ext(sig_path), "_pconly.txt"))
-  }
-  # Make rank
-  sig_rnk <- utils::read.delim(paste0(tools::file_path_sans_ext(sig_path), ".rnk"), header = F, col.names = c("gene", "score"))
-  sig_pconly_rnk <- sig_rnk[sig_rnk$gene %in% pc_genes, ] # Match with log2UQ coding genes
-  Rubrary::rwrite(sig_pconly_rnk, paste0(tools::file_path_sans_ext(sig_path), "_pconly.rnk"))
-
-  return(sig_pconly)
-}
-
 #' plot_DESeq_scatter
 #'
 #' @param sig1path Path to 1st signature (x-axis)

@@ -2,19 +2,21 @@
 % Please edit documentation in R/DEgenes.R
 \name{output_DESeq}
 \alias{output_DESeq}
-\title{Output DESeq results as dataframe with signed log2 p metric}
+\title{Output DESeq results as dataframe with signed log p metric}
 \usage{
-output_DESeq(DE_results, savename = NULL, rank = FALSE)
+output_DESeq(DE_results, logbase = 2, savename = NULL, rank = FALSE)
 }
 \arguments{
-\item{DE_results}{DESeq results object}
+\item{DE_results}{\code{DESeqDataSet} object}
 
-\item{savename}{string; filepath to save table under (no ext.)}
+\item{logbase}{numeric; base of log for sign log_base p metric}
 
-\item{rank}{logical; T to output .rnk file compatible with Java GSEA app}
+\item{savename}{string; filepath to save table under}
+
+\item{rank}{logical; \code{TRUE} to output .rnk file compatible with GSEA Java app}
 }
 \value{
-Dataframe with DESeq results
+Dataframe with DESeq results including signed log p metric
 }
 \description{
 Filters out all \code{sign_log_p == NA} rows.
