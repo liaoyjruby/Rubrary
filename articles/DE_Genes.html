@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -286,7 +286,10 @@ genes efficiently.</p>
 <span>  df <span class="op">=</span> <span class="va">deseq_res_hgnc</span>,</span>
 <span>  gene_col <span class="op">=</span> <span class="st">"hgnc_symbol"</span>,</span>
 <span>  genes_filt <span class="op">=</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/get_PC_genes.html">get_PC_genes</a></span><span class="op">(</span><span class="va">mart</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: 2967 genes not found in dataframe gene list: </span></span>
+<span><span class="co">#&gt; SNTG2, KIR3DL2, KIR3DL3, KIR3DL1, PTCHD3, KIR3DP1, KIR2DL4, KIR2DS2, FCAR, NPBWR2, ...</span></span>
+<span><span class="co">#&gt; ** Search may take a long time to run!</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="volcano-plot">Volcano plot<a class="anchor" aria-label="anchor" href="#volcano-plot"></a>
@@ -314,7 +317,7 @@ top left.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_volcano.html">plot_volcano</a></span><span class="op">(</span></span>
-<span>  df_deg <span class="op">=</span> <span class="va">deseq_res_hgnc_PC</span>,</span>
+<span>  df <span class="op">=</span> <span class="va">deseq_res_hgnc_PC</span>,</span>
 <span>  names <span class="op">=</span> <span class="st">"hgnc_symbol"</span>,</span>
 <span>  x <span class="op">=</span> <span class="st">"log2FoldChange"</span>, y <span class="op">=</span> <span class="st">"pvalue"</span>,</span>
 <span>  FCcutoff <span class="op">=</span> <span class="fl">1</span>, pCutoff <span class="op">=</span> <span class="fl">5e-04</span>,</span>

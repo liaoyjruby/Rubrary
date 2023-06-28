@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,12 +68,13 @@
 <span>  <span class="va">sig_DE</span>,</span>
 <span>  genes <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  metric <span class="op">=</span> <span class="st">"sign_log_p"</span>,</span>
+<span>  pval <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  genes_n <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  savename <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  height <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>  width <span class="op">=</span> <span class="fl">4</span></span>
+<span>  width <span class="op">=</span> <span class="fl">8</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,7 +105,11 @@
 
 
 <dt>metric</dt>
-<dd><p>string; colname in <code>sig_DE</code> to rank genes by for auto gene selection, only used if <code>genes</code> not provided</p></dd>
+<dd><p>string; colname in <code>sig_DE</code> to rank genes by for auto gene selection if <code>genes</code> not provided and for appending to gene name in parens</p></dd>
+
+
+<dt>pval</dt>
+<dd><p>logical; use <code>t.test</code> pvalue annotation via <code><a href="https://rpkgs.datanovia.com/ggpubr/reference/stat_compare_means.html" class="external-link">ggpubr::stat_compare_means</a></code></p></dd>
 
 
 <dt>genes_n</dt>

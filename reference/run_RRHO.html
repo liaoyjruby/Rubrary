@@ -12,7 +12,7 @@ Outputs RRHO results, hypermatrix heatmap, rank rank scatter, metric scatter."><
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -157,18 +157,18 @@ Outputs RRHO results, hypermatrix heatmap, rank rank scatter, metric scatter.</p
 
 
 <dt>waterfall</dt>
-<dd><p>logical; T to include waterfall subplots (plot_method = "ggplot" only)</p></dd>
+<dd><p>logical; <code>TRUE</code> to include waterfall subplots (<code>hm_method = "ggplot"</code> only)</p></dd>
 
 
 <dt>scatter</dt>
-<dd><p>logical; T to output metric &amp; rank scatterplot</p></dd>
+<dd><p>logical; <code>TRUE</code> to output metric &amp; rank scatterplot</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>RRHO results</p>
+<p>RRHO results, as list of plots if <code>scatter == TRUE</code> or as ggplot RRHO heatmap object</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

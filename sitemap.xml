@@ -61,9 +61,6 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/df_to_mtx.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_DESeq_PC.html</loc>
-  </url>
-  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_genes.html</loc>
   </url>
   <url>
@@ -104,9 +101,6 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/left_join_rownames.html</loc>
-  </url>
-  <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/make_pconly.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/output_DESeq.html</loc>
