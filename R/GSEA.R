@@ -133,8 +133,10 @@ plot_GSEA_barplot <- function(
     arrange(pathway) %>%
     # Pathway name position depending on 0/neg min if pos, 0/pos max if neg
     group_by(pathway) %>%
-    mutate(pw_y = ifelse(all(pos == "Pos") && min(NES) < 0, min(NES), 0),
-           pw_y = ifelse(all(pos == "Neg") && max(NES) > 0, max(NES), 0)) %>%
+    mutate(
+      pw_y = 0,
+      pw_y = ifelse(all(pos == "Pos") && min(NES) < 0, min(NES), pw_y),
+      pw_y = ifelse(all(pos == "Neg") && max(NES) > 0, max(NES), pw_y)) %>%
     ungroup(pathway) %>%
     # "Pseudo" discrete scale - axis separates pos/neg NES pws so leave a gap
     mutate(ord = c(rep(1:n_pos, each = n_res),
@@ -194,9 +196,9 @@ plot_GSEA_barplot <- function(
     # NES negative
     geom_segment(data = GSEA[GSEA$pos == "Neg",],
                  aes(x = ord, xend = ord, y = 0, yend = 0.025)) +
-    # NES tick values
+    # NES tick values - size scales to pathway name size
     geom_label(data = tick_frame, aes(x = zero, y = ticks, label = ticks),
-               vjust = 1.75, size = 3.5, label.size = 0., label.padding = unit(0.1, "lines")) +
+               vjust = 1.75, size = (3.5/5) * pw_size, label.size = 0., label.padding = unit(0.1, "lines")) +
     # Pathway names next to ticks
     # NES positive
     geom_text(data = GSEA[GSEA$pos == "Pos",], aes(x = ord, y = pw_y),
@@ -206,8 +208,8 @@ plot_GSEA_barplot <- function(
     geom_text(data = GSEA[GSEA$pos == "Neg",], aes(x = ord, y = pw_y),
               label = GSEA[GSEA$pos == "Neg",]$pw_name, size = pw_size,
               hjust = 0, nudge_y = 0.075) +
-    # "NES" annotation
-    geom_text(aes(x = pseud_0, y = NES_min_int - 0.25), label = "NES", size = 5,
+    # "NES" annotation - size same as pathway names? maybe scale?
+    geom_text(aes(x = pseud_0, y = NES_min_int - 0.25), label = "NES", size = pw_size,
               hjust = 1, nudge_y = -0.075)
 
   #### BARPLOT
