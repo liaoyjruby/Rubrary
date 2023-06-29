@@ -18,6 +18,7 @@ plot_GSEA_pathway_batch(
   lab_low = NULL,
   lab_high = NULL,
   legendpos = c(0.5, 0.2),
+  hl_color = "firebrick3",
   label = length(pthwys[[path_name]]) < 50,
   sig_name = "",
   savedir = NULL
@@ -49,6 +50,8 @@ plot_GSEA_pathway_batch(
 \item{lab_high}{string; label for high rankcol values}
 
 \item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)}
+
+\item{hl_color}{string; color for highlight}
 
 \item{label}{logical; T to label points in plot}
 

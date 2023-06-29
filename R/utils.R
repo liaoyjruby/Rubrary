@@ -24,8 +24,10 @@ rwrite <- function(x, file, sep = "\t", quote = FALSE, row.names = FALSE){
 #' Default file reading function in Rubrary functions because data is often in large tables and `read.delim` isn't optimized for high dimensionality. If file extension is `xlsx`, will attempt to use `openxlsx::read.xlsx` instead. Setting `row.names != 0` will result in output being a `data.frame`.
 #'
 #' @import dplyr
+#'
 #' @param input string; `fread` input
 #' @param row.names integer; column to use as row names, 0 for none
+#' @param make.names logical; `TRUE` to ensure column names are unique and valid (replicating `utils::read.table`)
 #' @param to_df logical; T to convert output to data.frame
 #'
 #' @return Table read in from input

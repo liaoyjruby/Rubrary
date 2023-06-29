@@ -11,6 +11,8 @@ rread(input, row.names = 0, make.names = TRUE, to_df = TRUE)
 
 \item{row.names}{integer; column to use as row names, 0 for none}
 
+\item{make.names}{logical; \code{TRUE} to ensure column names are unique and valid (replicating \code{utils::read.table})}
+
 \item{to_df}{logical; T to convert output to data.frame}
 }
 \value{

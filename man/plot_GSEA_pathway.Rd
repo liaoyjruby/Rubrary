@@ -13,6 +13,7 @@ plot_GSEA_pathway(
   hightolow = FALSE,
   label = length(geneset) < 20,
   legendpos = "none",
+  hl_color = "firebrick3",
   lab_high = NULL,
   lab_low = NULL,
   hllab = "Highlight",
@@ -37,6 +38,8 @@ plot_GSEA_pathway(
 \item{label}{logical; T to label highlighted genes}
 
 \item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)}
+
+\item{hl_color}{string; color for highlight}
 
 \item{lab_high}{string; description of high values}
 

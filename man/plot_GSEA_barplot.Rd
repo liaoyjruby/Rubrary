@@ -28,7 +28,7 @@ plot_GSEA_barplot(
 )
 }
 \arguments{
-\item{gsea_res}{dataframe; GSEA results w/ \code{pathway} and \code{NES} columns}
+\item{gsea_res}{df/string; (path to) GSEA results w/ \code{pathway} and \code{NES} columns}
 
 \item{gsea_name}{string; description of GSEA results}
 
@@ -46,7 +46,7 @@ plot_GSEA_barplot(
 
 \item{pw_size}{numeric; pathway name text size}
 
-\item{gsea2_res}{dataframe; 2nd GSEA results w/ \code{pathway} and \code{NES} columns}
+\item{gsea2_res}{df/string; (path to) 2nd GSEA results w/ \code{pathway} and \code{NES} columns}
 
 \item{gsea2_name}{string; description of 2nd GSEA results}
 

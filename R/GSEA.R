@@ -51,7 +51,7 @@ format_GSEA_name <- function(
 #' @import ggplot2
 #' @import dplyr
 #'
-#' @param gsea_res dataframe; GSEA results w/ `pathway` and `NES` columns
+#' @param gsea_res df/string; (path to) GSEA results w/ `pathway` and `NES` columns
 #' @param gsea_name string; description of GSEA results
 #' @param gsea_pws char vector; pathways in GSEA results to plot
 #' @param n_pws integer; if no pathways provided, top/bottom n pathways (ordered by NES) to plot
@@ -60,7 +60,7 @@ format_GSEA_name <- function(
 #' @param pw_source logical; T to append pathway source in parenthesis
 #' @param pw_ignore char vector; list of terms to ignore for name formatting
 #' @param pw_size numeric; pathway name text size
-#' @param gsea2_res dataframe; 2nd GSEA results w/ `pathway` and `NES` columns
+#' @param gsea2_res df/string; (path to) 2nd GSEA results w/ `pathway` and `NES` columns
 #' @param gsea2_name string; description of 2nd GSEA results
 #' @param order2 logical; order pathways by NES of 2nd GSEA results?
 #' @param ptrn2 string; `ggpattern` pattern arg: 'stripe', 'crosshatch', 'point', 'circle', 'none'
@@ -81,6 +81,10 @@ plot_GSEA_barplot <- function(
     gsea2_res = NULL, gsea2_name = NULL, order2 = FALSE, ptrn2 = "none",
     NES_cutoff = NULL, sig_cutoff = NULL, colors = c("firebrick", "darkblue"), title = NULL,
     savename = NULL, width = 10, height = NULL){
+
+  if(is.character(gsea_res)){ gsea_res <- Rubrary::rread(gsea_res) }
+  if(is.character(gsea2_res)){ gsea2_res <- Rubrary::rread(gsea2_res) }
+
   #### CLEAN
   if(is.null(gsea_pws)){
     if(is.null(gsea2_res)){
@@ -304,6 +308,7 @@ plot_GSEA_barplot <- function(
 #' @param label logical; T to label highlighted genes
 #' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)
 #' @param title string; plot title
+#' @param hl_color string; color for highlight
 #' @param subtitle string; plot subtitle; !! overwrites p-val_enrichment
 #' @param savename string; filepath to save png under
 #' @param lab_high string; description of high values
@@ -313,10 +318,11 @@ plot_GSEA_barplot <- function(
 #' @return grid of gene set enrichment waterfall above enrichment plot
 #' @export
 #'
-plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_name = rankcol, hightolow = FALSE,
-                              label = length(geneset) < 20, legendpos = "none",
-                              lab_high = NULL, lab_low = NULL, hllab = "Highlight",
-                              title = NULL, subtitle = NULL, savename = NULL){
+plot_GSEA_pathway <- function(
+    sig, geneset, genecol = "gene", rankcol, rankcol_name = rankcol, hightolow = FALSE,
+    label = length(geneset) < 20, legendpos = "none", hl_color = "firebrick3",
+    lab_high = NULL, lab_low = NULL, hllab = "Highlight", title = NULL, subtitle = NULL,
+    savename = NULL){
   Rubrary::use_pkg("fgsea")
 
   sig <- sig %>%
@@ -331,6 +337,7 @@ plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_n
     highlight = path_genes,
     lab_high = lab_high,
     lab_low = lab_low,
+    colors = c(hl_color, "gray"),
     hllab = hllab, otherlab = "Other genes",
     rankcol = rankcol,
     rankcol_name = rankcol_name,
@@ -385,6 +392,7 @@ plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_n
 #' @param lab_low string; label for low rankcol values
 #' @param lab_high string; label for high rankcol values
 #' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)
+#' @param hl_color string; color for highlight
 #' @param label logical; T to label points in plot
 #' @param sig_name string; name of signature
 #' @param savedir string; directory path for saving plot
@@ -394,9 +402,8 @@ plot_GSEA_pathway <- function(sig, geneset, genecol = "gene", rankcol, rankcol_n
 plot_GSEA_pathway_batch <- function(
     path_name, pthwys, sig, genecol = "gene", rankcol, rankcol_name = rankcol,
     hllab = "Pathway genes", hightolow = FALSE, format_name = TRUE, ignore_name = NULL,
-    lab_low = NULL, lab_high = NULL, legendpos = c(0.5, 0.2),
-    label = length(pthwys[[path_name]]) < 50,
-    sig_name = "", savedir = NULL){
+    lab_low = NULL, lab_high = NULL, legendpos = c(0.5, 0.2), hl_color = "firebrick3",
+    label = length(pthwys[[path_name]]) < 50, sig_name = "", savedir = NULL){
 
   if(!is.null(savedir)){ # Automate save path
     sig_name <- if(sig_name != "") paste0(sig_name,"_")
@@ -419,6 +426,7 @@ plot_GSEA_pathway_batch <- function(
     rankcol_name = rankcol_name,
     geneset = pthwys[[path_name]],
     label = label,
+    hl_color = hl_color,
     title = plot_name,
     lab_low = lab_low,
     lab_high = lab_high,
