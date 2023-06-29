@@ -1,3 +1,7 @@
+# Rubrary 0.10.3
+
+- theme adjustments
+
 # Rubrary 0.10.2
 
 - Removed old DESeq functions, reorganized, and fixed various bugs
