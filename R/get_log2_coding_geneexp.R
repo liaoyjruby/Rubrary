@@ -16,7 +16,7 @@ get_log_coding_geneexp <- function(exp, base = 2, pc_genes = Rubrary::get_PC_gen
   exp_logp1_pc <- log(exp + 1, base = base) %>%
     as.data.frame() %>%
     tibble::rownames_to_column(var = "gene") %>%
-    filter(gene %in% pc_genes)
+    Rubrary::filter_genes(genes_filt = pc_genes, gene_col = "gene")
   # Write to tsv
   Rubrary::rwrite(
     x = exp_logp1_pc,

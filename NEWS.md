@@ -1,5 +1,9 @@
-# Rubrary 0.11.0
 
+Minor
+
+- `get_log_coding_geneexp` uses `filter_genes` now
+
+# Rubrary 0.11.0
 
 - removed a LOT of old functions that weren't generalized very well so were probably not used anyways
 - added more examples to various functions (DE genes / GSEA)

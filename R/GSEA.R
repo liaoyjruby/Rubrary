@@ -1,7 +1,8 @@
 utils::globalVariables(c(
   "NES", "name", "ord", "pathway", "pos", "ticks", "zero",
   "pct_rnk", "rnk", "sig", "signedlogp", "type",
-  "NES.x", "NES.y", "pw_y", "ptrn", "sig_alpha"
+  "NES.x", "NES.y", "pw_y", "ptrn", "sig_alpha",
+  "rank_val"
 ))
 
 #' Format GSEA pathway name

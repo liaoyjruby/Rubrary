@@ -1,5 +1,5 @@
 utils::globalVariables(c(
-  ".data", "label_pos", "label"
+  ".data", "label_pos", "label", "rank_val"
 ))
 
 #' Plot horizontal waterfall plot (with optional density)
@@ -168,7 +168,7 @@ plot_waterfall <- function(
       scale_x_continuous(limits = c(1, max(sig$rank))) +
       theme(legend.position = "none",
             axis.text.y = element_blank())
-    if (vert) {
+    if (vertical) {
       dplt <- dplt + coord_flip()
       grid <- wf_lab + dplt +
         plot_layout(widths = c(3,1))
