@@ -1,3 +1,8 @@
+
+- removed a LOT of old functions that weren't generalized very well so were probably not used anyways
+- added more examples to various functions (DE genes / GSEA)
+- reorganization of function reference/index
+
 # Rubrary 0.10.3
 
 - theme adjustments

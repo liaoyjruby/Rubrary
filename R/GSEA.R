@@ -300,8 +300,9 @@ plot_GSEA_barplot <- function(
 #'
 #' @import ggplot2
 #' @import dplyr
+#' @import patchwork
 #'
-#' @param sig dataframe; genecol + rankcol columns
+#' @param sig df/string; (path to) dataframe with genecol + rankcol columns
 #' @param geneset vector; list of genes
 #' @param genecol string; colname of gene names in `sig`
 #' @param rankcol string; colname of values in `sig`
@@ -319,14 +320,28 @@ plot_GSEA_barplot <- function(
 #'
 #' @return grid of gene set enrichment waterfall above enrichment plot
 #' @export
+#' @examples
+#' airway_deseq = Rubrary::airway_deseq_res
+#' genes = Rubrary::GSEA_pathways$GOBP_REGULATION_OF_GLUCOSE_IMPORT
+#' Rubrary::plot_GSEA_pathway(
+#'   sig = airway_deseq,
+#'   geneset = genes,
+#'   genecol = "hgnc_symbol",
+#'   rankcol = "sign_log_p",
+#'   rankcol_name = "Sign log p value",
+#'   lab_high = "\U2191 in treated\n\U2193 in untreated",
+#'   lab_low = "\U2191 in untreated\n\U2193 in treated",
+#'   hllab = "Highlight genes",
+#'   title = "Airway Treated vs. Untreated DESeq - Glucose Import Regulation Genes"
+#' )
 #'
 plot_GSEA_pathway <- function(
     sig, geneset, genecol = "gene", rankcol, rankcol_name = rankcol, hightolow = FALSE,
     label = length(geneset) < 20, legendpos = "none", hl_color = "firebrick3",
     lab_high = NULL, lab_low = NULL, hllab = "Highlight", title = NULL, subtitle = NULL,
     savename = NULL){
-  Rubrary::use_pkg("fgsea")
 
+  if(is.character(sig)){ sig <- Rubrary::rread(sig) }
   sig <- sig %>%
     rename(gene = any_of(genecol)) %>%
     select(gene, everything())
@@ -354,23 +369,26 @@ plot_GSEA_pathway <- function(
                    axis.text.x= element_blank(),
                    axis.ticks.x= element_blank())
   # Enrichment plot
+  Rubrary::use_pkg("fgsea")
+  es_stats <- sig %>%
+    rename(rank_val = !!sym(rankcol)) %>%
+    select(gene, rank_val) %>%
+    tibble::deframe()
+
   plt_e <- fgsea::plotEnrichment(
     pathway = geneset,
-    stats = tibble::deframe(sig[,c("gene", rankcol)])
+    stats = es_stats
   ) +
     ylab("Enrichment Score") +
     xlab("Rank") +
     theme_classic() +
     {if(!hightolow) scale_x_reverse()}
 
-  grid <- cowplot::plot_grid(
-    plt_wf, plt_e,
-    align = "v", ncol = 1,
-    rel_heights = c(2,1)
-  )
+  grid <- plt_wf / plt_e +
+    plot_layout(heights = c(2,1))
 
   if(!is.null(savename)){
-    cowplot::ggsave2(
+    ggplot::ggsave2(
       filename = savename,
       plot = grid,
       width = 9, height = 6
@@ -379,7 +397,7 @@ plot_GSEA_pathway <- function(
   return(grid)
 }
 
-#' `plot_GSEA_pathway` that works nicely with `lapply`
+#' `plot_GSEA_pathway` wrapper that works nicely with `lapply`
 #'
 #' @param path_name string; name of pathway
 #' @param pthwys named list; key = geneset name, values = char vector of genes in geneset
@@ -396,16 +414,32 @@ plot_GSEA_pathway <- function(
 #' @param legendpos vector; value btwn 0-1 as legend coordinates (ggplot2 legend.position)
 #' @param hl_color string; color for highlight
 #' @param label logical; T to label points in plot
-#' @param sig_name string; name of signature
 #' @param savedir string; directory path for saving plot
+#' @param sig_name string; name of signature to append to save path
 #'
 #' @return Gene set enrichment plot as ggplot object
 #' @export
+#' @examples
+#' airway_deseq = Rubrary::airway_deseq_res
+#' pathways <- Rubrary::GSEA_pathways
+#' pws_plot <- c("HALLMARK_ADIPOGENESIS", "GOCC_POSTSYNAPTIC_MEMBRANE")
+#' lapply(
+#'   pws_plot,
+#'   Rubrary::plot_GSEA_pathway_batch,
+#'   pthwys = pathways,
+#'   sig = airway_deseq,
+#'   genecol = "hgnc_symbol",
+#'   rankcol = "sign_log_p",
+#'   rankcol_name = "Sign log p value",
+#'   lab_high = "\U2191 in treated\n\U2193 in untreated",
+#'   lab_low = "\U2191 in untreated\n\U2193 in treated",
+#' )
+#'
 plot_GSEA_pathway_batch <- function(
     path_name, pthwys, sig, genecol = "gene", rankcol, rankcol_name = rankcol,
     hllab = "Pathway genes", hightolow = FALSE, format_name = TRUE, ignore_name = NULL,
     lab_low = NULL, lab_high = NULL, legendpos = c(0.5, 0.2), hl_color = "firebrick3",
-    label = length(pthwys[[path_name]]) < 50, sig_name = "", savedir = NULL){
+    label = length(pthwys[[path_name]]) < 50, savedir = NULL, sig_name = ""){
 
   if(!is.null(savedir)){ # Automate save path
     sig_name <- if(sig_name != "") paste0(sig_name,"_")

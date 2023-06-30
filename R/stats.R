@@ -67,3 +67,38 @@ get_kspval <- function(df, value, group, goi = NULL, rep0 = .Machine$double.xmin
   }
   return(ks_pval)
 }
+
+#' Shapiro-Wilk test of normality
+#'
+#' Uses `stats::shapiro.test` to perform test of normality and outputs interpretation into console.
+#'
+#' The null hypothesis of the S-W test is that the sample comes from a normally distributed population. If the p-value is less than the chosen alpha level, the null hypothesis is rejected, indicating that the data has non-normal distribution.
+#'
+#' @param values numeric vector
+#' @param alpha numeric; p-value threshold for significance
+#'
+#' @return Logical SW normality test result; message
+#' @seealso [Rubrary::plot_distribution()]
+#' @export
+#'
+#' @examples
+#' set.seed(13)
+#' check_normal(rnorm(100))
+#'
+check_normal <- function(values, alpha = 0.05){
+  if(length(values) > 5000){
+    message("** Sampling 5000 values w/o replacement...")
+    values <- sample(values, 5000)
+  }
+  sw <- stats::shapiro.test(values)
+  pval <- signif(sw$p.value, digits = 3)
+  message(paste0(sw$method, ": p-value = ", pval))
+  result <- sw$p.value > alpha
+  if (result) {
+    msg_sw <- paste0("** p = ", pval, " > ", alpha, "; normal")
+  } else {
+    msg_sw <- paste0("** p = ", pval, " <= ", alpha, "; non-normal")
+  }
+  message(msg_sw)
+  return(result)
+}

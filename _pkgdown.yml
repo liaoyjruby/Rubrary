@@ -7,3 +7,75 @@ template:
     primary: '#6F1A07'
     secondary: '#e77575'
 
+reference:
+  - title: Exploratory data analysis
+    contents:
+      - plot_distribution
+      - plot_density
+      - plot_scatter
+      - get_kspval
+      - check_normal
+      - calc_sumZscore
+      - run_RRHO
+      - phyper_df
+  - title: Principal components analysis (PCA)
+    contents:
+      - run_PCA
+      - plot_PCA
+      - get_loadings
+      - plot_screeplot
+      - plot_PCA_biplot
+      - rotate_varimax
+      - predict_PCA
+  - title: Differentially expressed genes (DESeq)
+    contents:
+      - output_DESeq
+      - plot_DEgene_boxplot
+      - plot_waterfall
+      - plot_volcano
+  - title: Gene set enrichment analysis (GSEA)
+    desc: Including GSEA Squared functions.
+    contents:
+      - format_GSEA_name
+      - plot_GSEA_barplot
+      - plot_GSEA_pathway
+      - plot_GSEA_pathway_batch
+      - get_GSEAsq_terms
+      - run_GSEA_squared
+      - plot_GSEAsq_density
+  - title: Single cell RNA analysis
+    desc: Seurat object based analysis and visualization.
+    contents:
+      - plot_dimplot_grid
+      - plot_comp_barplot
+      - plot_featurescatter
+      - assess_integration
+      - run_LISI
+      - run_MixingMetric
+      - run_CellMixS
+      - genecoexp_scatter_hypers
+  - title: Gene manipulation
+    contents:
+      - convert_genes
+      - get_PC_genes
+      - filter_genes
+      - get_gene_desc
+      - get_log_coding_geneexp
+  - title: Utility
+    desc: Miscellaneous helper functions.
+    contents:
+      - rread
+      - rwrite
+      - corner
+      - split_line
+      - full_join_rownames
+      - left_join_rownames
+      - cbind.fill
+      - use_pkg
+      - inst_pkg
+      - reload_pkg
+  - title: Data
+    desc: Used for vignettes and examples.
+    contents:
+      - airway_deseq_res
+      - GSEA_pathways

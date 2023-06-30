@@ -10,42 +10,42 @@ plot_waterfall(
   rankcol,
   rankcol_name = rankcol,
   hightolow = FALSE,
-  vert = FALSE,
+  vertical = FALSE,
   label = TRUE,
   replab_size = 3.5,
   density = FALSE,
   hllab = "Highlight",
-  otherlab = "Others",
+  otherlab = "Other",
   pval = TRUE,
+  colors = c("firebrick3", "gray"),
   lab_high = NULL,
   lab_low = NULL,
   lab_size = 6,
   legendpos = "none",
   title = NULL,
-  colors = c("firebrick3", "gray"),
+  savename = NULL,
   width = 10,
-  height = 5,
-  savename = NULL
+  height = 5
 )
 }
 \arguments{
-\item{sig}{dataframe; name (1st column) + rankcol columns}
+\item{sig}{dataframe; names/genes in 1st column + \code{rankcol} columns}
 
 \item{highlight}{vector; list of names to highlight in waterfall}
 
-\item{rankcol}{string; colname of values}
+\item{rankcol}{string; colname of values to rank by}
 
-\item{rankcol_name}{string; descriptive name of values}
+\item{rankcol_name}{string; descriptive name of values to rank by}
 
 \item{hightolow}{logical; T for x-axis by decreasing value}
 
-\item{vert}{(NOT TESTED) logical; T for columns to be horizontal}
+\item{vertical}{logical; T for columns to be horizontal}
 
 \item{label}{logical; T to label highlighted values}
 
 \item{replab_size}{numeric; size of gene label}
 
-\item{density}{logical; T to output aligned density plot w/ wf}
+\item{density}{logical; T for density plot as side panel}
 
 \item{hllab}{string; description of highlighted values}
 
@@ -53,27 +53,44 @@ plot_waterfall(
 
 \item{pval}{logical; T to include KS enrichment pvalue}
 
+\item{colors}{vector; two colors, for highlight vs. other}
+
 \item{lab_high}{string; descriptor for high rankcol values}
 
 \item{lab_low}{string; descriptor for low rankcol values}
 
 \item{lab_size}{numeric; size of value annotation label}
 
-\item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)}
+\item{legendpos}{vector; value btwn 0-1 as legend coordinates (ggplot \code{legend.position})}
 
 \item{title}{string; plot title}
 
-\item{colors}{vector; two colors, for highlight vs. other}
+\item{savename}{string; filepath to save figure under}
 
 \item{width}{numeric; width of plot}
 
 \item{height}{numeric; height of plot}
-
-\item{savename}{string; filepath to save figure under}
 }
 \value{
 Waterfall plot ggplot2 object
 }
 \description{
 If \code{ggtext} package is installed, will do fancy version of p_enrichment. :)
+}
+\examples{
+library(dplyr)
+airway_deseq = Rubrary::airway_deseq_res \%>\% relocate(hgnc_symbol)
+genes = Rubrary::GSEA_pathways$GOBP_REGULATION_OF_GLUCOSE_IMPORT[1:20]
+
+Rubrary::plot_waterfall(
+  sig = airway_deseq,
+  highlight = genes,
+  rankcol = "sign_log_p",
+  rankcol_name = "Sign log p value",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated",
+  title = "Airway Treated vs. Untreated DESeq - Glucose Import Regulation Genes",
+  density = TRUE
+)
+
 }

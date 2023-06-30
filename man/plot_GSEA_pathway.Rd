@@ -23,7 +23,7 @@ plot_GSEA_pathway(
 )
 }
 \arguments{
-\item{sig}{dataframe; genecol + rankcol columns}
+\item{sig}{df/string; (path to) dataframe with genecol + rankcol columns}
 
 \item{geneset}{vector; list of genes}
 
@@ -58,4 +58,20 @@ grid of gene set enrichment waterfall above enrichment plot
 }
 \description{
 If subtitle is not specified, Kolmogorov-Smirnov enrichment p-value is calculated to check if the genes in the pathway separate from the genes not in the chosen pathway based on ranking by the desired \code{rankcol}.
+}
+\examples{
+airway_deseq = Rubrary::airway_deseq_res
+genes = Rubrary::GSEA_pathways$GOBP_REGULATION_OF_GLUCOSE_IMPORT
+Rubrary::plot_GSEA_pathway(
+  sig = airway_deseq,
+  geneset = genes,
+  genecol = "hgnc_symbol",
+  rankcol = "sign_log_p",
+  rankcol_name = "Sign log p value",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated",
+  hllab = "Highlight genes",
+  title = "Airway Treated vs. Untreated DESeq - Glucose Import Regulation Genes"
+)
+
 }

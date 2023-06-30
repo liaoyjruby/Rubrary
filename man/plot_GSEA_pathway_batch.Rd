@@ -2,7 +2,7 @@
 % Please edit documentation in R/GSEA.R
 \name{plot_GSEA_pathway_batch}
 \alias{plot_GSEA_pathway_batch}
-\title{\code{plot_GSEA_pathway} that works nicely with \code{lapply}}
+\title{\code{plot_GSEA_pathway} wrapper that works nicely with \code{lapply}}
 \usage{
 plot_GSEA_pathway_batch(
   path_name,
@@ -20,8 +20,8 @@ plot_GSEA_pathway_batch(
   legendpos = c(0.5, 0.2),
   hl_color = "firebrick3",
   label = length(pthwys[[path_name]]) < 50,
-  sig_name = "",
-  savedir = NULL
+  savedir = NULL,
+  sig_name = ""
 )
 }
 \arguments{
@@ -55,13 +55,30 @@ plot_GSEA_pathway_batch(
 
 \item{label}{logical; T to label points in plot}
 
-\item{sig_name}{string; name of signature}
-
 \item{savedir}{string; directory path for saving plot}
+
+\item{sig_name}{string; name of signature to append to save path}
 }
 \value{
 Gene set enrichment plot as ggplot object
 }
 \description{
-\code{plot_GSEA_pathway} that works nicely with \code{lapply}
+\code{plot_GSEA_pathway} wrapper that works nicely with \code{lapply}
+}
+\examples{
+airway_deseq = Rubrary::airway_deseq_res
+pathways <- Rubrary::GSEA_pathways
+pws_plot <- c("HALLMARK_ADIPOGENESIS", "GOCC_POSTSYNAPTIC_MEMBRANE")
+lapply(
+  pws_plot,
+  Rubrary::plot_GSEA_pathway_batch,
+  pthwys = pathways,
+  sig = airway_deseq,
+  genecol = "hgnc_symbol",
+  rankcol = "sign_log_p",
+  rankcol_name = "Sign log p value",
+  lab_high = "\U2191 in treated\n\U2193 in untreated",
+  lab_low = "\U2191 in untreated\n\U2193 in treated",
+)
+
 }

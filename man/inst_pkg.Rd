@@ -17,3 +17,4 @@ None
 \description{
 Helper function for "Rubrary::use_pkg"
 }
+\keyword{internal}

@@ -53,7 +53,7 @@ rread <- function(input, row.names = 0, make.names = TRUE, to_df = TRUE){
 #' Prompt user to install package
 #'
 #' Helper function for "Rubrary::use_pkg"
-#'
+#' @keywords internal
 #' @param pkg string; package name (CRAN or Bioconductor)
 #' @param strict logical; strict requirement on package install?
 #'
