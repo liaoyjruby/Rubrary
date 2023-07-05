@@ -68,9 +68,9 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
 
   # Merge ----
   merged <- inner_join(x = sig1, y = sig2, by = key) %>%
-    arrange(desc(!!m2)) %>%
+    arrange(desc(!!sym(m2))) %>%
     mutate(rank.2 = 1:nrow(.)) %>%
-    arrange(desc(!!m1)) %>%
+    arrange(desc(!!sym(m1))) %>%
     mutate(rank.1 = 1:nrow(.)) %>%
     select(!!key, rank.1, rank.2, !!m1, !!m2)
 
@@ -177,13 +177,14 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       # scale_x_reverse(expand = c(0,0)) + # not sure if need to flip the raster...
       # scale_y_reverse(expand = c(0,0)) +
       # x-axis / sig1 annotations
-      annotate("text", x = nrow(hypmtx) + 6, y = -6, label = sig1_low, hjust = "right") +
+      annotate("text", x = nrow(obj_RRHO$hypermat) + 6, y = -6, label = sig1_low, hjust = "right") +
       annotate("text", x = 0, y = -6, label = sig1_high, hjust = "left") +
       # y-axis / sig2 annotations
-      annotate("text", x = -6, y = nrow(hypmtx), label = sig2_low, hjust = "right", angle = 90) +
+      annotate("text", x = -6, y = nrow(obj_RRHO$hypermat), label = sig2_low, hjust = "right", angle = 90) +
       annotate("text", x = -6, y = 0, label = sig2_high, hjust = "left", angle = 90) +
       coord_cartesian(clip = "off")
 
+    ## Waterfall side panels ----
     if(waterfall){
       df_gg <- merged %>%
         `colnames<-`(c("id", "r1", "r2", "v1", "v2")) %>%
@@ -229,7 +230,9 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     }
   }
 
+  # Scatter plots ----
   if(scatter){
+    ## Metric scatter ----
     metricsct <- Rubrary::plot_scatter(
       df = merged,
       xval = paste0(metric1, ".1"), xlabel = sig1_name,
@@ -240,6 +243,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       scale_x_continuous(breaks = scales::pretty_breaks(6)) +
       scale_y_continuous(breaks = scales::pretty_breaks(6))
 
+    ## Rank scatter ----
     ranksct <- Rubrary::plot_scatter(
       df = merged, rank = T, reverse = F,
       xval = paste0(metric1, ".1"), xlabel = sig1_name,
@@ -286,6 +290,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     }
   }
 
+  # Output ----
   if(scatter){
     RRHO <- list(
       heatmap = plt,
