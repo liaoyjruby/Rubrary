@@ -24,7 +24,8 @@ run_RRHO(
   hm_method = c("ggplot", "lattice"),
   palette = "Spectral",
   waterfall = TRUE,
-  scatter = TRUE
+  scatter = TRUE,
+  plot_fmt = "png"
 )
 }
 \arguments{
@@ -52,7 +53,7 @@ run_RRHO(
 
 \item{steps}{integer; RRHO step size}
 
-\item{savename}{string; filepath to save results under (no ext.)}
+\item{savename}{string; filepath to save results under (no extension)}
 
 \item{webtool}{logical; T to output text formatted for Graeber RRHO webtool}
 
@@ -65,6 +66,8 @@ run_RRHO(
 \item{waterfall}{logical; \code{TRUE} to include waterfall subplots (\code{hm_method = "ggplot"} only)}
 
 \item{scatter}{logical; \code{TRUE} to output metric & rank scatterplot}
+
+\item{plot_fmt}{string; file extension to save plot as}
 }
 \value{
 RRHO results, as list of plots if \code{scatter == TRUE} or as ggplot RRHO heatmap object

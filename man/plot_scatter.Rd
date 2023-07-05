@@ -19,8 +19,7 @@ plot_scatter(
   pt_size = 2,
   pt_alpha = 1,
   lbl_size = 3,
-  heatmap = FALSE,
-  hm_palette = "Spectral",
+  density = FALSE,
   reverse = FALSE,
   title = NULL,
   subtitle = NULL,
@@ -58,9 +57,7 @@ plot_scatter(
 
 \item{lbl_size}{numeric; label text size}
 
-\item{heatmap}{logical; T for underlying heatmap (untested)}
-
-\item{hm_palette}{string; RColorBrewer continuous palette name (untested)}
+\item{density}{logical; show density plot along both axes}
 
 \item{reverse}{logical; T to reverse both axes}
 

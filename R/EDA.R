@@ -149,10 +149,9 @@ plot_density <- function(df, value, group, group2 = NA, title = NA, pval = T,
 #' @param pt_size numeric; point size
 #' @param pt_alpha numeric; point alpha value
 #' @param lbl_size numeric; label text size
+#' @param density logical; show density plot along both axes
 #' @param guides logical; T to include fitted linear model line
 #' @param reverse logical; T to reverse both axes
-#' @param heatmap logical; T for underlying heatmap (untested)
-#' @param hm_palette string; RColorBrewer continuous palette name (untested)
 #' @param savename string; filepath to save figure under
 #' @param width numeric; plot width
 #' @param height numeric; plot height
@@ -168,13 +167,12 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, colo
                          xlabel = ifelse(methods::is(xval, "character"), xval, "X"),
                          ylabel = ifelse(methods::is(yval, "character"), yval, "Y"),
                          cormethod = c("pearson", "spearman", "none"), guides = TRUE,
-                         pt_size = 2, pt_alpha = 1, lbl_size = 3,
-                         heatmap = FALSE, hm_palette = "Spectral",
+                         pt_size = 2, pt_alpha = 1, lbl_size = 3, density = FALSE,
                          reverse = FALSE, title = NULL, subtitle = NULL,
                          savename = NULL, width = 8, height = 8) {
   cormethod <- match.arg(cormethod)
 
-  if(is.null(df)){
+  if(is.null(df)){ # Create dataframe from vectors if not passed as df
     if (!is.null(label)){
       df <- data.frame(xval = xval, yval = yval, label = label)
     } else {
@@ -185,6 +183,14 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, colo
     label <- "label"
   } else {
     df <- df[, c(xval, yval, label, group)]
+  }
+
+  if(is.null(group)){ # No group
+    group <- "group"
+    df$group <- "none"
+    if(is.null(colors)){ colors = "black" }
+  } else { # Group exists
+    if(is.null(colors)){ colors = scales::hue_pal()(length(unique(df[[group]])))}
   }
 
   if (rank) {
@@ -210,32 +216,21 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, colo
     ), 2)
   }
 
-  # Manage colors
-  if(!is.null(group) && is.null(colors)){
-    colors = scales::hue_pal()(length(unique(df[[group]])))
-  }
-
-  plt <- ggplot(df, aes(x = .data[[xval]], y = .data[[yval]])) +
+  plt <- ggplot(df, aes(x = .data[[xval]], y = .data[[yval]], color = .data[[group]])) +
     {if(guides) geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red")} +
-    {if(heatmap) geom_raster()} +
-    {if(heatmap) scale_fill_gradientn(
-      colors = rev(RColorBrewer::brewer.pal(11, hm_palette)),
-      breaks = scales::pretty_breaks(5)) } +
     geom_point(alpha = pt_alpha, size = pt_size) +
-    {if(!is.null(group)) geom_point(aes(color = .data[[group]]), alpha = pt_alpha, size = pt_size)} +
-    {if(!is.null(group)) scale_color_manual(values = colors)} +
+    scale_color_manual(values = colors) +
     xlab(xlabel) +
     ylab(ylabel) +
-    labs(
-      title = title,
-      subtitle = subtitle
-    ) +
-    {if(cormethod != "none") labs(caption = paste0(
-      corcoef, " = ", corr, "; ", tools::toTitleCase(cormethod), " correlation"))} +
-    theme_classic() +
     {if(reverse) scale_x_reverse()} +
     {if(reverse) scale_y_reverse()} +
-    {if(!is.null(label)) ggrepel::geom_text_repel(aes(label = .data[[label]]), max.overlaps = Inf, size = lbl_size)}
+    labs(title = title, subtitle = subtitle) +
+    {if(cormethod != "none") labs(caption = paste0(
+      corcoef, " = ", corr, "; ", tools::toTitleCase(cormethod), " correlation"))} +
+    {if(!is.null(label)) ggrepel::geom_text_repel(
+      aes(label = .data[[label]]), color = "black", max.overlaps = Inf, size = lbl_size)} +
+    theme_classic() +
+    {if(length(unique(df[[group]])) == 1) theme(legend.position = "none")}
 
   if (!is.null(savename)) {
     ggplot2::ggsave(
@@ -244,6 +239,23 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, colo
       height = height,
       width = width
     )
+  }
+
+  if(density) {
+    Rubrary::use_pkg("ggExtra")
+    mplt <- ggExtra::ggMarginal(
+      plt, y = "Density", type = "density", margins = "both",
+      size = 6, groupColour = !is.null(group), groupFill = !is.null(group)
+    )
+    if (!is.null(savename)) {
+      savename <- paste0(tools::file_path_sans_ext(savename), "_density.", tools::file_ext(savename))
+      ggsave(
+        plot = mplt,
+        filename = savename,
+        height = height, width = width
+      )
+    }
+    plt <- mplt
   }
   return(plt)
 }

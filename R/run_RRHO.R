@@ -10,6 +10,7 @@ utils::globalVariables(c(
 #'
 #' Arrows in unicode are `\u2193` (down) and `\u2191` (up) if you want to be cool in your low/high descriptions B)
 #'
+#' @import dplyr
 #' @import ggplot2
 #' @import patchwork
 #' @encoding UTF-8
@@ -25,7 +26,7 @@ utils::globalVariables(c(
 #' @param key string; colname of corresponding values btwn both sigs
 #' @param metric1 string; colname of sig1 metric to rank by
 #' @param metric2 string; colname of sig2 metric to rank by
-#' @param savename string; filepath to save results under (no ext.)
+#' @param savename string; filepath to save results under (no extension)
 #' @param webtool logical; T to output text formatted for Graeber RRHO webtool
 #' @param steps integer; RRHO step size
 #' @param BY logical; T for Benjamini-Yekutieli FDR corrected pvalues
@@ -33,6 +34,7 @@ utils::globalVariables(c(
 #' @param palette string; RColorBrewer continuous palette name
 #' @param waterfall logical; `TRUE` to include waterfall subplots (`hm_method = "ggplot"` only)
 #' @param scatter logical; `TRUE` to output metric & rank scatterplot
+#' @param plot_fmt string; file extension to save plot as
 #'
 #' @return RRHO results, as list of plots if `scatter == TRUE` or as ggplot RRHO heatmap object
 #' @export
@@ -44,32 +46,33 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
                      steps = NULL,
                      savename = NULL, webtool = TRUE, BY = FALSE,
                      hm_method = c("ggplot", "lattice"), palette = "Spectral",
-                     waterfall = TRUE, scatter = TRUE){
-  Rubrary::use_pkg("RRHO")
-
+                     waterfall = TRUE, scatter = TRUE, plot_fmt = "png"){
   hm_method <- match.arg(hm_method)
 
-  # Load & clean individual sigs
-  if(is.character(sig1)){sig1 <- utils::read.delim(sig1)}
-  sig1 <- sig1[,c(key, metric1)]
-  sig1 <- sig1[stats::complete.cases(sig1),]
-  sig1 <- sig1[!duplicated(sig1[,key]),]
-  colnames(sig1) <- c(key, paste0(metric1,".1"))
+  # Individual signatures ----
+  if(is.character(sig1)){sig1 <- Rubrary::rread(sig1)}
+  m1 <- paste0(metric1, ".1")
+  sig1 <- sig1 %>%
+    select(!!sym(key), !!sym(metric1)) %>%
+    filter(complete.cases(.)) %>%
+    distinct(!!sym(key), .keep_all = TRUE) %>%
+    rename(!!m1 := !!sym(metric1))
 
-  if(is.character(sig2)){sig2 <- utils::read.delim(sig2)}
-  sig2 <- sig2[,c(key, metric2)]
-  sig2 <- sig2[stats::complete.cases(sig2),]
-  sig2 <- sig2[!duplicated(sig2[,key]),]
-  colnames(sig2) <- c(key, paste0(metric2,".2"))
+  if(is.character(sig2)){sig2 <- Rubrary::rread(sig2)}
+  m2 <- paste0(metric2, ".2")
+  sig2 <- sig2 %>%
+    select(!!sym(key), !!sym(metric2)) %>%
+    filter(complete.cases(.)) %>%
+    distinct(!!sym(key), .keep_all = TRUE) %>%
+    rename(!!m2 := !!sym(metric2))
 
-  # Join and order
-  merged <- dplyr::inner_join(x = sig1, y = sig2, by = key)
-  merged <- merged[order(merged[,paste0(metric1,".1")], decreasing = TRUE),]
-  merged$rank.1 <- 1:nrow(merged)
-  merged <- merged[order(merged[,paste0(metric2,".2")], decreasing = TRUE),]
-  merged$rank.2 <- 1:nrow(merged)
-  merged <- merged[c(key, "rank.1", "rank.2", paste0(metric1,".1"), paste0(metric2,".2"))]
-  merged <- merged[order(merged$rank.1),]
+  # Merge ----
+  merged <- inner_join(x = sig1, y = sig2, by = key) %>%
+    arrange(desc(!!m2)) %>%
+    mutate(rank.2 = 1:nrow(.)) %>%
+    arrange(desc(!!m1)) %>%
+    mutate(rank.1 = 1:nrow(.)) %>%
+    select(!!key, rank.1, rank.2, !!m1, !!m2)
 
   message(paste0("1) ", sig1_name, " genes: ", nrow(sig1)))
   message(paste0("2) ", sig2_name, " genes: ", nrow(sig2)))
@@ -80,15 +83,15 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     steps <- defaultStepSize(list1 = sig1, list2 = sig2)
   }
 
+  # Webtool ----
   if(webtool){
-    df_web <- data.frame(
-      Unigene = merged[,1],
-      Gene_Symbol = merged[,1]
-    )
-    df_web[, paste0("rank.", gsub(" ", "_", sig1_name))] <- merged$rank.1
-    df_web[, paste0("rank.", gsub(" ", "_", sig2_name))] <- merged$rank.2
-    df_web[, paste0(metric1,".", gsub(" ", "_", sig1_name))] <- merged[,paste0(metric1,".1")]
-    df_web[, paste0(metric2,".", gsub(" ", "_", sig2_name))] <- merged[,paste0(metric2,".2")]
+    df_web <- merged %>%
+      rename(Unigene = !!sym(key),
+             !!paste0("rank.", gsub(" ", "_", sig1_name)) := rank.1,
+             !!paste0("rank.", gsub(" ", "_", sig2_name)) := rank.2,
+             !!paste0(metric1,".", gsub(" ", "_", sig1_name)) := !!m1,
+             !!paste0(metric2,".", gsub(" ", "_", sig2_name)) := !!m2) %>%
+      mutate(Gene_Symbol = Unigene, .after = Unigene)
 
     Rubrary::rwrite(
       x = df_web,
@@ -110,7 +113,8 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     message(paste0("Step size: ", steps))
   }
 
-  # Run RRHO in R
+  # Run RRHO ----
+  Rubrary::use_pkg("RRHO")
   obj_RRHO <- RRHO::RRHO(
     list1 = sig1,
     list2 = sig2,
@@ -126,6 +130,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
   # sig2_low <- paste0(sig2_low, " (n = ", sum(sig2[,paste0(metric2,".2")] < 0),")")
   # sig2_high <- paste0(sig2_high, " (n = ", sum(sig2[,paste0(metric2,".2")] > 0),")")
 
+  # Heatmap plot ----
   if(hm_method == "lattice"){ # lattice style heatmap
     requireNamespace("lattice", quietly = TRUE)
     plt <- lattice::levelplot(obj_RRHO$hypermat, # should be flipped?
@@ -139,7 +144,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
                                             y=list(draw=FALSE)))
 
     if(!is.null(savename)){
-      grDevices::png(filename = paste0(savename,"_heatmap.png"),
+      grDevices::png(filename = paste0(savename,"_heatmap.", plot_fmt),
           type = "cairo",
           units = "in",
           width = 5, height = 4, pointsize = 12, res = 96)
@@ -147,15 +152,12 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       grDevices::dev.off()
     }
   } else { # ggplot style heatmap
-    # Format data to long
-    hypmtx <- tibble::rownames_to_column(as.data.frame(obj_RRHO$hypermat), var = "row")
-    hypmtx_long <- reshape2::melt(
-      data = hypmtx,
-      id.vars = "row",
-      variable.name = "col"
-    )
-    hypmtx_long$col <- sub("V", "", hypmtx_long$col)
-    hypmtx_long <- dplyr::mutate_all(hypmtx_long, function(x) as.numeric(as.character(x)))
+    hypmtx_long <- obj_RRHO$hypermat %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column("row") %>%
+      tidyr::pivot_longer(!row, names_to = "col", values_to = "value") %>%
+      mutate(col = sub("V", "", col)) %>%
+      mutate_all(as.numeric)
 
     plt_hypmtx <- ggplot(hypmtx_long, aes(x = row, y = col, fill = value)) +
       geom_raster() +
@@ -183,10 +185,10 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       coord_cartesian(clip = "off")
 
     if(waterfall){
-      df_gg <- merged
-      colnames(df_gg) <- c("id", "r1", "r2", "v1", "v2")
-      df_gg$p1 <- ifelse(df_gg$v1 >= 0, T, F)
-      df_gg$p2 <- ifelse(df_gg$v2 >= 0, T, F)
+      df_gg <- merged %>%
+        `colnames<-`(c("id", "r1", "r2", "v1", "v2")) %>%
+        mutate(p1 = ifelse(v1 >= 0, T, F),
+               p2 = ifelse(v2 >= 0, T, F))
       # sig1 wf
       plt_wf1 <- ggplot(df_gg, aes(x = r1, y = v1, fill = p1)) +
         geom_col(show.legend = F) +
@@ -220,7 +222,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
     }
     if(!is.null(savename)){
       ggsave(
-        filename = paste0(savename,"_heatmap.png"),
+        filename = paste0(savename,"_heatmap.", plot_fmt),
         plot = plt,
         width = wd, height = ht
       )
@@ -271,13 +273,13 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
 
     if(!is.null(savename)){
       ggsave(
-        filename = paste0(savename,"_metricsct.png"),
+        filename = paste0(savename,"_metricsct.", plot_fmt),
         plot = metricsct,
         width = wd, height = wd # Square
       )
 
       ggsave(
-        filename = paste0(savename,"_ranksct.png"),
+        filename = paste0(savename,"_ranksct.", plot_fmt),
         plot = ranksct,
         width = wd, height = ht + 1
       )
