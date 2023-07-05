@@ -52,7 +52,7 @@ phyper_df <- function(df, A, B){
 #' Plot gene co-expression scatter for genes A vs B
 #'
 #' Helper function for 'genecoexp_scatter_hyper'
-#'
+#' @keywords internal
 #' @param geneB string; gene B
 #' @param geneA string; gene A
 #' @param hyp_df dataframe; hypergeometric p-value table
@@ -60,7 +60,6 @@ phyper_df <- function(df, A, B){
 #' @param group string; metadata value to group by
 #'
 #' @return Scatter plot
-#' @export
 pltAB <- function(geneB, geneA, hyp_df, sobj, group) {
   if(geneA != geneB){
     hyp_df <- hyp_df[(hyp_df$A == geneA) & (hyp_df$B == geneB),]

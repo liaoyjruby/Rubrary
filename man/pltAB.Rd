@@ -23,3 +23,4 @@ Scatter plot
 \description{
 Helper function for 'genecoexp_scatter_hyper'
 }
+\keyword{internal}

@@ -53,7 +53,7 @@ reference:
       - run_LISI
       - run_MixingMetric
       - run_CellMixS
-      - genecoexp_scatter_hypers
+      - genecoexp_scatter_hyper
   - title: Gene manipulation
     contents:
       - convert_genes
