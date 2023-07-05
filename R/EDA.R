@@ -63,6 +63,8 @@ plot_distribution <- function(values, check_normal = FALSE, hist = FALSE,
 
 #' Density plot by group
 #'
+#' @import ggplot2
+#'
 #' @param df dataframe
 #' @param value string; colname of values
 #' @param group string; colname of group info
@@ -79,7 +81,6 @@ plot_distribution <- function(values, check_normal = FALSE, hist = FALSE,
 #' @param height numeric; ggsave height of plot
 #'
 #' @return Density plot by group
-#' @importFrom ggplot2 ggplot aes scale_fill_manual geom_rug
 #' @export
 #'
 #' @examples
@@ -211,7 +212,7 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, colo
 
   # Manage colors
   if(!is.null(group) && is.null(colors)){
-    colors = scales::hue_pal()(length(unique(df[,group])))
+    colors = scales::hue_pal()(length(unique(df[[group]])))
   }
 
   plt <- ggplot(df, aes(x = .data[[xval]], y = .data[[yval]])) +
