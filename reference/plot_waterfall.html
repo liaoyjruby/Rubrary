@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,29 +66,29 @@
 <span>  <span class="va">rankcol</span>,</span>
 <span>  rankcol_name <span class="op">=</span> <span class="va">rankcol</span>,</span>
 <span>  hightolow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  vert <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  vertical <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  replab_size <span class="op">=</span> <span class="fl">3.5</span>,</span>
 <span>  density <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  hllab <span class="op">=</span> <span class="st">"Highlight"</span>,</span>
-<span>  otherlab <span class="op">=</span> <span class="st">"Others"</span>,</span>
+<span>  otherlab <span class="op">=</span> <span class="st">"Other"</span>,</span>
 <span>  pval <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"gray"</span><span class="op">)</span>,</span>
 <span>  lab_high <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lab_low <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lab_size <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>  legendpos <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"firebrick3"</span>, <span class="st">"gray"</span><span class="op">)</span>,</span>
+<span>  savename <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  width <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  height <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  savename <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  height <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>sig</dt>
-<dd><p>dataframe; name (1st column) + rankcol columns</p></dd>
+<dd><p>dataframe; names/genes in 1st column + <code>rankcol</code> columns</p></dd>
 
 
 <dt>highlight</dt>
@@ -96,19 +96,19 @@
 
 
 <dt>rankcol</dt>
-<dd><p>string; colname of values</p></dd>
+<dd><p>string; colname of values to rank by</p></dd>
 
 
 <dt>rankcol_name</dt>
-<dd><p>string; descriptive name of values</p></dd>
+<dd><p>string; descriptive name of values to rank by</p></dd>
 
 
 <dt>hightolow</dt>
 <dd><p>logical; T for x-axis by decreasing value</p></dd>
 
 
-<dt>vert</dt>
-<dd><p>(NOT TESTED) logical; T for columns to be horizontal</p></dd>
+<dt>vertical</dt>
+<dd><p>logical; T for columns to be horizontal</p></dd>
 
 
 <dt>label</dt>
@@ -120,7 +120,7 @@
 
 
 <dt>density</dt>
-<dd><p>logical; T to output aligned density plot w/ wf</p></dd>
+<dd><p>logical; T for density plot as side panel</p></dd>
 
 
 <dt>hllab</dt>
@@ -133,6 +133,10 @@
 
 <dt>pval</dt>
 <dd><p>logical; T to include KS enrichment pvalue</p></dd>
+
+
+<dt>colors</dt>
+<dd><p>vector; two colors, for highlight vs. other</p></dd>
 
 
 <dt>lab_high</dt>
@@ -148,15 +152,15 @@
 
 
 <dt>legendpos</dt>
-<dd><p>vector; value btwn 0-1 as legend coordinates (ggplot legend.position option)</p></dd>
+<dd><p>vector; value btwn 0-1 as legend coordinates (ggplot <code>legend.position</code>)</p></dd>
 
 
 <dt>title</dt>
 <dd><p>string; plot title</p></dd>
 
 
-<dt>colors</dt>
-<dd><p>vector; two colors, for highlight vs. other</p></dd>
+<dt>savename</dt>
+<dd><p>string; filepath to save figure under</p></dd>
 
 
 <dt>width</dt>
@@ -166,10 +170,6 @@
 <dt>height</dt>
 <dd><p>numeric; height of plot</p></dd>
 
-
-<dt>savename</dt>
-<dd><p>string; filepath to save figure under</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -178,6 +178,26 @@
 <p>Waterfall plot ggplot2 object</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">airway_deseq</span> <span class="op">=</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="va"><a href="airway_deseq_res.html">airway_deseq_res</a></span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate</a></span><span class="op">(</span><span class="va">hgnc_symbol</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">genes</span> <span class="op">=</span> <span class="fu">Rubrary</span><span class="fu">::</span><span class="va"><a href="GSEA_pathways.html">GSEA_pathways</a></span><span class="op">$</span><span class="va">GOBP_REGULATION_OF_GLUCOSE_IMPORT</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">Rubrary</span><span class="fu">::</span><span class="fu">plot_waterfall</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  sig <span class="op">=</span> <span class="va">airway_deseq</span>,</span></span>
+<span class="r-in"><span>  highlight <span class="op">=</span> <span class="va">genes</span>,</span></span>
+<span class="r-in"><span>  rankcol <span class="op">=</span> <span class="st">"sign_log_p"</span>,</span></span>
+<span class="r-in"><span>  rankcol_name <span class="op">=</span> <span class="st">"Sign log p value"</span>,</span></span>
+<span class="r-in"><span>  lab_high <span class="op">=</span> <span class="st">"\U2191 in treated\n\U2193 in untreated"</span>,</span></span>
+<span class="r-in"><span>  lab_low <span class="op">=</span> <span class="st">"\U2191 in untreated\n\U2193 in treated"</span>,</span></span>
+<span class="r-in"><span>  title <span class="op">=</span> <span class="st">"Airway Treated vs. Untreated DESeq - Glucose Import Regulation Genes"</span>,</span></span>
+<span class="r-in"><span>  density <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plot_waterfall-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

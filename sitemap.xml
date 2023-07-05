@@ -58,9 +58,6 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/corner.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/df_to_mtx.html</loc>
-  </url>
-  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/filter_genes.html</loc>
   </url>
   <url>
@@ -91,9 +88,6 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/get_log_coding_geneexp.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/get_n.html</loc>
-  </url>
-  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/index.html</loc>
   </url>
   <url>
@@ -110,9 +104,6 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_DESeq_scatter.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_DEgene_boxplot.html</loc>
@@ -136,12 +127,6 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_PCA_biplot.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_SCN_KaplanMeier.html</loc>
-  </url>
-  <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_boxplot_paired.html</loc>
-  </url>
-  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_comp_barplot.html</loc>
   </url>
   <url>
@@ -160,9 +145,6 @@
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_scatter.html</loc>
   </url>
   <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_scatter_compare.html</loc>
-  </url>
-  <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_screeplot.html</loc>
   </url>
   <url>
@@ -170,9 +152,6 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_waterfall.html</loc>
-  </url>
-  <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/plot_waterfall_hl.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/pltAB.html</loc>
@@ -188,9 +167,6 @@
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/rread.html</loc>
-  </url>
-  <url>
-    <loc>https://liaoyjruby.github.io/Rubrary/reference/run_DESeq.html</loc>
   </url>
   <url>
     <loc>https://liaoyjruby.github.io/Rubrary/reference/run_GSEA_squared.html</loc>

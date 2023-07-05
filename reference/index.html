@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">Rubrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="exploratory-data-analysis">Exploratory data analysis<a class="anchor" aria-label="anchor" href="#exploratory-data-analysis"></a></h2>
       
       
 
@@ -65,84 +65,19 @@
 
       <dl><dt>
           
-          <code><a href="GSEA_pathways.html">GSEA_pathways</a></code> 
+          <code><a href="plot_distribution.html">plot_distribution()</a></code> 
         </dt>
-        <dd>Pathways from <code>msigdbr</code> to use with <code>fgsea</code></dd>
+        <dd>Plot distribution of numeric vector</dd>
       </dl><dl><dt>
           
-          <code><a href="airway_deseq_res.html">airway_deseq_res</a></code> 
+          <code><a href="plot_density.html">plot_density()</a></code> 
         </dt>
-        <dd>Airway Dex Treated vs. Untreated DESeq2 Results</dd>
+        <dd>Density plot by group</dd>
       </dl><dl><dt>
           
-          <code><a href="assess_integration.html">assess_integration()</a></code> <code><a href="assess_integration.html">run_LISI()</a></code> <code><a href="assess_integration.html">run_MixingMetric()</a></code> <code><a href="assess_integration.html">run_CellMixS()</a></code> 
+          <code><a href="plot_scatter.html">plot_scatter()</a></code> 
         </dt>
-        <dd>Compute and plot integration assessment cell-specific methods for Seurat object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="calc_sumZscore.html">calc_sumZscore()</a></code> 
-        </dt>
-        <dd>Generate Sum Z Score</dd>
-      </dl><dl><dt>
-          
-          <code><a href="cbind.fill.html">cbind(<i>&lt;fill&gt;</i>)</a></code> 
-        </dt>
-        <dd>Combine data.frames by column, filling in missing rows.</dd>
-      </dl><dl><dt>
-          
-          <code><a href="check_normal.html">check_normal()</a></code> 
-        </dt>
-        <dd>Shapiro-Wilk test of normality</dd>
-      </dl><dl><dt>
-          
-          <code><a href="convert_genes.html">convert_genes()</a></code> 
-        </dt>
-        <dd>Convert list of genes via BioMart</dd>
-      </dl><dl><dt>
-          
-          <code><a href="corner.html">corner()</a></code> 
-        </dt>
-        <dd>Like head but just the corner</dd>
-      </dl><dl><dt>
-          
-          <code><a href="df_to_mtx.html">df_to_mtx()</a></code> 
-        </dt>
-        <dd>df_to_mtx</dd>
-      </dl><dl><dt>
-          
-          <code><a href="filter_genes.html">filter_genes()</a></code> 
-        </dt>
-        <dd>Filter dataframe by list of (protein coding) genes</dd>
-      </dl><dl><dt>
-          
-          <code><a href="format_GSEA_name.html">format_GSEA_name()</a></code> 
-        </dt>
-        <dd>Format GSEA pathway name</dd>
-      </dl><dl><dt>
-          
-          <code><a href="full_join_rownames.html">full_join_rownames()</a></code> 
-        </dt>
-        <dd>Full join by rownames</dd>
-      </dl><dl><dt>
-          
-          <code><a href="genecoexp_scatter_hyper.html">genecoexp_scatter_hyper()</a></code> 
-        </dt>
-        <dd>Plot pairwise gene coexpression scatter and calculate hypergeometric enrichment p-value between two genelists</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_GSEAsq_terms.html">get_GSEAsq_terms()</a></code> 
-        </dt>
-        <dd>Get GSEA Squared terms/keywords</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_PC_genes.html">get_PC_genes()</a></code> 
-        </dt>
-        <dd>Retrieve protein coding genes from Ensembl BioMart</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_gene_desc.html">get_gene_desc()</a></code> 
-        </dt>
-        <dd>Get gene description from BioMart</dd>
+        <dd>Plot simple scatter</dd>
       </dl><dl><dt>
           
           <code><a href="get_kspval.html">get_kspval()</a></code> 
@@ -150,49 +85,117 @@
         <dd>Calculate (signed) Kolgomorov-Smirnov enrichment p-value in dataframe</dd>
       </dl><dl><dt>
           
+          <code><a href="check_normal.html">check_normal()</a></code> 
+        </dt>
+        <dd>Shapiro-Wilk test of normality</dd>
+      </dl><dl><dt>
+          
+          <code><a href="calc_sumZscore.html">calc_sumZscore()</a></code> 
+        </dt>
+        <dd>Generate Sum Z Score</dd>
+      </dl><dl><dt>
+          
+          <code><a href="run_RRHO.html">run_RRHO()</a></code> 
+        </dt>
+        <dd>Run RRHO analysis</dd>
+      </dl><dl><dt>
+          
+          <code><a href="phyper_df.html">phyper_df()</a></code> 
+        </dt>
+        <dd>Hypergeometric test, 0 vs. non-0, on columns of a dataframe</dd>
+      </dl></div><div class="section level2">
+      <h2 id="principal-components-analysis-pca-">Principal components analysis (PCA)<a class="anchor" aria-label="anchor" href="#principal-components-analysis-pca-"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="run_PCA.html">run_PCA()</a></code> 
+        </dt>
+        <dd>Run PCA (<code>prcomp</code> wrapper)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="plot_PCA.html">plot_PCA()</a></code> 
+        </dt>
+        <dd>Plot PCA with annotation</dd>
+      </dl><dl><dt>
+          
           <code><a href="get_loadings.html">get_loadings()</a></code> 
         </dt>
         <dd>Extract loadings from <code>prcomp</code> object</dd>
       </dl><dl><dt>
           
-          <code><a href="get_log_coding_geneexp.html">get_log_coding_geneexp()</a></code> 
+          <code><a href="plot_screeplot.html">plot_screeplot()</a></code> 
         </dt>
-        <dd>Get log(x+1) protein coding gene expression matrix</dd>
+        <dd>Plot screeplot from prcomp</dd>
       </dl><dl><dt>
           
-          <code><a href="get_n.html">get_n()</a></code> 
+          <code><a href="plot_PCA_biplot.html">plot_PCA_biplot()</a></code> 
         </dt>
-        <dd>Get number of TF MRA signature genes to highlight</dd>
+        <dd>Plot PCA biplot</dd>
       </dl><dl><dt>
           
-          <code><a href="inst_pkg.html">inst_pkg()</a></code> 
+          <code><a href="rotate_varimax.html">rotate_varimax()</a></code> 
         </dt>
-        <dd>Prompt user to install package</dd>
+        <dd>Apply varimax rotation to PCA scores</dd>
       </dl><dl><dt>
           
-          <code><a href="left_join_rownames.html">left_join_rownames()</a></code> 
+          <code><a href="predict_PCA.html">predict_PCA()</a></code> 
         </dt>
-        <dd>Left join by rownames</dd>
-      </dl><dl><dt>
+        <dd>PCA prediction by projecting query/test samples onto PCA of reference/train samples</dd>
+      </dl></div><div class="section level2">
+      <h2 id="differentially-expressed-genes-deseq-">Differentially expressed genes (DESeq)<a class="anchor" aria-label="anchor" href="#differentially-expressed-genes-deseq-"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="output_DESeq.html">output_DESeq()</a></code> 
         </dt>
         <dd>Output DESeq results as dataframe with signed log p metric</dd>
       </dl><dl><dt>
           
-          <code><a href="phyper_df.html">phyper_df()</a></code> 
-        </dt>
-        <dd>Hypergeometric test, 0 vs. non-0, on columns of a dataframe</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_DESeq_scatter.html">plot_DESeq_scatter()</a></code> 
-        </dt>
-        <dd>plot_DESeq_scatter</dd>
-      </dl><dl><dt>
-          
           <code><a href="plot_DEgene_boxplot.html">plot_DEgene_boxplot()</a></code> 
         </dt>
         <dd>Plot gene expression boxplots of selected genes (from DESeq signature)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="plot_waterfall.html">plot_waterfall()</a></code> 
+        </dt>
+        <dd>Plot horizontal waterfall plot (with optional density)</dd>
+      </dl><dl><dt>
+          
+          <code><a href="plot_volcano.html">plot_volcano()</a></code> 
+        </dt>
+        <dd>Plot (DE genes) volcano plot</dd>
+      </dl></div><div class="section level2">
+      <h2 id="gene-set-enrichment-analysis-gsea-">Gene set enrichment analysis (GSEA)<a class="anchor" aria-label="anchor" href="#gene-set-enrichment-analysis-gsea-"></a></h2>
+      
+      <p class="section-desc"></p><p>Including GSEA Squared functions.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="format_GSEA_name.html">format_GSEA_name()</a></code> 
+        </dt>
+        <dd>Format GSEA pathway name</dd>
       </dl><dl><dt>
           
           <code><a href="plot_GSEA_barplot.html">plot_GSEA_barplot()</a></code> 
@@ -207,117 +210,12 @@
           
           <code><a href="plot_GSEA_pathway_batch.html">plot_GSEA_pathway_batch()</a></code> 
         </dt>
-        <dd><code>plot_GSEA_pathway</code> that works nicely with <code>lapply</code></dd>
+        <dd><code>plot_GSEA_pathway</code> wrapper that works nicely with <code>lapply</code></dd>
       </dl><dl><dt>
           
-          <code><a href="plot_GSEAsq_density.html">plot_GSEAsq_density()</a></code> 
+          <code><a href="get_GSEAsq_terms.html">get_GSEAsq_terms()</a></code> 
         </dt>
-        <dd>Plot categorical percentile rank comparison between two GSEA squared signatures</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_PCA.html">plot_PCA()</a></code> 
-        </dt>
-        <dd>Plot PCA with annotation</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_PCA_biplot.html">plot_PCA_biplot()</a></code> 
-        </dt>
-        <dd>Plot PCA biplot</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_SCN_KaplanMeier.html">plot_SCN_KaplanMeier()</a></code> 
-        </dt>
-        <dd>Plot SCN Kaplan Meier Survival Analysis</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_boxplot_paired.html">plot_boxplot_paired()</a></code> 
-        </dt>
-        <dd>plot_boxplot_paired</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_comp_barplot.html">plot_comp_barplot()</a></code> 
-        </dt>
-        <dd>Plot stacked barplot filled by group</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_density.html">plot_density()</a></code> 
-        </dt>
-        <dd>Density plot by group</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_dimplot_grid.html">plot_dimplot_grid()</a></code> 
-        </dt>
-        <dd>Plot Seurat DimPlot grid set</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_distribution.html">plot_distribution()</a></code> 
-        </dt>
-        <dd>Plot distribution of numeric vector</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_featurescatter.html">plot_featurescatter()</a></code> 
-        </dt>
-        <dd>Plot FeatureScatter wrapper</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_scatter.html">plot_scatter()</a></code> 
-        </dt>
-        <dd>Plot simple scatter</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_scatter_compare.html">plot_scatter_compare()</a></code> 
-        </dt>
-        <dd>Plot scatter, either metric or rank</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_screeplot.html">plot_screeplot()</a></code> 
-        </dt>
-        <dd>Plot screeplot from prcomp</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_volcano.html">plot_volcano()</a></code> 
-        </dt>
-        <dd>Plot (DE genes) volcano plot</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_waterfall.html">plot_waterfall()</a></code> 
-        </dt>
-        <dd>Plot horizontal waterfall plot (with optional density)</dd>
-      </dl><dl><dt>
-          
-          <code><a href="plot_waterfall_hl.html">plot_waterfall_hl()</a></code> 
-        </dt>
-        <dd>Plot ranked waterfall with genes highlighted</dd>
-      </dl><dl><dt>
-          
-          <code><a href="pltAB.html">pltAB()</a></code> 
-        </dt>
-        <dd>Plot gene co-expression scatter for genes A vs B</dd>
-      </dl><dl><dt>
-          
-          <code><a href="predict_PCA.html">predict_PCA()</a></code> 
-        </dt>
-        <dd>PCA prediction by projecting query/test samples onto PCA of reference/train samples</dd>
-      </dl><dl><dt>
-          
-          <code><a href="reload_pkg.html">reload_pkg()</a></code> 
-        </dt>
-        <dd>Reload package by installation path</dd>
-      </dl><dl><dt>
-          
-          <code><a href="rotate_varimax.html">rotate_varimax()</a></code> 
-        </dt>
-        <dd>Apply varimax rotation to PCA scores</dd>
-      </dl><dl><dt>
-          
-          <code><a href="rread.html">rread()</a></code> 
-        </dt>
-        <dd>Wrapper for <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread</a></code> implementing <code>row.names</code> functionality</dd>
-      </dl><dl><dt>
-          
-          <code><a href="run_DESeq.html">run_DESeq()</a></code> 
-        </dt>
-        <dd>Run DESeq</dd>
+        <dd>Get GSEA Squared terms/keywords</dd>
       </dl><dl><dt>
           
           <code><a href="run_GSEA_squared.html">run_GSEA_squared()</a></code> 
@@ -325,14 +223,97 @@
         <dd>Run GSEA Squared on GSEA results</dd>
       </dl><dl><dt>
           
-          <code><a href="run_PCA.html">run_PCA()</a></code> 
+          <code><a href="plot_GSEAsq_density.html">plot_GSEAsq_density()</a></code> 
         </dt>
-        <dd>Run PCA (<code>prcomp</code> wrapper)</dd>
+        <dd>Plot categorical percentile rank comparison between two GSEA squared signatures</dd>
+      </dl></div><div class="section level2">
+      <h2 id="single-cell-rna-analysis">Single cell RNA analysis<a class="anchor" aria-label="anchor" href="#single-cell-rna-analysis"></a></h2>
+      
+      <p class="section-desc"></p><p>Seurat object based analysis and visualization.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="plot_dimplot_grid.html">plot_dimplot_grid()</a></code> 
+        </dt>
+        <dd>Plot Seurat DimPlot grid set</dd>
       </dl><dl><dt>
           
-          <code><a href="run_RRHO.html">run_RRHO()</a></code> 
+          <code><a href="plot_comp_barplot.html">plot_comp_barplot()</a></code> 
         </dt>
-        <dd>Run RRHO analysis</dd>
+        <dd>Plot stacked barplot filled by group</dd>
+      </dl><dl><dt>
+          
+          <code><a href="plot_featurescatter.html">plot_featurescatter()</a></code> 
+        </dt>
+        <dd>Plot FeatureScatter wrapper</dd>
+      </dl><dl><dt>
+          
+          <code><a href="assess_integration.html">assess_integration()</a></code> <code><a href="assess_integration.html">run_LISI()</a></code> <code><a href="assess_integration.html">run_MixingMetric()</a></code> <code><a href="assess_integration.html">run_CellMixS()</a></code> 
+        </dt>
+        <dd>Compute and plot integration assessment cell-specific methods for Seurat object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="genecoexp_scatter_hyper.html">genecoexp_scatter_hyper()</a></code> 
+        </dt>
+        <dd>Plot pairwise gene coexpression scatter and calculate hypergeometric enrichment p-value between two genelists</dd>
+      </dl></div><div class="section level2">
+      <h2 id="gene-manipulation">Gene manipulation<a class="anchor" aria-label="anchor" href="#gene-manipulation"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="convert_genes.html">convert_genes()</a></code> 
+        </dt>
+        <dd>Convert list of genes via BioMart</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_PC_genes.html">get_PC_genes()</a></code> 
+        </dt>
+        <dd>Retrieve protein coding genes from Ensembl BioMart</dd>
+      </dl><dl><dt>
+          
+          <code><a href="filter_genes.html">filter_genes()</a></code> 
+        </dt>
+        <dd>Filter dataframe by list of (protein coding) genes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_gene_desc.html">get_gene_desc()</a></code> 
+        </dt>
+        <dd>Get gene description from BioMart</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_log_coding_geneexp.html">get_log_coding_geneexp()</a></code> 
+        </dt>
+        <dd>Get log(x+1) protein coding gene expression matrix</dd>
+      </dl></div><div class="section level2">
+      <h2 id="utility">Utility<a class="anchor" aria-label="anchor" href="#utility"></a></h2>
+      
+      <p class="section-desc"></p><p>Miscellaneous helper functions.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="rread.html">rread()</a></code> 
+        </dt>
+        <dd>Wrapper for <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread</a></code> implementing <code>row.names</code> functionality</dd>
       </dl><dl><dt>
           
           <code><a href="rwrite.html">rwrite()</a></code> 
@@ -340,16 +321,68 @@
         <dd>Wrapper for <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">data.table::fwrite</a></code> with tab separated values (TSV) default parameters</dd>
       </dl><dl><dt>
           
+          <code><a href="corner.html">corner()</a></code> 
+        </dt>
+        <dd>Like head but just the corner</dd>
+      </dl><dl><dt>
+          
           <code><a href="split_line.html">split_line()</a></code> 
         </dt>
         <dd>Split text into multiple lines</dd>
       </dl><dl><dt>
           
+          <code><a href="full_join_rownames.html">full_join_rownames()</a></code> 
+        </dt>
+        <dd>Full join by rownames</dd>
+      </dl><dl><dt>
+          
+          <code><a href="left_join_rownames.html">left_join_rownames()</a></code> 
+        </dt>
+        <dd>Left join by rownames</dd>
+      </dl><dl><dt>
+          
+          <code><a href="cbind.fill.html">cbind(<i>&lt;fill&gt;</i>)</a></code> 
+        </dt>
+        <dd>Combine data.frames by column, filling in missing rows.</dd>
+      </dl><dl><dt>
+          
           <code><a href="use_pkg.html">use_pkg()</a></code> 
         </dt>
         <dd>Check if package is installed, prompt if not</dd>
+      </dl><dl><dt>
+          
+          <code><a href="inst_pkg.html">inst_pkg()</a></code> 
+        </dt>
+        <dd>Prompt user to install package</dd>
+      </dl><dl><dt>
+          
+          <code><a href="reload_pkg.html">reload_pkg()</a></code> 
+        </dt>
+        <dd>Reload package by installation path</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a></h2>
+      
+      <p class="section-desc"></p><p>Used for vignettes and examples.</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="airway_deseq_res.html">airway_deseq_res</a></code> 
+        </dt>
+        <dd>Airway Dex Treated vs. Untreated DESeq2 Results</dd>
+      </dl><dl><dt>
+          
+          <code><a href="GSEA_pathways.html">GSEA_pathways</a></code> 
+        </dt>
+        <dd>Pathways from <code>msigdbr</code> to use with <code>fgsea</code></dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
