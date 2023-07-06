@@ -389,7 +389,7 @@ plot_GSEA_pathway <- function(
     plot_layout(heights = c(2,1))
 
   if(!is.null(savename)){
-    ggsave2(
+    ggsave(
       filename = savename,
       plot = grid,
       width = 9, height = 6

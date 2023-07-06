@@ -391,6 +391,7 @@ plot_PCA <- function(
 
 #' Plot screeplot from prcomp
 #'
+#' @import dplyr
 #' @import ggplot2
 #'
 #' @param obj_prcomp prcomp function output object
@@ -408,27 +409,26 @@ plot_PCA <- function(
 #'
 plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
                            cum_var_exp = 80, savename = NULL){
-  var_explained = obj_prcomp$sdev^2 / sum(obj_prcomp$sdev^2)
-  df_scrplt <- data.frame(PC = colnames(obj_prcomp$rotation),
-                          Var.Exp = var_explained[1:length(colnames(obj_prcomp$rotation))],
-                          Cum.Var.Exp = cumsum(var_explained)[1:length(colnames(obj_prcomp$rotation))])
+  var_explained <- obj_prcomp$sdev^2 / sum(obj_prcomp$sdev^2)
+  df_scrplt <- data.frame(
+    PC = colnames(obj_prcomp$rotation),
+    Var.Exp = var_explained[1:length(colnames(obj_prcomp$rotation))],
+    Cum.Var.Exp = cumsum(var_explained)[1:length(colnames(obj_prcomp$rotation))]) %>%
+    mutate(PC = as.numeric(sub("PC", "", PC)))
 
-  df_scrplt$PC <- sub("PC", "", df_scrplt$PC)
   message(paste0("** Cumulative var. exp. >= ", cum_var_exp,
                  "% at PC ",df_scrplt[df_scrplt$Cum.Var.Exp >= (cum_var_exp/100),]$PC[1],
                  " (", round(df_scrplt[df_scrplt$Cum.Var.Exp >= (cum_var_exp/100),]$Cum.Var.Exp[1] * 100, 1), "%)"))
 
-  df_scrplt <- df_scrplt[1:npcs,]
-
-  df_scrplt$PC <- factor(df_scrplt$PC, levels = unique(df_scrplt$PC))
-  df_scrplt <- reshape2::melt(df_scrplt, id.var = "PC")
-  df_scrplt$value <- df_scrplt$value * 100
-  df_scrplt$label <- paste0(round(df_scrplt$value, 1), "%")
+  df_scrplt2 <- df_scrplt[1:npcs,] %>%
+    tidyr::pivot_longer(!PC) %>%
+    mutate(value = value * 100,
+           label = paste0(round(value, 1), "%"))
 
   title_scr <- ifelse(is.null(savename), "PCA", basename(savename))
 
-  scrplt <- ggplot(data = df_scrplt, aes(x = PC, y = value, col = variable, group = variable, label = label)) +
-    geom_hline(yintercept = cum_var_exp, color = "red") +
+  scrplt <- ggplot(df_scrplt2, aes(x = PC, y = value, col = name, group = name, label = label)) +
+    geom_hline(yintercept = cum_var_exp, color = "gray", linetype = "dashed") +
     geom_line() +
     geom_point() +
     scale_y_continuous(breaks = seq(0, 100, by = 10)) +
@@ -450,6 +450,118 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
   }
 
   return(scrplt)
+}
+
+#' Plot PCA matrix via `GGally::ggpairs`
+#'
+#' @import dplyr
+#' @import ggplot2
+#'
+#' @param df_pca string/`prcomp` obj; (path to) PCA output with sample names in first column
+#' @param PCs num vector; list of numeric PCs to plot (ex. `c(1:3)` for first 3 PCs)
+#' @param anno string/df; Annotation info for DF
+#' @param annoname string; Colname in `anno` matching point name
+#' @param annotype string; Colname in `anno` with info to color by
+#' @param title string; Plot title
+#' @param colors char vector; For discrete `annotype`, length should be number of unique `annotype`s. For continuous `annotype`, can either be length 2 where `colors[1]` is low and `colors[2]` is high or length 3 diverging colorscale where `colors[1]` = low, `colors[2]` = mid, `colors[3]` = high.
+#' @param savename string; File path to save plot under
+#' @param height numeric; Saved plot height
+#' @param width numeric; Saved plot width
+#'
+#' @return `ggmatrix` object with PCA scatter plot matrix
+#' @export
+#'
+#' @examples
+#' data(iris)
+#' iris$Sample = rownames(iris)
+#' plot_PCA_matrix(
+#'   df_pca = Rubrary::run_PCA(t(iris[,c(1:4)]), screeplot = FALSE),
+#'   PCs = c(1:3),
+#'   anno = iris[,c("Sample", "Species")],
+#'   annoname = "Sample",
+#'   annotype = "Species",
+#'   title = "Iris PCA"
+#' )
+plot_PCA_matrix <- function(
+    df_pca, PCs = c(1:3), anno = NULL, annoname = "Sample", annotype = "Type",
+    colors = NULL, title = NULL, savename = NULL, width = 8, height = 8) {
+
+  # Load data ----
+  if (is.character(df_pca)) { # PCA results as path to txt
+    dfpath <- df_pca
+    df_pca <- Rubrary::rread(dfpath)
+    sdevpath <- gsub("_[^_]+$", "_sdev.txt", dfpath)
+    sdev <- Rubrary::rread(sdevpath) %>%
+      mutate(var = .^2, #
+             pve = round(var / sum(var) * 100, digits = 2)) %>%
+      `rownames<-`(paste0("PC", rownames(.)))
+  } else if (methods::is(df_pca, "prcomp")){ # prcomp object
+    df <- df_pca$x %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "Scores")
+
+    sdev <- df_pca$sdev %>%
+      as.data.frame() %>%
+      mutate(var = .^2,
+             pve = round(var / sum(var) * 100, digits = 1)) %>%
+      `rownames<-`(paste0("PC", rownames(.)))
+
+  } else { # PCA results directly as dataframe, no sdev
+    df <- df_pca
+    names(df)[1] <- "Scores"
+  }
+
+  PCs <- paste0("PC", PCs)
+  idx <- match(PCs, names(df))
+
+  if(exists("sdev")){
+    PClabs <- paste0(PCs, " (", sdev$pve[match(PCs, rownames(sdev))], "%)")
+  } else { PClabs <- PCs }
+
+  # Join annotation ----
+  if (is.character(anno)) { anno <- Rubrary::rread(anno) }
+  if(!is.null(anno)){
+    df <- df %>% left_join(., anno, by = stats::setNames(nm = "Scores", annoname))
+    axlab = "show"
+    leg = c(length(idx), 1)
+    legpos = "bottom"
+    if(is.null(colors)){ colors <- scales::hue_pal()(length(unique(df[[annotype]])))}
+  } else { #No anno
+    df <- df %>% mutate(anno = "none")
+    annotype = "anno"
+    axlab = "internal"
+    leg = NULL
+    legpos = "none"
+    if(is.null(colors)){ colors = "black" } else { colors = colors[1] }
+  }
+
+  # Plot mtx ----
+  Rubrary::use_pkg("GGally", strict = TRUE)
+  plt <- GGally::ggpairs(
+    data = df, aes(color = .data[[annotype]], fill = .data[[annotype]]),
+    columns = idx,
+    title = title,
+    columnLabels = PClabs,
+    upper = list(continuous = "points"),
+    diag = list(continuous = GGally::wrap("densityDiag", alpha = 0.5)),
+    axisLabels = axlab,
+    legend = leg
+  ) +
+    scale_color_manual(values = colors) +
+    scale_fill_manual(values = colors) +
+    theme_classic() +
+    theme(legend.position = legpos,
+          panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5))
+
+  # Save ----
+  if(!is.null(savename)){
+    ggsave(
+      plot = plt,
+      filename = savename,
+      width = width, height = height
+    )
+  }
+  return(plt)
 }
 
 #' Plot PCA biplot

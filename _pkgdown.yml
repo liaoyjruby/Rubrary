@@ -22,9 +22,10 @@ reference:
     contents:
       - run_PCA
       - plot_PCA
+      - plot_PCA_matrix
+      - plot_PCA_biplot
       - get_loadings
       - plot_screeplot
-      - plot_PCA_biplot
       - rotate_varimax
       - predict_PCA
   - title: Differentially expressed genes (DESeq)

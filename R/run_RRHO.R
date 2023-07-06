@@ -1,6 +1,7 @@
 
 utils::globalVariables(c(
-  "p1", "p2", "r1", "r2", "v1", "v2"
+  "p1", "p2", "r1", "r2", "v1", "v2",
+  ":=", "rank.1", "rank.2", "Unigene"
 ))
 
 #' Run RRHO analysis
@@ -54,7 +55,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
   m1 <- paste0(metric1, ".1")
   sig1 <- sig1 %>%
     select(!!sym(key), !!sym(metric1)) %>%
-    filter(complete.cases(.)) %>%
+    filter(stats::complete.cases(.)) %>%
     distinct(!!sym(key), .keep_all = TRUE) %>%
     rename(!!m1 := !!sym(metric1))
 
@@ -62,7 +63,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
   m2 <- paste0(metric2, ".2")
   sig2 <- sig2 %>%
     select(!!sym(key), !!sym(metric2)) %>%
-    filter(complete.cases(.)) %>%
+    filter(stats::complete.cases(.)) %>%
     distinct(!!sym(key), .keep_all = TRUE) %>%
     rename(!!m2 := !!sym(metric2))
 

@@ -18,7 +18,6 @@ Imports:
     methods,
     patchwork,
     plyr,
-    reshape2,
     stats,
     tibble,
     utils,
@@ -35,8 +34,6 @@ Suggests:
     scales,
     RColorBrewer,
     RRHO,
-    survival,
-    ggsurvfit,
     ggExtra,
     DESeq2,
     EnhancedVolcano,
@@ -53,7 +50,8 @@ Suggests:
     SingleCellExperiment,
     CellMixS,
     BiocParallel,
-    openxlsx
+    openxlsx,
+    GGally
 Remotes:
   immunogenomics/lisi
 VignetteBuilder: knitr

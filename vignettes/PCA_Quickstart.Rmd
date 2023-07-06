@@ -48,7 +48,7 @@ Raw text files can be loaded through `read.delim` by passing in the URL.
 
 ```{r Load Beltran data}
 # Upper quartile normalized log2 transformed gene counts
-Beltran_log2UQ_exp <- read.delim("https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt", row.names = 1)
+Beltran_log2UQ_exp <- Rubrary::rread("https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt", row.names = 1)
 
 rmarkdown::paged_table(Rubrary::corner(Beltran_log2UQ_exp))
 ```
