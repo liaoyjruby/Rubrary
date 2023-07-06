@@ -1,8 +1,15 @@
+# Rubrary 0.12.0
+
+Major
+
+- `plot_PCA_matrix`
 
 Minor
 
 - `get_log_coding_geneexp` uses `filter_genes` now
 - remove `reshape2` dependency
+- remove survival related suggests
+- bug fixes
 
 # Rubrary 0.11.0
 
