@@ -23,6 +23,7 @@ reference:
       - run_PCA
       - plot_PCA
       - plot_PCA_matrix
+      - plot_PCA_3D
       - plot_PCA_biplot
       - get_loadings
       - plot_screeplot

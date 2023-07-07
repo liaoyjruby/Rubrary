@@ -160,6 +160,12 @@ deseq_res_hgnc_PC <- Rubrary::filter_genes(
 )
 ```
 
+## Gene expression boxplot
+
+```{r Gene_exp_boxplot}
+```
+
+
 ## Volcano plot
 
 DESeq results can be visualized through volcano plots. Volcano plots show that top and bottom differentially expressed genes when sorted by decreasing signed log p value present as outliers on the top right and top left.

@@ -226,7 +226,6 @@ Rubrary::plot_PCA_matrix(
 ```
 3D view of the first three PCs.
 ```{r Penguin_PCA_3D}
-debugonce(Rubrary::plot_PCA_3D)
 Rubrary::plot_PCA_3D(
   df_pca = pca,
   PCs = c(1:3),

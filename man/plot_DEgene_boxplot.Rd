@@ -36,7 +36,7 @@ plot_DEgene_boxplot(
 
 \item{metric}{string; colname in \code{sig_DE} to rank genes by for auto gene selection if \code{genes} not provided and for appending to gene name in parens}
 
-\item{pval}{logical; use \code{t.test} pvalue annotation via \code{ggpubr::stat_compare_means}}
+\item{pval}{logical; use \code{t.test} pvalue annotation via \code{ggsignif::stat_signif}}
 
 \item{genes_n}{integer; if \code{genes} not provided, get top/bottom \code{genes_n}}
 

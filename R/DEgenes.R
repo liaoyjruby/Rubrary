@@ -15,7 +15,7 @@ utils::globalVariables(c(
 #' @param sig_DE df/string, optional; (path to) DE(seq) gene results table
 #' @param genes char vector; list of genes to plot, must be present in `data`
 #' @param metric string; colname in `sig_DE` to rank genes by for auto gene selection if `genes` not provided and for appending to gene name in parens
-#' @param pval logical; use `t.test` pvalue annotation via `ggpubr::stat_compare_means`
+#' @param pval logical; use `t.test` pvalue annotation via `ggsignif::stat_signif`
 #' @param genes_n integer; if `genes` not provided, get top/bottom `genes_n`
 #' @param colors char vector; jitter point colors, length == # of unique `anno_type`s
 #' @param title string; plot title
@@ -111,8 +111,8 @@ plot_DEgene_boxplot <- function(
     colors <- scales::hue_pal()(length(unique(exp_anno[,anno_type])))
   }
   if(pval){
-    Rubrary::use_pkg("ggpubr")
-    if(!requireNamespace("ggpubr")){ pval <- FALSE }
+    Rubrary::use_pkg("ggsignif")
+    if(!requireNamespace("ggsignif")){ pval <- FALSE }
   }
 
   plt <- ggplot(exp_anno, aes(x = .data[[anno_sig]], y = exp)) +
@@ -127,9 +127,10 @@ plot_DEgene_boxplot <- function(
     theme_classic() +
     theme(strip.background = element_blank()) +
     {if(length(colors) == 1) theme(legend.position = "none")} +
-    {if(pval) ggpubr::stat_compare_means(
-      comparisons = list(as.character(unique(exp_anno[,anno_type]))),
-      method = "t.test", size = 3)}
+    {if(pval)
+      ggsignif::stat_signif(
+        test = "t.test",
+        comparisons = list(as.character(unique(exp_anno[,anno_type]))))}
 
   if(!is.null(savename)){
     ggsave(
