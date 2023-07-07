@@ -90,6 +90,27 @@ Rubrary::plot_PCA(
 )
 ```
 
+Lower PCs can be visualized simultaneously with `Rubrary::plot_PCA_matrix`.
+```{r Beltran_PCA_mtx}
+Rubrary::plot_PCA_matrix(
+  df_pca = Beltran_PCA,
+  PCs = c(1:5),
+  anno = Beltran_info,
+  annoname = "sample",
+  annotype = "type"
+)
+```
+3D view of the first three PCs.
+```{r Beltran_PCA_3D}
+Rubrary::plot_PCA_3D(
+  df_pca = Beltran_PCA,
+  PCs = c(1:3),
+  anno = Beltran_info,
+  annoname = "sample",
+  annotype = "type"
+)
+```
+
 ## Varimax rotation
 
 ```{r Beltran varimax loadings}
@@ -192,6 +213,29 @@ Rubrary::plot_PCA_biplot(
   label = "Loadings"
 )
 ```
+
+Plot multiple PCs simultaneously.
+```{r Penguin_PCA_mtx}
+Rubrary::plot_PCA_matrix(
+  df_pca = pca,
+  PCs = c(1:3),
+  anno = penguins,
+  annoname = "Sample_ID",
+  annotype = "species",
+)
+```
+3D view of the first three PCs.
+```{r Penguin_PCA_3D}
+debugonce(Rubrary::plot_PCA_3D)
+Rubrary::plot_PCA_3D(
+  df_pca = pca,
+  PCs = c(1:3),
+  anno = penguins,
+  annoname = "Sample_ID",
+  annotype = "species",
+)
+```
+
 
 ## Varimax rotation
 

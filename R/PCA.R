@@ -169,7 +169,6 @@ plot_PCA <- function(
   type <- match.arg(type)
   ks_pval <- match.arg(ks_pval)
   annolabel <- ifelse(annolabel == annoname, type, annolabel)
-  lab_type <- type
 
   if (is.character(df_pca)) { # PCA results as path to txt
     dfpath <- df_pca
@@ -246,10 +245,10 @@ plot_PCA <- function(
            x = PCxlab,
            y = PCylab) +
       {if (!is.null(subtitle)) labs(subtitle = subtitle)} +
-      {if (label) ggrepel::geom_text_repel(label = df[, lab_type], max.overlaps = Inf)} +
+      {if (label) ggrepel::geom_text_repel(label = df[, type], max.overlaps = Inf)} +
     theme_classic()
   } else {
-    # Two groups, calc KS p-value for both PCx and PCy
+    # KS pvalue calculation ----
     ks_cap <- waiver()
     if ((length(unique(df[, annotype])) == 2) && (ks_pval != "none")) {
       kpX <- Rubrary::get_kspval(df, PCx, annotype, unique(df[, annotype])[1])
@@ -276,7 +275,7 @@ plot_PCA <- function(
           )
         )
       }
-      ks_cap <- ifelse(ks_pval == "caption", waiver(), paste0(kpX_text, "; ", kpY_text))
+      ks_cap <- ifelse(ks_pval == "caption", paste0(kpX_text, "; ", kpY_text), NULL)
     }
 
     # Manage alpha if many points
@@ -454,6 +453,8 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 
 #' Plot PCA matrix via `GGally::ggpairs`
 #'
+#' Only does "scores" PCA plots.
+#'
 #' @import dplyr
 #' @import ggplot2
 #'
@@ -463,7 +464,7 @@ plot_screeplot <- function(obj_prcomp, npcs = ncol(obj_prcomp$x), label = FALSE,
 #' @param annoname string; Colname in `anno` matching point name
 #' @param annotype string; Colname in `anno` with info to color by
 #' @param title string; Plot title
-#' @param colors char vector; For discrete `annotype`, length should be number of unique `annotype`s. For continuous `annotype`, can either be length 2 where `colors[1]` is low and `colors[2]` is high or length 3 diverging colorscale where `colors[1]` = low, `colors[2]` = mid, `colors[3]` = high.
+#' @param colors char vector; For discrete `annotype`, length should be number of unique `annotype`s.
 #' @param savename string; File path to save plot under
 #' @param height numeric; Saved plot height
 #' @param width numeric; Saved plot width
@@ -525,7 +526,6 @@ plot_PCA_matrix <- function(
     axlab = "show"
     leg = c(length(idx), 1)
     legpos = "bottom"
-    if(is.null(colors)){ colors <- scales::hue_pal()(length(unique(df[[annotype]])))}
   } else { #No anno
     df <- df %>% mutate(anno = "none")
     annotype = "anno"
@@ -537,21 +537,55 @@ plot_PCA_matrix <- function(
 
   # Plot mtx ----
   Rubrary::use_pkg("GGally", strict = TRUE)
-  plt <- GGally::ggpairs(
-    data = df, aes(color = .data[[annotype]], fill = .data[[annotype]]),
-    columns = idx,
-    title = title,
-    columnLabels = PClabs,
-    upper = list(continuous = "points"),
-    diag = list(continuous = GGally::wrap("densityDiag", alpha = 0.5)),
-    axisLabels = axlab,
-    legend = leg
-  ) +
-    scale_color_manual(values = colors) +
-    scale_fill_manual(values = colors) +
-    theme_classic() +
-    theme(legend.position = legpos,
-          panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5))
+  if(is.numeric(df[,annotype])){ # Continuous annotype
+
+    guidetitle <- guide_colorbar(title = annotype)
+    if(is.null(colors)){ cols <- c("blue", "red") } else { cols <- colors }
+    if(length(cols) == 1){ cols <- c("gray80", cols) }
+
+    num_sct <- function(data, mapping, ..., low = "blue", high = "red"){
+      ggplot(data = data, mapping = mapping) +
+        geom_point(...) +
+        scale_color_gradient(low = low, high = high)
+    }
+
+    plt <- GGally::ggpairs(
+      data = df, aes(color = .data[[annotype]]),
+      columns = idx,
+      title = title,
+      upper = list(continuous = GGally::wrap(num_sct, low = cols[1], high = cols[2])),
+      lower = list(continuous = GGally::wrap(num_sct, low = cols[1], high = cols[2])),
+      # diag = list(continuous = GGally::wrap(GGally::ggally_diagAxis, color = "black")),
+      axisLabels = "internal",
+      columnLabels = PClabs,
+      legend = leg,
+      progress = FALSE
+    ) +
+      theme_bw() +
+      theme(legend.position = legpos,
+            panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5))
+  } else { # Discrete annotype
+    guidetitle <- guide_legend(title = annotype)
+    if(is.null(colors)){ colors <- scales::hue_pal()(length(unique(df[[annotype]])))}
+
+    plt <- GGally::ggpairs(
+      data = df, aes(color = .data[[annotype]], fill = .data[[annotype]]),
+      columns = idx,
+      title = title,
+      columnLabels = PClabs,
+      upper = list(continuous = "points"),
+      diag = list(continuous = GGally::wrap("densityDiag", alpha = 0.5)),
+      axisLabels = axlab,
+      legend = leg,
+      progress = FALSE
+    ) +
+      scale_color_manual(values = colors) +
+      scale_fill_manual(values = colors) +
+      theme_classic() +
+      theme(legend.position = legpos,
+            panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5))
+  }
+
 
   # Save ----
   if(!is.null(savename)){
@@ -680,6 +714,246 @@ plot_PCA_biplot <- function(obj, PCx = "PC1", PCy = "PC2",
   }
 
   return(plt)
+}
+
+#' Plot 3D PCA scores/loadings via `plotly`
+#'
+#' Image saving requires `kaleido` python package setup via `reticulate` R package. See `?plotly::save_image` for more details and setup instructions. Pass in `savename` with `html` file extension to avoid these errors.
+#'
+#' @import dplyr
+#'
+#' @param df_pca string/`prcomp` obj; (path to) PCA output with sample names in first column
+#' @param PCs num vector; list of numeric PCs to plot (ex. `c(1:3)` for first 3 PCs)
+#' @param type `c("Score", "Loading")`
+#' @param anno string/df; Annotation info for `df_pca` with `annoname`, `annotype`, and `annolabel` columns
+#' @param annoname string; Colname in `anno` matching point name
+#' @param annotype string; Colname in `anno` with info to color by
+#' @param annolabel string; Colname in `anno` to label points by, defaults to `annoname`
+#' @param label logical; T to label points
+#' @param colors char vector; For discrete `annotype`, length should be number of unique `annotype`s or length 2 for continuous `annotype`s where `colors[1]` represents low values and `colors[2]` represents high values.
+#' @param title string; Plot title
+#' @param savename string; File path to save plot under, `html` if not an image format
+#' @param height numeric; Saved plot height if saving as image format
+#' @param width numeric; Saved plot width
+#' @param df_pca string or `prcomp` obj; (path to) PCA output
+#' @param rotate logical; T to have the HTML widget automatically rotate when opened. Only applicable if `savename` is not `NULL`
+#'
+#' @return `plotly` object
+#' @export
+#'
+#' @examples
+#' data(iris)
+#' iris$Sample = rownames(iris)
+#' plot_PCA_3D(
+#'   df_pca = Rubrary::run_PCA(t(iris[,c(1:4)]), screeplot = FALSE),
+#'   PCs = c(1:3),
+#'   type = "Scores",
+#'   anno = iris[,c("Sample", "Species")],
+#'   annoname = "Sample", annotype = "Species",
+#'   title = "Iris PCA Scores 3D"
+#' )
+#'
+plot_PCA_3D <- function(
+    df_pca, PCs = c(1:3), type = c("Scores", "Loadings"),
+    anno = NULL, annoname = "Sample", annotype = "Type",
+    annolabel = annoname, label = FALSE, colors = NULL,
+    title = NULL, savename = NULL, rotate = FALSE,
+    width = 10, height = 10){
+  type <- match.arg(type)
+  annolabel <- ifelse(annolabel == annoname, type, annolabel)
+
+  # Load data ----
+  if(is.character(df_pca)) { # PCA results as path to txt
+    dfpath <- df_pca
+    df_pca <- Rubrary::rread(dfpath)
+    sdevpath <- gsub("_[^_]+$", "_sdev.txt", dfpath)
+    sdev <- Rubrary::rread(sdevpath) %>%
+      mutate(var = .^2, #
+             pve = round(var / sum(var) * 100, digits = 2)) %>%
+      `rownames<-`(paste0("PC", rownames(.)))
+
+    if (grepl("score", dfpath, ignore.case = T)) {
+      type <- "Scores"
+    } else if(grepl("loading", dfpath, ignore.case = T)){
+      type <- "Loadings"
+    }
+  } else if (methods::is(df_pca, "prcomp")){ # prcomp object
+    df_sc <- df_pca$x %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "Scores")
+
+    df_lo <- Rubrary::get_loadings(df_pca) %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column(var = "Loadings")
+
+    if(type == "Loadings"){
+      df <- df_lo
+    } else { # Scores or biplot
+      df <- df_sc
+    }
+    sdev <- df_pca$sdev %>%
+      as.data.frame() %>%
+      mutate(var = .^2,
+             pve = round(var / sum(var) * 100, digits = 2)) %>%
+      `rownames<-`(paste0("PC", rownames(.)))
+  } else { # PCA results directly as dataframe
+    df <- df_pca
+    names(df)[1] <- type
+  }
+
+  PCs <- paste0("PC", PCs)
+
+  if(exists("sdev")){
+    PClabs <- paste0(PCs, " (", sdev$pve[match(PCs, rownames(sdev))], "%)")
+  } else { PClabs <- PCs }
+
+  # Join annotation ----
+  if(is.character(anno)) { anno <- Rubrary::rread(anno) }
+  if(!is.null(anno) && type == "Scores"){
+    df <- df %>% left_join(., anno, by = stats::setNames(nm = "Scores", annoname))
+    if(is.null(colors)){ colors <- scales::hue_pal()(length(unique(df[[annotype]])))}
+    showleg = TRUE
+  } else { #No anno
+    df <- df %>% mutate(anno = "none")
+    annotype = "anno"
+    showleg = FALSE
+    if(is.null(colors)){ colors = "black" }
+  }
+
+  # Plot ----
+  Rubrary::use_pkg("plotly", strict = TRUE)
+  if(is.numeric(df[,annotype])){ # Continuous legend
+    fig <- plotly::plot_ly(
+      type = "scatter3d", mode = "markers",
+      x = ~df[,PCs[1]],
+      y = ~df[,PCs[2]],
+      z = ~df[,PCs[3]],
+      marker = list(color = ~df[,annotype],
+                    colorbar = list(title = annotype),
+                    colors = colors),
+      showlegend = showleg)
+    } else {
+      fig <- plotly::plot_ly(
+        type = "scatter3d", mode = "markers",
+        x = ~df[,PCs[1]],
+        y = ~df[,PCs[2]],
+        z = ~df[,PCs[3]],
+        color = ~df[,annotype],
+        colors = colors,
+        showlegend = showleg)
+  }
+
+
+  fig <- fig %>%
+    plotly::add_trace(
+      marker = list(
+        size = 7,
+        line = list(
+          color = "black",
+          opacity = 0.5,
+          width = 1)),
+      showlegend = F
+    )
+  if(label){ fig <- fig %>%
+    plotly::add_text(text = ~df[, annolabel], showlegend = F)}
+
+  # Rotation? ----
+    if(rotate){
+      # @ismirsehregal on StackOverflow
+      # https://stackoverflow.com/questions/71042818/plot-ly-rotate-animation-in-r
+      Rubrary::use_pkg("htmlwidgets")
+      fig <- fig %>%
+        plotly::layout(
+          title = title,
+          legend = list(title=list(text=annotype)),
+          scene = list(
+            camera = list(
+              eye = list(
+                x = 1.25,
+                y = 1.25,
+                z = 1.25
+              ),
+              center = list(x = 0, y = 0, z = 0),
+            xaxis = list(title = PClabs[1]),
+            yaxis = list(title = PClabs[2]),
+            zaxis = list(title = PClabs[3])
+            ))) %>%
+        htmlwidgets::onRender("
+            function(el, x){
+        var id = el.getAttribute('id');
+        var gd = document.getElementById(id);
+        Plotly.update(id).then(attach);
+        function attach() {
+          var cnt = 0;
+
+          function run() {
+            rotate('scene', Math.PI / 180); # speed
+            requestAnimationFrame(run);
+          }
+          run();
+
+          function rotate(id, angle) {
+            var eye0 = gd.layout[id].camera.eye
+            var rtz = xyz2rtz(eye0);
+            rtz.t += angle;
+
+            var eye1 = rtz2xyz(rtz);
+            Plotly.relayout(gd, id + '.camera.eye', eye1)
+          }
+
+          function xyz2rtz(xyz) {
+            return {
+              r: Math.sqrt(xyz.x * xyz.x + xyz.y * xyz.y),
+              t: Math.atan2(xyz.y, xyz.x),
+              z: xyz.z
+            };
+          }
+
+          function rtz2xyz(rtz) {
+            return {
+              x: rtz.r * Math.cos(rtz.t),
+              y: rtz.r * Math.sin(rtz.t),
+              z: rtz.z
+            };
+          }
+        };
+      }
+          ")
+    } else {
+      fig <- fig %>%
+        plotly::layout(
+          scene = list(
+            xaxis = list(title = PClabs[1]),
+            yaxis = list(title = PClabs[2]),
+            zaxis = list(title = PClabs[3])),
+          title = title,
+          legend = list(title = list(text = annotype)))
+    }
+  # Save ----
+  if(!is.null(savename)){
+    # Save as HTML ----
+    htmlname <- paste0(tools::file_path_sans_ext(savename), ".html")
+    Rubrary::use_pkg("htmlwidgets")
+    htmlwidgets::saveWidget(
+      plotly::partial_bundle(fig),
+      file = htmlname,
+      selfcontained = TRUE)
+    utils::browseURL(htmlname)
+
+    ## Save as image ----
+    img_fmt <- c("png", "jpeg", "jpg", "webp", "svg", "pdf")
+    if(tools::file_ext(savename) %in% img_fmt){
+      message("** Image saving requires `kaleido` python package setup via `reticulate` R package.")
+      message("** See `?plotly::save_image` for more details.")
+      Rubrary::use_pkg("reticulate")
+      if(requireNamespace("reticulate", quietly = TRUE)){
+        plotly::save_image(
+          p = fig, file = savename,
+          scale = 4)
+      }
+    }
+  }
+  return(fig)
 }
 
 #' Apply varimax rotation to PCA scores

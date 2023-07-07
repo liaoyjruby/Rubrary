@@ -51,7 +51,10 @@ Suggests:
     CellMixS,
     BiocParallel,
     openxlsx,
-    GGally
+    GGally,
+    htmlwidgets,
+    plotly,
+    reticulate
 Remotes:
   immunogenomics/lisi
 VignetteBuilder: knitr

@@ -1,3 +1,12 @@
+
+Major
+
+- `plot_PCA_3D`: uses `plotly` library to plot three dimensional scatter plots
+
+Minor
+
+- `PCA_Quickstart`: PCA matrix & 3d plotting examples for Beltran & penguin data sets
+
 # Rubrary 0.12.0
 
 Major

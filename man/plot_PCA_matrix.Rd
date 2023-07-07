@@ -28,7 +28,7 @@ plot_PCA_matrix(
 
 \item{annotype}{string; Colname in \code{anno} with info to color by}
 
-\item{colors}{char vector; For discrete \code{annotype}, length should be number of unique \code{annotype}s. For continuous \code{annotype}, can either be length 2 where \code{colors[1]} is low and \code{colors[2]} is high or length 3 diverging colorscale where \code{colors[1]} = low, \code{colors[2]} = mid, \code{colors[3]} = high.}
+\item{colors}{char vector; For discrete \code{annotype}, length should be number of unique \code{annotype}s.}
 
 \item{title}{string; Plot title}
 
@@ -42,7 +42,7 @@ plot_PCA_matrix(
 \code{ggmatrix} object with PCA scatter plot matrix
 }
 \description{
-Plot PCA matrix via \code{GGally::ggpairs}
+Only does "scores" PCA plots.
 }
 \examples{
 data(iris)
