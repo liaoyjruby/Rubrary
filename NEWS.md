@@ -1,7 +1,9 @@
+# Rubrary 0.13.0
 
 Major
 
 - `plot_PCA_3D`: uses `plotly` library to plot three dimensional scatter plots
+- `plot_PCA_matrix`: can accommodate numeric / continuous annotations
 
 Minor
 
