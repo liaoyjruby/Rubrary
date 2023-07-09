@@ -8,7 +8,7 @@ get_log_coding_geneexp(
   exp,
   base = 2,
   pc_genes = Rubrary::get_PC_genes(),
-  savename
+  savename = NULL
 )
 }
 \arguments{

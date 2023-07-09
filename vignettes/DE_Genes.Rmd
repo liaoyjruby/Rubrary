@@ -75,20 +75,76 @@ The gene expression data is represented in counts. There are 4 samples treated w
 # Counts
 cts <- assay(airway, "counts")
 # Annotation
-anno <- colData(airway) %>%
-  as.data.frame()
+anno <- colData(airway) %>% as.data.frame()
 anno$dex <- relevel(anno$dex, "untrt") # Set untreated as first factor
 
 rmarkdown::paged_table(data.frame(cts))
 rmarkdown::paged_table(anno)
 ```
 
+### Replace Ensembl ID w/ HGNC symbol
+
+`airway` gene names are given in [Ensembl ID](http://www.ensembl.org/info/genome/stable_ids/index.html), but [HGNC gene symbols](https://www.genenames.org/about/guidelines/) can be easier to interpret in downstream analysis and more compatible with gene set enrichment analysis (GSEA) tools.
+
+```{r Replace Ensembl ID w/ HGNC symbol}
+# Gene format is currently in Ensembl ID format
+head(rownames(cts))
+
+library(biomaRt)
+# Load Mart object - database of Homo sapiens genes from Ensembl
+mart <- biomaRt::useDataset(
+  dataset = "hsapiens_gene_ensembl",
+  mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL",
+                          host="https://useast.ensembl.org"))
+
+conv <- Rubrary::convert_genes(
+    genes = rownames(cts),
+    from_to = c("ensembl_gene_id", "hgnc_symbol"),
+    mart = mart, table = T) %>%
+  filter(hgnc_symbol != "") %>% # Exclude unmatched HGNC symbols
+  distinct(hgnc_symbol, .keep_all = T)
+
+cts <- cts %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("ensembl_gene_id")
+
+cts_hgnc <- dplyr::left_join( # Join stats with HGNC symbol table
+  conv, cts, by = "ensembl_gene_id") %>%
+  dplyr::select(!ensembl_gene_id) %>%
+  tibble::column_to_rownames("hgnc_symbol")
+
+# Genes now have associated HGNC symbols
+rmarkdown::paged_table(head(cts_hgnc))
+```
+
 ## Visualize samples w/ PCA
 
+Since we already created the `Mart` object when converting gene symbols, we can reuse it to avoid querying the BioMart database again and load protein coding genes efficiently.
+
+
 ```{r Visualize samples w/ PCA}
-# log2UQ
+# Upper quartile normalize
+cts_UQ <- Rubrary::quantile_norm(cts_hgnc, q = 75)
+# Log transform
+pc_genes <- Rubrary::get_PC_genes(mart)
+cts_log2UQ <- Rubrary::get_log_coding_geneexp(cts_UQ, pc_genes = pc_genes)
 # Rubrary::run_PCA
+airway_PCA <- Rubrary::run_PCA(cts_log2UQ)
 # Rubrary::plot_PCA
+Rubrary::plot_PCA(
+  df_pca = airway_PCA,
+  anno = tibble::rownames_to_column(anno, "Sample_ID"),
+  annoname = "Sample_ID",
+  annotype = "dex",
+  label = TRUE
+)
+# Rubrary::plot_PCA_matrix
+Rubrary::plot_PCA_matrix(
+  df_pca = airway_PCA,
+  anno = tibble::rownames_to_column(anno, "Sample_ID"),
+  annoname = "Sample_ID",
+  annotype = "cell"
+)
 ```
 
 # `DESeq2` differentially expressed genes
@@ -109,7 +165,7 @@ Thus, the fold change per gene in the results represents the change in the `dex`
 library(DESeq2)
 
 dds <- DESeqDataSetFromMatrix(
-  countData = cts[,rownames(anno)],
+  countData = cts_hgnc[,rownames(anno)],
   colData = anno,
   design = ~ dex)
 
@@ -118,51 +174,31 @@ res <- results(dds, contrast = c("dex", "trt", "untrt"))
 deseq_res_df <- Rubrary::output_DESeq(res)
 ```
 
-### Replace Ensembl ID w/ HGNC symbol
-
-`airway` gene names are given in [Ensembl ID](http://www.ensembl.org/info/genome/stable_ids/index.html), but [HGNC gene symbols](https://www.genenames.org/about/guidelines/) can be easier to interpret in downstream analysis and more compatible with gene set enrichment analysis (GSEA) tools.
-
-```{r Replace Ensembl ID w/ HGNC symbol}
-# Gene format is currently in Ensembl ID format
-head(deseq_res_df$gene)
-
-library(biomaRt)
-# Load Mart object - database of Homo sapiens genes from Ensembl
-mart <- biomaRt::useDataset(
-  dataset = "hsapiens_gene_ensembl",
-  mart = biomaRt::useMart("ENSEMBL_MART_ENSEMBL",
-                          host="https://useast.ensembl.org"))
-
-conv <- Rubrary::convert_genes(
-    genes = deseq_res_df$gene,
-    from_to = c("ensembl_gene_id", "hgnc_symbol"),
-    mart = mart, table = T) %>%
-  filter(hgnc_symbol != "") %>% # Exclude unmatched HGNC symbols
-  distinct(hgnc_symbol, .keep_all = T)
-
-deseq_res_hgnc <- dplyr::left_join( # Join stats with HGNC symbol table
-  conv, deseq_res_df, by = join_by(ensembl_gene_id == gene)) %>%
-  arrange(desc(sign_log_p))
-
-# Genes now have associated HGNC symbols
-rmarkdown::paged_table(deseq_res_hgnc)
-```
-
 ## Filter to protein coding genes
 
-For ease of interpretation, the DE genes results can also be filtered to protein coding genes only. `Rubrary::filter_genes()` can filter with the list of protein coding genes retrieved with `Rubrary::get_PC_genes()`. Since we already created the `Mart` object when converting gene symbols, we can reuse it to avoid querying the BioMart database again and load protein coding genes efficiently.
+For ease of interpretation, the DE genes results can also be filtered to protein coding genes only. `Rubrary::filter_genes()` can filter with the list of protein coding genes retrieved with `Rubrary::get_PC_genes()`. 
 
 ```{r PC genes}
-deseq_res_hgnc_PC <- Rubrary::filter_genes(
-  df = deseq_res_hgnc,
-  gene_col = "hgnc_symbol",
-  genes_filt = Rubrary::get_PC_genes(mart)
-)
+deseq_res_df_PC <- Rubrary::filter_genes(
+  df = deseq_res_df,
+  gene_col = "gene",
+  genes_filt = pc_genes
+) %>%
+  `rownames<-`(NULL) %>%
+  as.data.frame() %>%
+  tibble::column_to_rownames("gene")
 ```
 
 ## Gene expression boxplot
 
 ```{r Gene_exp_boxplot}
+Rubrary::plot_DEgene_boxplot(
+  data = cts_log2UQ,
+  anno = anno,
+  anno_sig = "dex",
+  anno_type = "cell",
+  sig_DE = deseq_res_df_PC
+)
 ```
 
 
@@ -172,13 +208,13 @@ DESeq results can be visualized through volcano plots. Volcano plots show that t
 
 ```{r Volcano_plot, fig.height=12, fig.width=16}
 rmarkdown::paged_table(
-  head(deseq_res_hgnc_PC[order(deseq_res_hgnc_PC$sign_log_p, decreasing = T),]))
+  head(deseq_res_df_PC[order(deseq_res_df_PC$sign_log_p, decreasing = T),]))
 rmarkdown::paged_table(
-  tail(deseq_res_hgnc_PC[order(deseq_res_hgnc_PC$sign_log_p, decreasing = T),]))
+  tail(deseq_res_df_PC[order(deseq_res_df_PC$sign_log_p, decreasing = T),]))
 
 Rubrary::plot_volcano(
-  df = deseq_res_hgnc_PC,
-  names = "hgnc_symbol",
+  df = tibble::rownames_to_column(deseq_res_df_PC, "gene"),
+  names = "gene",
   x = "log2FoldChange", y = "pvalue",
   FCcutoff = 1, pCutoff = 5e-04,
   title = "Airway Treated vs. Untreated DE Genes",

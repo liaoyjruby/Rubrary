@@ -180,7 +180,7 @@ plot_scatter <- function(df = NULL, xval, yval, label = NULL, group = NULL, colo
     }
     xval <- "xval"
     yval <- "yval"
-    label <- "label"
+    # label <- "label"
   } else {
     df <- df[, c(xval, yval, label, group)]
   }
