@@ -62,6 +62,7 @@ reference:
       - get_PC_genes
       - filter_genes
       - get_gene_desc
+      - quantile_norm
       - get_log_coding_geneexp
   - title: Utility
     desc: Miscellaneous helper functions.
