@@ -49,6 +49,8 @@ format_GSEA_name <- function(
 #'
 #' Can plot barplot of NES of pathways from one GSEA result, or compare NES for chosen pathways between two GSEA results.
 #'
+#' To extend margins and accomodate long pathway names, add `ggplot2::theme(plot.margin = unit(c(top, right, bottom, left), units))` to the ggplot object.
+#'
 #' @import ggplot2
 #' @import dplyr
 #'
@@ -110,6 +112,7 @@ plot_GSEA_barplot <- function(
   pw_order <- factor(GSEA$pathway, levels = GSEA$pathway)
   n_pos <- nrow(GSEA[GSEA$NES > 0,]) # Number of positive pathways
   n_pws <- length(GSEA$pathway) # Number of pathways
+  n_neg <- n_pws - n_pos
   n_res <- 1 # Number of results
 
   if(!is.null(gsea2_res)){ # 2nd GSEA results, if applicable
@@ -138,10 +141,21 @@ plot_GSEA_barplot <- function(
       pw_y = 0,
       pw_y = ifelse(all(pos == "Pos") && min(NES) < 0, min(NES), pw_y),
       pw_y = ifelse(all(pos == "Neg") && max(NES) > 0, max(NES), pw_y)) %>%
-    ungroup(pathway) %>%
-    # "Pseudo" discrete scale - axis separates pos/neg NES pws so leave a gap
-    mutate(ord = c(rep(1:n_pos, each = n_res),
-                   rep((n_pos + 2):(length(unique(pathway))+1), each = n_res)))
+    ungroup(pathway)
+
+  if(length(unique(GSEA$pos)) == 2){ # Both pos + neg
+    GSEA <- GSEA %>%
+      # "Pseudo" discrete scale - axis separates pos/neg NES pws so leave a gap
+      mutate(ord = c(rep(1:n_pos, each = n_res),
+                     rep((n_pos + 2):(length(unique(pathway))+1), each = n_res)))
+  } else if(n_neg == 0){ # ALl pos
+    GSEA <- GSEA %>%
+      mutate(ord = c(rep(1:n_pos, each = n_res)))
+  } else if(n_pos == 0){ # All neg
+    GSEA <- GSEA %>%
+      mutate(ord = c(rep(1:n_neg, each = n_res)))
+  }
+
   if(pw_format){
     GSEA$pw_name <- Rubrary::format_GSEA_name(
       pw = GSEA$pathway,
@@ -152,7 +166,11 @@ plot_GSEA_barplot <- function(
     GSEA$pw_name <- GSEA$pathway
   }
   # Pathway label w/ NES axis label in the middle
-  pw_labs <- c(GSEA$pw_name[1:n_pos], "NES", GSEA$pw_name[(n_pos+1):length(pw_order)])
+  if(length(unique(GSEA$pos)) == 2){ # Both pos + neg
+    pw_labs <- c(GSEA$pw_name[1:n_pos], "NES", GSEA$pw_name[(n_pos+1):length(pw_order)])
+  } else { # ALl pos or all neg
+    pw_labs <- c(unique(GSEA$pw_name), "NES")
+  }
 
   # Manage significance alpha
   if(!is.null(sig_cutoff)){ # Sig cutoff provided
@@ -172,16 +190,36 @@ plot_GSEA_barplot <- function(
   }
 
   # Plotting preparation
-  pseud_0 <- n_pos + 0.75 # Midpoint in pseudofactor
-  pseud_ord <- c(1:n_pos, pseud_0, (n_pos+2):(length(pw_order)+1)) # Pseudo-order /w midpoint
-  # Tick frame - calc from max/min
-  # https://stackoverflow.com/questions/17753101/center-x-and-y-axis-with-ggplot2
-  NES_max_int <- round(max(GSEA$NES))
-  NES_min_int <- round(min(GSEA$NES))
-  tick_frame <- data.frame(
-    ticks = seq(NES_min_int, NES_max_int,
-                length.out = abs(NES_min_int) + abs(NES_max_int) + 1),
-    zero = pseud_0)
+  if(length(unique(GSEA$pos)) != 1){ # Both pos + neg
+    pseud_0 <- n_pos + 0.75 # Midpoint in pseudofactor
+    pseud_ord <- c(1:n_pos, pseud_0, (n_pos+2):(length(pw_order)+1)) # Pseudo-order /w midpoint
+    # Tick frame - calc from max/min
+    # https://stackoverflow.com/questions/17753101/center-x-and-y-axis-with-ggplot2
+    NES_max_int <- round(max(GSEA$NES))
+    NES_min_int <- round(min(GSEA$NES))
+    tick_frame <- data.frame(
+      ticks = seq(NES_min_int, NES_max_int,
+                  length.out = abs(NES_min_int) + abs(NES_max_int) + 1),
+      zero = pseud_0)
+  } else if(n_neg == 0){ # All pos
+    pseud_0 <- n_pos + 0.75 # Midpoint in pseudofactor
+    pseud_ord <- c(1:n_pos, pseud_0) # Pseudo-order /w midpoint
+    NES_min_int <- 0
+    NES_max_int <- round(max(GSEA$NES))
+    tick_frame <- data.frame(
+      ticks = seq(NES_min_int, NES_max_int,
+                  length.out = 2 * abs(NES_max_int) + 1),
+      zero = pseud_0)
+  } else if(n_pos == 0){ # All neg
+    pseud_0 <- n_neg + 0.75 # Midpoint in pseudofactor
+    pseud_ord <- c(1:n_neg, pseud_0) # Pseudo-order /w midpoint
+    NES_min_int <- round(min(GSEA$NES))
+    NES_max_int <- 0
+    tick_frame <- data.frame(
+      ticks = seq(NES_min_int, NES_max_int,
+                  length.out = 2 * abs(NES_min_int) + 1),
+      zero = pseud_0)
+  }
 
   #### PLOT
   plt <- ggplot(GSEA, aes(x = ord, y = NES)) +
@@ -254,9 +292,9 @@ plot_GSEA_barplot <- function(
     scale_alpha_identity()
   #### NES = +-1 guidelines - make conditional segment/hline if paired not corresponding?
   plt <- plt +
-    {if (!is.null(NES_cutoff)) geom_segment(
+    {if (!is.null(NES_cutoff) && n_pos != 0) geom_segment(
       aes(x = 0.5, xend = pseud_0 - 0.25, y = NES_cutoff, yend = NES_cutoff), linetype = "dashed")} +
-    {if (!is.null(NES_cutoff)) geom_segment(
+    {if (!is.null(NES_cutoff) && n_neg != 0) geom_segment(
       aes(x = pseud_0 + 0.75, xend = max(pseud_ord) + 0.5, y = -1 * NES_cutoff, yend = -1 * NES_cutoff),
       linetype = "dashed")} +
     # geom_hline(yintercept = -1, linetype = "dashed") +

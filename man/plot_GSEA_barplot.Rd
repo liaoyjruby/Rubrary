@@ -74,3 +74,6 @@ GSEA NES barplot as \code{ggplot} object
 \description{
 Can plot barplot of NES of pathways from one GSEA result, or compare NES for chosen pathways between two GSEA results.
 }
+\details{
+To extend margins and accomodate long pathway names, add \code{ggplot2::theme(plot.margin = unit(c(top, right, bottom, left), units))} to the ggplot object.
+}
