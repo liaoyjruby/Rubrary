@@ -239,7 +239,7 @@ run_RRHO <- function(sig1, sig2, sig1_name, sig2_name,
       xval = paste0(metric1, ".1"), xlabel = sig1_name,
       yval = paste0(metric2, ".2"), ylabel = sig2_name,
       title = paste0("Metric Scatter Plot"),
-      reverse = F
+      pt_alpha = 0.5, reverse = F
     ) +
       scale_x_continuous(breaks = scales::pretty_breaks(6)) +
       scale_y_continuous(breaks = scales::pretty_breaks(6))
