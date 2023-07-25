@@ -203,6 +203,41 @@ lapply(
 
 ## GSEA Squared
 
+```{r Get GSEA squared terms}
+GSEAsq_terms <- Rubrary::get_GSEAsq_terms(
+  df_GSEA = gsea_results,
+  savename = NULL,
+  filt_freq = c(5, 500),
+  signlogp_base = 10,
+  rep0 = .Machine$double.xmin,
+  verbose = FALSE,
+  plot = TRUE,
+  plot_pval = 1e-05,
+  seed = 13
+)
+
+rmarkdown::paged_table(
+  head(GSEAsq_terms))
+```
+
+
+```{r Run GSEA squared}
+GSEAsq_terms_plt <- head(GSEAsq_terms$Term)
+GSEAsq_terms_plt
+GSEAsq <- Rubrary::run_GSEA_squared(
+  df_GSEA = gsea_results,
+  get_terms = FALSE, verbose = FALSE,
+  categories = GSEAsq_terms_plt,
+  cat_terms = GSEAsq_terms_plt,
+  plot_pval = TRUE,
+  plot_type = "jitter"
+)
+names(GSEAsq) # Various outputs as list
+GSEAsq$plot
+rmarkdown::paged_table(head(GSEAsq$pathways))
+rmarkdown::paged_table(GSEAsq$categories)
+```
+
 # Resources
 
 # Citations

@@ -35,3 +35,10 @@ if (!require("devtools", quietly = TRUE))
 
 devtools::install_github("liaoyjruby/Rubrary")
 ```
+
+## Vignettes
+
+- [Principal Component Analysis (PCA) Quickstart](https://www.liaoyjruby.com/Rubrary/articles/PCA_Quickstart.html)
+- [Principial Component Analysis (PCA) Walkthrough](https://www.liaoyjruby.com/Rubrary/articles/PCA_Walkthrough.html)
+- [Differential Gene Expression](https://www.liaoyjruby.com/Rubrary/articles/DE_Genes.html)
+- [Gene Set Enrichment Analysis (GSEA) & GSEA Squared](https://www.liaoyjruby.com/Rubrary/articles/GSEA.html)
