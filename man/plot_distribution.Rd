@@ -7,6 +7,7 @@
 plot_distribution(
   values,
   check_normal = FALSE,
+  ctr_measure = TRUE,
   hist = FALSE,
   title = "Distribution",
   xlab = "Value",
@@ -19,6 +20,8 @@ plot_distribution(
 \item{values}{numeric vector; values to check distribution for}
 
 \item{check_normal}{logical; perform SW test for normality?}
+
+\item{ctr_measure}{logical; include central measures (mean + median)?}
 
 \item{hist}{logical; include histogram?}
 

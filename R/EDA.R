@@ -8,6 +8,7 @@ utils::globalVariables(c("density", "x"))
 #'
 #' @param values numeric vector; values to check distribution for
 #' @param check_normal logical; perform SW test for normality?
+#' @param ctr_measure logical; include central measures (mean + median)?
 #' @param hist logical; include histogram?
 #' @param title string; plot title
 #' @param xlab string; x-axis label
@@ -27,7 +28,8 @@ utils::globalVariables(c("density", "x"))
 #' vals_sequential <- c(1:100)
 #' plot_distribution(values = vals_sequential, title = "Sequential", check_normal = TRUE)
 #'
-plot_distribution <- function(values, check_normal = FALSE, hist = FALSE,
+plot_distribution <- function(values, check_normal = FALSE,
+                              ctr_measure = TRUE, hist = FALSE,
                               title = "Distribution", xlab = "Value",
                               savename = NULL, height = 5, width = 7) {
 
@@ -35,17 +37,22 @@ plot_distribution <- function(values, check_normal = FALSE, hist = FALSE,
     Rubrary::check_normal(values)
   }
 
-  mea <- mean(as.numeric(values), na.rm = T)
-  med <- stats::median(as.numeric(values), na.rm = T)
+  if(ctr_measure){
+    mea <- mean(as.numeric(values), na.rm = T)
+    med <- stats::median(as.numeric(values), na.rm = T)
+    sbtt <- paste0("Median: ", round(med, 2), "; Mean: ", round(mea, 2))
+  } else {
+    sbtt <- ggplot2::waiver()
+  }
 
   plt <- ggplot(data.frame(x = values), aes(x = x)) +
     {if(hist) geom_histogram(aes(y = after_stat(density)), color = "black", fill = "white")} +
     geom_density(alpha = 0.2, fill = "red") +
-    geom_vline(aes(xintercept = mea), color = "blue", linetype = "dashed") +
-    geom_vline(aes(xintercept = med), color = "red", linetype = "dashed") +
+    {if(ctr_measure) geom_vline(aes(xintercept = mea), color = "blue", linetype = "dashed")} +
+    {if(ctr_measure) geom_vline(aes(xintercept = med), color = "red", linetype = "dashed")} +
     labs(
       title = title,
-      subtitle = paste0("Median: ", round(med, 2), "; Mean: ", round(mea, 2)),
+      subtitle = sbtt,
       x = xlab,
       y = "Density"
     ) +
