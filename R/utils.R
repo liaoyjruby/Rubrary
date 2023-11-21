@@ -28,25 +28,24 @@ rwrite <- function(x, file, sep = "\t", quote = FALSE, row.names = FALSE){
 #' @param input string; `fread` input
 #' @param row.names integer; column to use as row names, 0 for none
 #' @param make.names logical; `TRUE` to ensure column names are unique and valid (replicating `utils::read.table`)
-#' @param to_df logical; T to convert output to data.frame
+#' @param as_df logical; T to convert output to data.frame
 #'
 #' @return Table read in from input
 #' @export
 #'
 #' @examples
 #' glab_Beltran_2016 <- "https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt"
-#' df <- Rubrary::rread(glab_Beltran_2016, row.names = 1, to_df = FALSE)
+#' df <- Rubrary::rread(glab_Beltran_2016, row.names = 1, as_df = FALSE)
 #' Rubrary::corner(df, 5)
-rread <- function(input, row.names = 0, make.names = TRUE, to_df = TRUE){
+rread <- function(input, row.names = 0, make.names = TRUE, as_df = TRUE){
   if(tools::file_ext(input) == "xlsx"){
     Rubrary::use_pkg("openxlsx")
     df <- openxlsx::read.xlsx(input)
   } else {
-    df <- data.table::fread(input)
+    df <- data.table::fread(input, data.table = !as_df)
   }
   if(make.names){ colnames(df) <- make.names(colnames(df), unique = TRUE, allow_ = TRUE)}
   if(row.names != 0){ df <- tibble::column_to_rownames(df, var = names(df)[row.names])}
-  if(to_df){df <- as.data.frame(df)}
   return(df)
 }
 

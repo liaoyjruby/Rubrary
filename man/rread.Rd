@@ -4,7 +4,7 @@
 \alias{rread}
 \title{Wrapper for \code{data.table::fread} implementing \code{row.names} functionality}
 \usage{
-rread(input, row.names = 0, make.names = TRUE, to_df = TRUE)
+rread(input, row.names = 0, make.names = TRUE, as_df = TRUE)
 }
 \arguments{
 \item{input}{string; \code{fread} input}
@@ -13,7 +13,7 @@ rread(input, row.names = 0, make.names = TRUE, to_df = TRUE)
 
 \item{make.names}{logical; \code{TRUE} to ensure column names are unique and valid (replicating \code{utils::read.table})}
 
-\item{to_df}{logical; T to convert output to data.frame}
+\item{as_df}{logical; T to convert output to data.frame}
 }
 \value{
 Table read in from input
@@ -23,6 +23,6 @@ Default file reading function in Rubrary functions because data is often in larg
 }
 \examples{
 glab_Beltran_2016 <- "https://raw.githubusercontent.com/graeberlab-ucla/glab.library/master/vignettes/PCA_tutorial/Beltran_2016_rsem_genes_upper_norm_counts_coding_log2.txt"
-df <- Rubrary::rread(glab_Beltran_2016, row.names = 1, to_df = FALSE)
+df <- Rubrary::rread(glab_Beltran_2016, row.names = 1, as_df = FALSE)
 Rubrary::corner(df, 5)
 }
